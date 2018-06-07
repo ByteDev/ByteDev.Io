@@ -10,7 +10,7 @@ Unit tests and integration tests are also provided in the solution.
 
 ## Usage
 
-Add a reference to ByteDev.Io.
+Add a reference to ByteDev.Io.  A nuget reference can be found [here](https://www.nuget.org/packages/ByteDev.Io/).
 
 Main public classes:
 
