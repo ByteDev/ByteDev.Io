@@ -1,112 +1,40 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\NUnit.3.10.1\build\NUnit.props" Condition="Exists('..\packages\NUnit.3.10.1\build\NUnit.props')" />
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{82A967E6-41D2-44DD-BBD1-BD425B313611}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ByteDev.Io.IntTests</RootNamespace>
-    <AssemblyName>ByteDev.Io.IntTests</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="ByteDev.Common, Version=4.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ByteDev.Common.4.0.0\lib\netstandard2.0\ByteDev.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="ByteDev.Testing, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <None Remove="AssemblyTestFiles\EmbeddedResource1.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="AssemblyTestFiles\EmbeddedResource1.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
+    <PackageReference Include="NUnit" Version="3.10.1" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
+	<PackageReference Include="ByteDev.Common" Version="4.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ByteDev.Io\ByteDev.Io.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="ByteDev.Testing">
       <HintPath>..\..\lib\ByteDev.Testing-1.4.1.0\ByteDev.Testing.dll</HintPath>
     </Reference>
     <Reference Include="ByteDev.Testing.Nunit">
       <HintPath>..\..\lib\ByteDev.Testing.Nunit-1.2.0.0\ByteDev.Testing.Nunit.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework, Version=3.10.1.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
-      <HintPath>..\packages\NUnit.3.10.1\lib\net45\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Include="AssemblyFileReaderTests.cs" />
-    <Compile Include="DirectoryInfoExtensionsTest.cs" />
-    <Compile Include="FileCommands\FileCopyCommands\FileCopyExistsDoNothingCommandTest.cs" />
-    <Compile Include="FileCommands\FileCopyCommands\FileCopyExistsOverwriteCommandTest.cs" />
-    <Compile Include="FileCommands\FileCopyCommands\FileCopyExistsRenameWithNumberCommandTest.cs" />
-    <Compile Include="FileCommands\FileCopyCommands\FileCopyExistsThrowExceptionCommandTest.cs" />
-    <Compile Include="FileCommands\FileCommandTestBase.cs" />
-    <Compile Include="FileCommands\FileCopyCommands\FileCopySourceIsNewerOverwriteCommandTest.cs" />
-    <Compile Include="FileCommands\FileCopyCommands\FileCopySourceSizeGreaterOverwriteCommandTest.cs" />
-    <Compile Include="FileCommands\FileMoveCommands\FileMoveExistsDoNothingCommandTest.cs" />
-    <Compile Include="FileCommands\FileMoveCommands\FileMoveExistsOverwriteCommandTest.cs" />
-    <Compile Include="FileCommands\FileMoveCommands\FileMoveExistsRenameWithNumberCommandTest.cs" />
-    <Compile Include="FileCommands\FileMoveCommands\FileMoveExistsThrowExceptionCommandTest.cs" />
-    <Compile Include="FileCommands\FileMoveCommands\FileMoveSourceIsNewerOverwriteCommandTest.cs" />
-    <Compile Include="FileCommands\FileMoveCommands\FileMoveSourceSizeGreaterOverwriteCommandTest.cs" />
-    <Compile Include="FileComparerTest.cs" />
-    <Compile Include="FileInfoExtensionsTest.cs" />
-    <Compile Include="FileSystemTest.cs" />
-    <Compile Include="IoBase.cs" />
-    <Compile Include="IoTestBase.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="StreamExtensionsTest.cs" />
+    <None Update="AssemblyTestFiles\ContentFile1.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ByteDev.Io\ByteDev.Io.csproj">
-      <Project>{3d21595c-c100-41f4-af14-4baf5016cb7b}</Project>
-      <Name>ByteDev.Io</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="AssemblyTestFiles\ContentFile1.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="AssemblyTestFiles\EmbeddedResource1.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\NUnit.3.10.1\build\NUnit.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\NUnit.3.10.1\build\NUnit.props'))" />
-  </Target>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>
