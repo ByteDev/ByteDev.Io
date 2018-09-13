@@ -62,5 +62,10 @@ namespace ByteDev.Io
 
             source.MoveTo(newPath);
         }
+
+        public static void RemoveExtension(this FileInfo source)
+        {
+            RenameExtension(source, string.Empty);
+        }
     }
 }

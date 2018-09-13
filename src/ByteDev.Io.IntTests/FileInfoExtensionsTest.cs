@@ -15,6 +15,28 @@ namespace ByteDev.Io.IntTests
         }
 
         [TestFixture]
+        public class RemoveExtension : FileInfoExtensionsTest
+        {
+            [SetUp]
+            public void Setup()
+            {
+                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
+                EmptyWorkingDir();
+            }
+
+            [Test]
+            public void WhenNewExtensionIsDifferent_ThenRenameExtension()
+            {
+                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test.txt")).Build();
+
+                sut.RemoveExtension();
+
+                AssertFile.Exists(Path.Combine(WorkingDir, "Test"));
+                AssertFile.NotExists(Path.Combine(WorkingDir, "Test.txt"));
+            }
+        }
+
+        [TestFixture]
         public class RenameExtension : FileInfoExtensionsTest
         {
             [SetUp]
