@@ -7,13 +7,13 @@ namespace ByteDev.Io
     {
         public static string ReadAsString(this Stream source, bool tryStartFromBeginning = true)
         {
-            using (var ms = ReadAsStream(source, tryStartFromBeginning))
+            using (var ms = ReadAsMemoryStream(source, tryStartFromBeginning))
             {
                 return Encoding.UTF8.GetString(ms.ToArray());
             }
         }
 
-        public static MemoryStream ReadAsStream(this Stream source, bool tryStartFromBeginning = true)
+        public static MemoryStream ReadAsMemoryStream(this Stream source, bool tryStartFromBeginning = true)
         {
             if (tryStartFromBeginning && source.CanSeek)
                 source.Position = 0;

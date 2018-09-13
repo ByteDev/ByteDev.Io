@@ -46,5 +46,21 @@ namespace ByteDev.Io
 
             return $"{newName} ({newNumber})";
         }
+
+        public static void RenameExtension(this FileInfo source, string newExtension)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            if (newExtension == null)
+                throw new ArgumentNullException(nameof(newExtension));
+
+            if (newExtension != string.Empty && newExtension.Substring(0, 1) != ".")
+                newExtension = "." + newExtension;
+
+            var newPath = Path.Combine(source.DirectoryName, Path.GetFileNameWithoutExtension(source.FullName) + newExtension);
+
+            source.MoveTo(newPath);
+        }
     }
 }

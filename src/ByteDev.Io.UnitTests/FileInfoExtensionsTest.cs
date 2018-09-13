@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using NUnit.Framework;
 
 namespace ByteDev.Io.UnitTests
@@ -12,6 +13,22 @@ namespace ByteDev.Io.UnitTests
             public void WhenIsNull_ThenThrowException()
             {
                 Assert.Throws<ArgumentNullException>(() => FileInfoExtensions.GetNextAvailableFileName(null));
+            }
+        }
+
+        [TestFixture]
+        public class RenameExtension : FileInfoExtensionsTest
+        {
+            [Test]
+            public void WhenIsNull_ThenThrowException()
+            {
+                Assert.Throws<ArgumentNullException>(() => FileInfoExtensions.RenameExtension(null, ".txt"));
+            }
+
+            [Test]
+            public void WhenNewExtensionIsNull_ThenThrowException()
+            {
+                Assert.Throws<ArgumentNullException>(() => new FileInfo(@"C:\").RenameExtension(null));
             }
         }
     }

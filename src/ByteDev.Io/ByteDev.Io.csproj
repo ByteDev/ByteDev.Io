@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <Description>Set of IO related .NET utility classes.</Description>
-    <Version>2.0.0</Version>
+    <Version>3.0.0</Version>
     <Authors>Paul Stanley</Authors>
     <Company></Company>
     <PackageTags>io file directory folder</PackageTags>

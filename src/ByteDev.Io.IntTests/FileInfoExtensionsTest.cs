@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Reflection;
+using ByteDev.Testing.Nunit;
 using ByteDev.Testing.TestBuilders.FileSystem;
 using NUnit.Framework;
 
@@ -11,6 +12,80 @@ namespace ByteDev.Io.IntTests
         private void SetupWorkingDir(string methodName)
         {
             SetWorkingDir(MethodBase.GetCurrentMethod().DeclaringType, methodName);
+        }
+
+        [TestFixture]
+        public class RenameExtension : FileInfoExtensionsTest
+        {
+            [SetUp]
+            public void Setup()
+            {
+                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
+                EmptyWorkingDir();
+            }
+
+            [Test]
+            public void WhenNewExtensionIsEmpty_ThenRemoveExtension()
+            {
+                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test.txt")).Build();
+
+                sut.RenameExtension(string.Empty);
+
+                AssertFile.Exists(Path.Combine(WorkingDir, "Test"));
+            }
+
+            [Test]
+            public void WhenNewAndOldExtensionAreEqual_ThenKeepExtension()
+            {
+                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test.txt")).Build();
+
+                sut.RenameExtension(".txt");
+
+                AssertFile.Exists(Path.Combine(WorkingDir, "Test.txt"));
+            }
+
+            [Test]
+            public void WhenNewExtensionIsDifferent_ThenRenameExtension()
+            {
+                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test.txt")).Build();
+
+                sut.RenameExtension(".log");
+
+                AssertFile.Exists(Path.Combine(WorkingDir, "Test.log"));
+                AssertFile.NotExists(Path.Combine(WorkingDir, "Test.txt"));
+            }
+
+            [Test]
+            public void WhenNewExtensionIsDifferent_AndFileExists_ThenThrowException()
+            {
+                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test.log")).Build();
+
+                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test.txt")).Build();
+
+                var ex = Assert.Throws<IOException>(() => sut.RenameExtension(".log"));      
+                Assert.That(ex.Message, Is.EqualTo("Cannot create a file when that file already exists"));
+
+                AssertFile.Exists(Path.Combine(WorkingDir, "Test.log"));
+            }
+
+            [Test]
+            public void WhenExtensionHasNoDotPrefix_ThenAddDotPrefix()
+            {
+                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test.txt")).Build();
+
+                sut.RenameExtension("log");
+
+                AssertFile.Exists(Path.Combine(WorkingDir, "Test.log"));
+                AssertFile.NotExists(Path.Combine(WorkingDir, "Test.txt"));
+            }
+
+            [Test]
+            public void WhenFileDoesNotExist_ThenThrowException()
+            {
+                var sut = new FileInfo(Path.Combine(WorkingDir, "DoesntExist.txt"));
+
+                Assert.Throws<FileNotFoundException>(() => sut.RenameExtension(".log"));
+            }
         }
 
         [TestFixture]
