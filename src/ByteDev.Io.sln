@@ -3,17 +3,23 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ByteDev.Io", "ByteDev.Io\ByteDev.Io.csproj", "{3D21595C-C100-41F4-AF14-4BAF5016CB7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ByteDev.Io", "ByteDev.Io\ByteDev.Io.csproj", "{3D21595C-C100-41F4-AF14-4BAF5016CB7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ByteDev.Io.UnitTests", "ByteDev.Io.UnitTests\ByteDev.Io.UnitTests.csproj", "{5F97FB91-62E8-4614-AE60-621D02A75871}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ByteDev.Io.UnitTests", "ByteDev.Io.UnitTests\ByteDev.Io.UnitTests.csproj", "{5F97FB91-62E8-4614-AE60-621D02A75871}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ByteDev.Io.IntTests", "ByteDev.Io.IntTests\ByteDev.Io.IntTests.csproj", "{82A967E6-41D2-44DD-BBD1-BD425B313611}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ByteDev.Io.IntTests", "ByteDev.Io.IntTests\ByteDev.Io.IntTests.csproj", "{82A967E6-41D2-44DD-BBD1-BD425B313611}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{78207A9F-B975-49A2-96D4-D8C11A0D709B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{4620C436-C894-4173-82D6-BD6B50C0CFA2}"
 	ProjectSection(SolutionItems) = preProject
 		..\README.md = ..\README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{CA07D0A1-A3AE-41FE-B73B-4EEBE40BBBAC}"
+	ProjectSection(SolutionItems) = preProject
+		..\build\build.cake = ..\build\build.cake
+		..\build\nuget-publish.ps1 = ..\build\nuget-publish.ps1
 	EndProjectSection
 EndProject
 Global
