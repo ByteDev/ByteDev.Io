@@ -25,7 +25,7 @@ namespace ByteDev.Io.IntTests
             }
 
             [Test]
-            public void WhenNewExtensionIsDifferent_ThenRenameExtension()
+            public void WhenFileHasExtension_ThenRemoveExtension()
             {
                 var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test.txt")).Build();
 
@@ -33,6 +33,16 @@ namespace ByteDev.Io.IntTests
 
                 AssertFile.Exists(Path.Combine(WorkingDir, "Test"));
                 AssertFile.NotExists(Path.Combine(WorkingDir, "Test.txt"));
+            }
+
+            [Test]
+            public void WhenFileHasNoExtension_ThenDoNotRenameFile()
+            {
+                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test")).Build();
+
+                sut.RemoveExtension();
+
+                AssertFile.Exists(Path.Combine(WorkingDir, "Test"));
             }
         }
 
