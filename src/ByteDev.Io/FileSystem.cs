@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using ByteDev.Io.FileCommands;
 
 namespace ByteDev.Io
@@ -98,6 +99,23 @@ namespace ByteDev.Io
                 throw new ArgumentNullException(nameof(fileInfo2));
 
             SwapFileNames(fileInfo1.FullName, fileInfo2.FullName);
+        }
+
+        public string FirstExists(IEnumerable<string> paths)
+        {
+            if (paths == null)
+                throw new ArgumentNullException(nameof(paths));
+
+            if (!paths.Any())
+                throw new ArgumentException("Empty path list provided.", nameof(paths));
+
+            foreach (var path in paths)
+            {
+                if (Directory.Exists(path) || File.Exists(path))
+                    return path;
+            }
+            
+            throw new PathNotFoundException("None of the paths exist.");
         }
 
         #endregion

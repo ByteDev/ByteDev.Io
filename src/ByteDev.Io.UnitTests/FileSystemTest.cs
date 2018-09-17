@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using NUnit.Framework;
 
 namespace ByteDev.Io.UnitTests
@@ -15,6 +17,22 @@ namespace ByteDev.Io.UnitTests
         public void SetUp()
         {
             _sut = new FileSystem();
+        }
+
+        [TestFixture]
+        public class FirstExists : FileSystemTest
+        {
+            [Test]
+            public void WhenPathsIsNull_ThenThrowException()
+            {
+                Assert.Throws<ArgumentNullException>(() => _sut.FirstExists(null));
+            }
+
+            [Test]
+            public void WhenPathsIsEmpty_ThenThrowException()
+            {
+                Assert.Throws<ArgumentException>(() => _sut.FirstExists(Enumerable.Empty<string>()));
+            }
         }
 
         public class SwapFileNames : FileSystemTest

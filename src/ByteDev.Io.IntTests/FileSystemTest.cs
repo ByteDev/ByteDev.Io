@@ -28,13 +28,89 @@ namespace ByteDev.Io.IntTests
         }
 
         [TestFixture]
+        public class FirstExists : FileSystemTest
+        {
+            [SetUp]
+            public new void Setup()
+            {
+                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
+                CreateWorkingDir();
+            }
+
+            [Test]
+            public void WhenNoPathExists_ThenThrowException()
+            {
+                string[] paths = 
+                {
+                    Path.Combine(WorkingDir, "test1.txt"),
+                    Path.Combine(WorkingDir, "test2.txt")
+                };
+
+                Assert.Throws<PathNotFoundException>(() => _sut.FirstExists(paths));
+            }
+
+            [Test]
+            public void WhenOneFilePathMatches_ThenReturnPath()
+            {
+                var testFile = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "test2.txt")).Build();
+
+                string[] paths =
+                {
+                    Path.Combine(WorkingDir, "test1.txt"),
+                    testFile.FullName
+                };
+
+                var result = _sut.FirstExists(paths);
+
+                Assert.That(result, Is.EqualTo(testFile.FullName));
+            }
+
+            [Test]
+            public void WhenPathsMixed_AndDirectoryFound_ThenReturnDirectory()
+            {
+                var testDir = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "TestDirectory")).Build();
+                var testFile = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "test2.txt")).Build();
+
+                string[] paths =
+                {
+                    Path.Combine(WorkingDir, "SomeDir"),
+                    Path.Combine(WorkingDir, "test1.txt"),
+                    testDir.FullName,
+                    testFile.FullName
+                };
+
+                var result = _sut.FirstExists(paths);
+
+                Assert.That(result, Is.EqualTo(testDir.FullName));
+            }
+
+            [Test]
+            public void WhenPathsMixed_AndFileFound_ThenReturnFile()
+            {
+                var testDir = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "TestDirectory")).Build();
+                var testFile = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "test2.txt")).Build();
+
+                string[] paths =
+                {
+                    Path.Combine(WorkingDir, "SomeDir"),
+                    Path.Combine(WorkingDir, "test1.txt"),
+                    testFile.FullName,
+                    testDir.FullName
+                };
+
+                var result = _sut.FirstExists(paths);
+
+                Assert.That(result, Is.EqualTo(testFile.FullName));
+            }
+        }
+
+        [TestFixture]
         public class GetDirectories : FileSystemTest
         {
             [SetUp]
             public new void Setup()
             {
                 SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
-
                 CreateWorkingDir();
             }
 
@@ -73,7 +149,6 @@ namespace ByteDev.Io.IntTests
             public new void Setup()
             {
                 SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
-
                 CreateWorkingDir();
             }
 
@@ -112,7 +187,6 @@ namespace ByteDev.Io.IntTests
             public new void Setup()
             {
                 SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
-
                 CreateWorkingDir();
             }
 
@@ -143,7 +217,6 @@ namespace ByteDev.Io.IntTests
             public new void Setup()
             {
                 SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
-
                 CreateWorkingDir();
 
                 _filePath1 = Path.Combine(WorkingDir, "file1.txt");

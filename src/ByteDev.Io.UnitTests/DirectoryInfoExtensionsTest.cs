@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 namespace ByteDev.Io.UnitTests
 {
-    namespace DirectoryInfoExtensionsTest
+    public class DirectoryInfoExtensionsTest
     {
         [TestFixture]
         public class GetFilesByExtensions

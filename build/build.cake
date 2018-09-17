@@ -25,11 +25,11 @@ Task("Clean")
 {
     CleanDirectory(artifactsDirectory);
 	
-	//var binDirectoriesToClean = GetDirectories("../src/**/bin");
-	//var objDirectoriesToClean = GetDirectories("../src/**/obj");
+	var binDir = GetDirectories("../src/**/bin");
+	var objDir = GetDirectories("../src/**/obj");
 
-	//CleanDirectories(binDirectoriesToClean);
-	//CleanDirectories(objDirectoriesToClean);
+	CleanDirectories(binDir);
+	CleanDirectories(objDir);
 });
 
 Task("Restore")
