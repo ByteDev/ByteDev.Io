@@ -181,33 +181,6 @@ namespace ByteDev.Io.IntTests
         }
 
         [TestFixture]
-        public class GetFileSize : FileSystemTest
-        {
-            [SetUp]
-            public new void Setup()
-            {
-                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
-                CreateWorkingDir();
-            }
-
-            [Test]
-            public void WhenFileDoesNotExist_ThenThrowException()
-            {
-                Assert.Throws<FileNotFoundException>(() => _sut.GetFileSize(Path.Combine(WorkingDir, Path.GetRandomFileName())));
-            }
-
-            [Test]
-            public void WhenFileDoesExist_ThenReturnFileSize()
-            {
-                var file1 = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "file1.txt")).WithSize(1200).Build();
-
-                var result = _sut.GetFileSize(file1);
-
-                Assert.That(result.TotalBytes, Is.EqualTo(1200));
-            }
-        }
-
-        [TestFixture]
         public class SwapFileNames : FileSystemTest
         {
             private string _filePath1;

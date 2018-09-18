@@ -5,9 +5,6 @@ namespace ByteDev.Io
 {
     public interface IFileSystem
     {
-        FileSize GetFileSize(FileInfo fileInfo);
-        FileSize GetFileSize(string filePath);
-
         FileInfo MoveFile(FileInfo sourceFile, FileInfo destinationFile, FileOperationBehaviourType type = FileOperationBehaviourType.DestExistsThrowException);
         FileInfo MoveFile(string sourceFile, string destinationFile, FileOperationBehaviourType type = FileOperationBehaviourType.DestExistsThrowException);
 
@@ -20,5 +17,7 @@ namespace ByteDev.Io
         void DeleteDirectory(string path);
         void EmptyDirectory(string path);
         IEnumerable<string> GetDirectories(string path);
+
+        string FirstExists(IEnumerable<string> paths);
     }
 }

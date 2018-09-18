@@ -21,17 +21,24 @@ namespace ByteDev.Io
             get { return _fileCopyCommandFactory ?? (_fileCopyCommandFactory = new FileCopyCommandFactory()); }
         }
 
-        #region File Operations
-        
-        public FileSize GetFileSize(FileInfo fileInfo)
+        public string FirstExists(IEnumerable<string> paths)
         {
-            return new FileSize(fileInfo.Length);
+            if (paths == null)
+                throw new ArgumentNullException(nameof(paths));
+
+            if (!paths.Any())
+                throw new ArgumentException("Empty path list provided.", nameof(paths));
+
+            foreach (var path in paths)
+            {
+                if (Directory.Exists(path) || File.Exists(path))
+                    return path;
+            }
+
+            throw new PathNotFoundException("None of the paths exist.");
         }
 
-        public FileSize GetFileSize(string filePath)
-        {
-            return GetFileSize(new FileInfo(filePath));
-        }
+        #region File Operations
 
         public IEnumerable<string> GetFiles(string directoryPath)
         {
@@ -99,23 +106,6 @@ namespace ByteDev.Io
                 throw new ArgumentNullException(nameof(fileInfo2));
 
             SwapFileNames(fileInfo1.FullName, fileInfo2.FullName);
-        }
-
-        public string FirstExists(IEnumerable<string> paths)
-        {
-            if (paths == null)
-                throw new ArgumentNullException(nameof(paths));
-
-            if (!paths.Any())
-                throw new ArgumentException("Empty path list provided.", nameof(paths));
-
-            foreach (var path in paths)
-            {
-                if (Directory.Exists(path) || File.Exists(path))
-                    return path;
-            }
-            
-            throw new PathNotFoundException("None of the paths exist.");
         }
 
         #endregion

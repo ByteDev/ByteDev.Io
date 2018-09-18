@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
 
 namespace ByteDev.Io
 {
@@ -23,6 +24,14 @@ namespace ByteDev.Io
         private readonly long _totalBytes;
         private readonly MultiplierType _multiplier;
         private string _readableSize;
+
+        public FileSize(string filePath, MultiplierType multiplier = MultiplierType.BinaryMultiplier) : this(new FileInfo(filePath), multiplier)
+        {
+        }
+
+        public FileSize(FileInfo fileInfo, MultiplierType multiplier = MultiplierType.BinaryMultiplier) : this(fileInfo.Length, multiplier)
+        {
+        }
 
         public FileSize(long numberOfBytes, MultiplierType multiplier = MultiplierType.BinaryMultiplier)
         {
