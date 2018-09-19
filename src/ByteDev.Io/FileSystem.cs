@@ -21,6 +21,18 @@ namespace ByteDev.Io
             get { return _fileCopyCommandFactory ?? (_fileCopyCommandFactory = new FileCopyCommandFactory()); }
         }
 
+        public bool IsDirectory(string path)
+        {
+            try
+            {
+                return File.GetAttributes(path).HasFlag(FileAttributes.Directory);
+            }
+            catch (FileNotFoundException ex)
+            {
+                throw new PathNotFoundException($"Unable to find the path '{path}'.", ex);
+            }
+        }
+
         public string FirstExists(IEnumerable<string> paths)
         {
             if (paths == null)
@@ -36,13 +48,6 @@ namespace ByteDev.Io
             }
 
             throw new PathNotFoundException("None of the paths exist.");
-        }
-
-        #region File Operations
-
-        public IEnumerable<string> GetFiles(string directoryPath)
-        {
-            return Directory.EnumerateFiles(directoryPath);
         }
 
         public FileInfo MoveFile(FileInfo sourceFile, FileInfo destinationFile, FileOperationBehaviourType type = FileOperationBehaviourType.DestExistsThrowException)
@@ -108,10 +113,6 @@ namespace ByteDev.Io
             SwapFileNames(fileInfo1.FullName, fileInfo2.FullName);
         }
 
-        #endregion
-
-        #region Directory operations
-
         public int DeleteDirectoriesWithName(DirectoryInfo basePath, string directoryName)
         {
             if(basePath == null)
@@ -134,7 +135,5 @@ namespace ByteDev.Io
         {
             return DeleteDirectoriesWithName(new DirectoryInfo(basePath), directoryName);
         }
-
-        #endregion
     }
 }

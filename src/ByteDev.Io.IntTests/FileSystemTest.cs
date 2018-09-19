@@ -1,11 +1,9 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Reflection;
 using ByteDev.Common.Collections;
 using ByteDev.Testing.Nunit;
 using ByteDev.Testing.TestBuilders.FileSystem;
-using ByteDev.Testing.TestHelpers.Io;
 using NUnit.Framework;
 
 namespace ByteDev.Io.IntTests
@@ -13,7 +11,7 @@ namespace ByteDev.Io.IntTests
     [TestFixture]
     public class FileSystemTest : IoTestBase
     {
-        private FileSystem _sut;
+        private IFileSystem _sut;
 
         private void SetupWorkingDir(string methodName)
         {
@@ -25,6 +23,43 @@ namespace ByteDev.Io.IntTests
         public void Setup()
         {
             _sut = new FileSystem();            
+        }
+
+        [TestFixture]
+        public class IsDirectory : FileSystemTest
+        {
+            [SetUp]
+            public new void Setup()
+            {
+                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
+                CreateOrEmptyWorkingDir();
+            }
+
+            [Test]
+            public void WhenPathDoesNotExist_ThenThrowException()
+            {
+                Assert.Throws<PathNotFoundException>(() => _sut.IsDirectory(@"C:\7b4feb7ab70845a78bec2511b532f55a"));
+            }
+
+            [Test]
+            public void WhenFileExists_ThenReturnFalse()
+            {
+                var fileInfo = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "test.txt")).Build();
+
+                var result = _sut.IsDirectory(fileInfo.FullName);
+
+                Assert.That(result, Is.False);
+            }
+
+            [Test]
+            public void WhenDirectoryExists_ThenReturnTrue()
+            {
+                var dirInfo = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "TestDir")).Build();
+
+                var result = _sut.IsDirectory(dirInfo.FullName);
+
+                Assert.That(result, Is.True);
+            }
         }
 
         [TestFixture]
@@ -101,44 +136,6 @@ namespace ByteDev.Io.IntTests
                 var result = _sut.FirstExists(paths);
 
                 Assert.That(result, Is.EqualTo(testFile.FullName));
-            }
-        }
-
-        [TestFixture]
-        public class GetFiles : FileSystemTest
-        {
-            [SetUp]
-            public new void Setup()
-            {
-                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
-                CreateOrEmptyWorkingDir();
-            }
-
-            [Test]
-            public void WhenPathDoesNotExist_ThenThrowException()
-            {
-                Assert.Throws<DirectoryNotFoundException>(() => _sut.GetFiles(@"C:\b7b17fa382754b138ec4e7d710e298f8"));
-            }
-
-            [Test]
-            public void WhenPathIsEmpty_ThenReturnEmpty()
-            {
-                var result = _sut.GetFiles(WorkingDir);
-
-                Assert.That(result, Is.Empty);
-            }
-
-            [Test]
-            public void WhenPathHasFiles_ThenReturnFiles()
-            {
-                var file1 = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "file1.txt")).Build();
-                var file2 = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "file2.txt")).Build();
-
-                var result = _sut.GetFiles(WorkingDir);
-
-                Assert.That(result.Count(), Is.EqualTo(2));
-                Assert.That(result.First(), Is.EqualTo(file1.FullName));
-                Assert.That(result.Second(), Is.EqualTo(file2.FullName));
             }
         }
 

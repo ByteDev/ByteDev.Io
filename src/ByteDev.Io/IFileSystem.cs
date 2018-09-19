@@ -7,6 +7,8 @@ namespace ByteDev.Io
     {
         string FirstExists(IEnumerable<string> paths);
 
+        bool IsDirectory(string path);
+
         FileInfo MoveFile(FileInfo sourceFile, FileInfo destinationFile, FileOperationBehaviourType type = FileOperationBehaviourType.DestExistsThrowException);
         FileInfo MoveFile(string sourceFile, string destinationFile, FileOperationBehaviourType type = FileOperationBehaviourType.DestExistsThrowException);
 
