@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
@@ -59,6 +58,28 @@ namespace ByteDev.Io.UnitTests
             public void WhenFile2IsNull_ThenThrowException()
             {
                 Assert.Throws<ArgumentNullException>(() => _sut.SwapFileNames(FileExists, null));
+            }
+        }
+
+        [TestFixture]
+        public class DeleteDirectoriesWithName : FileSystemTest
+        {
+            [Test]
+            public void WhenBasePathDirInfoIsNull_ThenThrowException()
+            {
+                Assert.Throws<ArgumentNullException>(() => _sut.DeleteDirectoriesWithName(null as DirectoryInfo, "someDir"));
+            }
+
+            [Test]
+            public void WhenBasePathIsNull_ThenThrowException()
+            {
+                Assert.Throws<ArgumentNullException>(() => _sut.DeleteDirectoriesWithName(null as string, "someDir"));
+            }
+
+            [Test]
+            public void WhenDirNameIsNull_ThenThrowException()
+            {
+                Assert.Throws<ArgumentException>(() => _sut.DeleteDirectoriesWithName(@"C:\Temp", null));
             }
         }
     }

@@ -34,7 +34,7 @@ namespace ByteDev.Io.IntTests
         public void SetUp()
         {
             SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
-            CreateWorkingDir();
+            CreateOrEmptyWorkingDir();
 
             _sourceDir = Path.Combine(WorkingDir, "Source");
             _destinationDir = Path.Combine(WorkingDir, "Destination");

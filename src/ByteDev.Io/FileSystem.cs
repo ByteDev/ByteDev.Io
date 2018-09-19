@@ -112,26 +112,27 @@ namespace ByteDev.Io
 
         #region Directory operations
 
-        public void DeleteDirectory(string path)
+        public int DeleteDirectoriesWithName(DirectoryInfo basePath, string directoryName)
         {
-            try
+            if(basePath == null)
+                throw new ArgumentNullException(nameof(basePath));
+
+            if(string.IsNullOrEmpty(directoryName))
+                throw new ArgumentException("Directory name to delete was null or empty.", nameof(directoryName));
+
+            DirectoryInfo[] subDirs = basePath.GetDirectories(directoryName, SearchOption.AllDirectories);
+
+            foreach (var dir in subDirs)
             {
-                EmptyDirectory(path);
-                Directory.Delete(path);
+                Directory.Delete(dir.FullName, true);
             }
-            catch (DirectoryNotFoundException)
-            {
-            }
+
+            return subDirs.Length;
         }
 
-        public void EmptyDirectory(string path)
+        public int DeleteDirectoriesWithName(string basePath, string directoryName)
         {
-            new DirectoryInfo(path).Empty();
-        }
-
-        public IEnumerable<string> GetDirectories(string path)
-        {
-            return Directory.EnumerateDirectories(path);
+            return DeleteDirectoriesWithName(new DirectoryInfo(basePath), directoryName);
         }
 
         #endregion

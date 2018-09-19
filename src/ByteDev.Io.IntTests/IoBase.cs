@@ -35,10 +35,10 @@ namespace ByteDev.Io.IntTests
             {
                 throw new InvalidOperationException("Working directory has not been set");                
             }
-            CreateWorkingDir().Empty();
+            CreateOrEmptyWorkingDir().Empty();
         }
 
-        protected DirectoryInfo CreateWorkingDir()
+        protected DirectoryInfo CreateOrEmptyWorkingDir()
         {
             return DirectoryTestBuilder.InFileSystem.WithPath(WorkingDir).EmptyIfExists().Build();
         }

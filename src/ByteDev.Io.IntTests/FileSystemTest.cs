@@ -34,7 +34,7 @@ namespace ByteDev.Io.IntTests
             public new void Setup()
             {
                 SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
-                CreateWorkingDir();
+                CreateOrEmptyWorkingDir();
             }
 
             [Test]
@@ -105,51 +105,13 @@ namespace ByteDev.Io.IntTests
         }
 
         [TestFixture]
-        public class GetDirectories : FileSystemTest
-        {
-            [SetUp]
-            public new void Setup()
-            {
-                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
-                CreateWorkingDir();
-            }
-
-            [Test]
-            public void WhenPathDoesNotExist_ThenThrowException()
-            {
-                Assert.Throws<DirectoryNotFoundException>(() => _sut.GetDirectories(@"C:\b7b17fa382754b138ec4e7d710e298f8"));
-            }
-
-            [Test]
-            public void WhenPathIsEmpty_ThenReturnEmpty()
-            {
-                var result = _sut.GetDirectories(WorkingDir);
-
-                Assert.That(result, Is.Empty);
-            }
-
-            [Test]
-            public void WhenPathHasDirectories_ThenReturnDirectories()
-            {
-                var dir1 = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "test1")).Build();
-                var dir2 = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "test2")).Build();
-
-                var result = _sut.GetDirectories(WorkingDir);
-
-                Assert.That(result.Count(), Is.EqualTo(2));
-                Assert.That(result.First(), Is.EqualTo(dir1.FullName));
-                Assert.That(result.Second(), Is.EqualTo(dir2.FullName));
-            }
-        }
-
-        [TestFixture]
         public class GetFiles : FileSystemTest
         {
             [SetUp]
             public new void Setup()
             {
                 SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
-                CreateWorkingDir();
+                CreateOrEmptyWorkingDir();
             }
 
             [Test]
@@ -190,7 +152,7 @@ namespace ByteDev.Io.IntTests
             public new void Setup()
             {
                 SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
-                CreateWorkingDir();
+                CreateOrEmptyWorkingDir();
 
                 _filePath1 = Path.Combine(WorkingDir, "file1.txt");
                 _filePath2 = Path.Combine(WorkingDir, "file2.txt");
@@ -326,42 +288,89 @@ namespace ByteDev.Io.IntTests
                 return FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(_sourceDir, filePath)).WithSize(size).Build();
             }
         }
-        
+
         [TestFixture]
-        public class DeleteDirectory : FileSystemTest
+        public class DeleteDirectoryWithName : FileSystemTest
         {
             [SetUp]
             public new void Setup()
             {
                 SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
+                CreateOrEmptyWorkingDir();
+            }
+            
+            [Test]
+            public void WhenBasePathDoesNotExist_ThenThrowException()
+            {
+                Assert.Throws<DirectoryNotFoundException>(() => _sut.DeleteDirectoriesWithName(@"C:\7b8b7a10eaad4fc195a7168898f4e27b", "dirToDelete"));
             }
 
             [Test]
-            public void WhenDirectoryDoesNotExist_ThenNotThrowException()
+            public void WhenNoMatches_ThenReturnZero()
             {
-                var dir = Path.Combine(WorkingDir, Guid.NewGuid().ToString());
+                DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToNotDelete")).Build();
 
-                _sut.DeleteDirectory(dir);
+                var result = _sut.DeleteDirectoriesWithName(WorkingDir, "dirToDelete");
 
-                AssertDir.NotExists(dir);
+                Assert.That(result, Is.EqualTo(0));
             }
 
             [Test]
-            public void WhenTwoFilesAndTwoDirectories_ThenDeleteAllFilesAndDirectories()
+            public void WhenMatchInBase_ThenDelete()
             {
-                var newDir = Path.Combine(WorkingDir, "Test1");
+                var dirToNotDelete = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToNotDelete")).Build();
 
-                DirectoryHelper.EmptyIfExists(newDir);
+                var dirToDelete = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToDelete")).Build();
 
-                DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(newDir, "DirTest1")).Build();
-                DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(newDir, "DirTest2")).Build();
+                var result = _sut.DeleteDirectoriesWithName(WorkingDir, "dirToDelete");
 
-                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(newDir, "Test1.txt")).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(newDir, "Test2.txt")).Build();
+                Assert.That(result, Is.EqualTo(1));
+                AssertDir.NotExists(dirToDelete);
+                AssertDir.Exists(dirToNotDelete);
+            }
 
-                _sut.DeleteDirectory(newDir);
+            [Test]
+            public void WhenCaseInsensitiveMatchInBase_ThenDelete()
+            {
+                var dirToNotDelete = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToNotDelete")).Build();
 
-                AssertDir.NotExists(newDir);
+                var dirToDelete = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "DIRtoDELETE")).Build();
+
+                var result = _sut.DeleteDirectoriesWithName(WorkingDir, "dirToDelete");
+
+                Assert.That(result, Is.EqualTo(1));
+                AssertDir.NotExists(dirToDelete);
+                AssertDir.Exists(dirToNotDelete);
+            }
+
+            [Test]
+            public void WhenMatchingDirHasFiles_ThenDelete()
+            {
+                DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToNotDelete")).Build();
+
+                var dirToDelete = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToDelete")).Build();
+
+                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(dirToDelete.FullName, "test.txt")).Build();
+
+                var result = _sut.DeleteDirectoriesWithName(WorkingDir, "dirToDelete");
+
+                Assert.That(result, Is.EqualTo(1));
+                AssertDir.NotExists(dirToDelete);
+            }
+
+            [Test]
+            public void WhenMatchesInSubDir_ThenDelete()
+            {
+                var dirToNotDelete = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToNotDelete")).Build();
+                var dirToDelete1 = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToDelete")).Build();
+
+                var dirToDelete2 = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(dirToNotDelete.FullName, "dirToDelete")).Build();
+
+                var result = _sut.DeleteDirectoriesWithName(WorkingDir, "dirToDelete");
+
+                Assert.That(result, Is.EqualTo(2));
+                AssertDir.NotExists(dirToDelete1);
+                AssertDir.NotExists(dirToDelete2);
             }
         }
     }
