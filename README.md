@@ -1,3 +1,5 @@
+[![NuGet Package](https://img.shields.io/nuget/v/ByteDev.Io.svg)](https://www.nuget.org/packages/ByteDev.Io)
+
 # ByteDev.Io
 
 Set of IO related .NET utility classes.
