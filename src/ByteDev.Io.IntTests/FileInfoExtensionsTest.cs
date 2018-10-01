@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
 using ByteDev.Testing.Nunit;
 using ByteDev.Testing.TestBuilders.FileSystem;
@@ -12,6 +13,86 @@ namespace ByteDev.Io.IntTests
         private void SetupWorkingDir(string methodName)
         {
             SetWorkingDir(MethodBase.GetCurrentMethod().DeclaringType, methodName);
+        }
+
+        [TestFixture]
+        public class HasExtension : FileInfoExtensionsTest
+        {
+            [SetUp]
+            public void Setup()
+            {
+                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
+                EmptyWorkingDir();
+            }
+
+            [Test]
+            public void WhenFileHasExtension_ThenReturnTrue()
+            {
+                var sut = new FileInfo(Path.Combine(WorkingDir, "Test.txt"));
+
+                var result = sut.HasExtension();
+
+                Assert.That(result, Is.True);
+            }
+
+            [Test]
+            public void WhenFileHasNoExtension_ThenReturnFalse()
+            {
+                var sut = new FileInfo(Path.Combine(WorkingDir, "Test"));
+
+                var result = sut.HasExtension();
+
+                Assert.That(result, Is.False);
+            }
+        }
+
+        [TestFixture]
+        public class AddExtension : FileInfoExtensionsTest
+        {
+            [SetUp]
+            public void Setup()
+            {
+                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
+                EmptyWorkingDir();
+            }
+
+            [Test]
+            public void WhenFileDoesNotExist_ThenThrowException()
+            {
+                var sut = new FileInfo(Path.Combine(WorkingDir, "DoesntExist"));
+
+                Assert.Throws<FileNotFoundException>(() => sut.AddExtension(".log"));
+            }
+            
+            [Test]
+            public void WhenFileHasNoExtension_ThenAddExtension()
+            {
+                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test")).Build();
+
+                sut.AddExtension(".log");
+
+                AssertFile.Exists(Path.Combine(WorkingDir, "Test.log"));
+                AssertFile.NotExists(Path.Combine(WorkingDir, "Test"));
+            }
+
+            [Test]
+            public void WhenFileAlreadyHasExtension_ThenThrowException()
+            {
+                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test.txt")).Build();
+
+                Assert.Throws<InvalidOperationException>(() => sut.AddExtension(".log"));
+            }
+
+            [Test]
+            public void WhenExtensionHasNoDotPrefix_ThenAddWithDotPrefix()
+            {
+                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test")).Build();
+
+                sut.AddExtension("log");
+
+                AssertFile.Exists(Path.Combine(WorkingDir, "Test.log"));
+                AssertFile.NotExists(Path.Combine(WorkingDir, "Test"));
+            }
         }
 
         [TestFixture]
@@ -57,6 +138,14 @@ namespace ByteDev.Io.IntTests
             }
 
             [Test]
+            public void WhenFileDoesNotExist_ThenThrowException()
+            {
+                var sut = new FileInfo(Path.Combine(WorkingDir, "DoesntExist.txt"));
+
+                Assert.Throws<FileNotFoundException>(() => sut.RenameExtension(".log"));
+            }
+
+            [Test]
             public void WhenNewExtensionIsEmpty_ThenRemoveExtension()
             {
                 var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test.txt")).Build();
@@ -88,7 +177,7 @@ namespace ByteDev.Io.IntTests
             }
 
             [Test]
-            public void WhenNewExtensionIsDifferent_AndFileExists_ThenThrowException()
+            public void WhenNewExtensionIsDifferent_AndNewFileExists_ThenThrowException()
             {
                 FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test.log")).Build();
 
@@ -112,11 +201,14 @@ namespace ByteDev.Io.IntTests
             }
 
             [Test]
-            public void WhenFileDoesNotExist_ThenThrowException()
+            public void WhenExistingFileHasNoExtension_ThenAddFileExtension()
             {
-                var sut = new FileInfo(Path.Combine(WorkingDir, "DoesntExist.txt"));
+                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test")).Build();
 
-                Assert.Throws<FileNotFoundException>(() => sut.RenameExtension(".log"));
+                sut.RenameExtension(".log");
+                
+                AssertFile.Exists(Path.Combine(WorkingDir, "Test.log"));
+                AssertFile.NotExists(Path.Combine(WorkingDir, "Test"));
             }
         }
 

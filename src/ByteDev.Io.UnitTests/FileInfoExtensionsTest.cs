@@ -31,5 +31,31 @@ namespace ByteDev.Io.UnitTests
                 Assert.Throws<ArgumentNullException>(() => new FileInfo(@"C:\").RenameExtension(null));
             }
         }
+
+        [TestFixture]
+        public class AddExtension : FileInfoExtensionsTest
+        {
+            [Test]
+            public void WhenIsNull_ThenThrowException()
+            {
+                Assert.Throws<ArgumentNullException>(() => FileInfoExtensions.AddExtension(null, ".txt"));
+            }
+
+            [Test]
+            public void WhenExtensionIsNull_ThenThrowException()
+            {
+                Assert.Throws<ArgumentNullException>(() => new FileInfo(@"C:\").AddExtension(null));
+            }
+        }
+
+        [TestFixture]
+        public class HasExtension : FileInfoExtensionsTest
+        {
+            [Test]
+            public void WhenIsNull_ThenThrowException()
+            {
+                Assert.Throws<ArgumentNullException>(() => FileInfoExtensions.HasExtension(null));
+            }
+        }
     }
 }

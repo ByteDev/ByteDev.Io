@@ -29,6 +29,55 @@ namespace ByteDev.Io
             return new FileInfo(path);
         }
 
+        public static void RenameExtension(this FileInfo source, string newExtension)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            if (newExtension == null)
+                throw new ArgumentNullException(nameof(newExtension));
+
+            var newPath = Path.Combine(source.DirectoryName, Path.GetFileNameWithoutExtension(source.FullName) + AddExtensionDotPrefix(newExtension));
+
+            source.MoveTo(newPath);
+        }
+
+        public static void RemoveExtension(this FileInfo source)
+        {
+            RenameExtension(source, string.Empty);
+        }
+
+        public static void AddExtension(this FileInfo source, string extension)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            if (extension == null)
+                throw new ArgumentNullException(nameof(extension));
+
+            if (source.HasExtension())
+                throw new InvalidOperationException("File already has a file name extension.");
+
+            source.MoveTo(source.FullName + AddExtensionDotPrefix(extension));
+        }
+
+        public static bool HasExtension(this FileInfo source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return !string.IsNullOrEmpty(Path.GetExtension(source.FullName));
+        }
+
+        private static string AddExtensionDotPrefix(string extension)
+        {
+            if (!string.IsNullOrEmpty(extension) && !extension.StartsWith("."))
+            {
+                return "." + extension;
+            }
+            return extension;
+        }
+
         private static string GetNextFileNameWithNumber(string fileNameNoExten)
         {
             const string pattern = @" \([\d]+\)$";
@@ -45,27 +94,6 @@ namespace ByteDev.Io
             var newName = Regex.Replace(fileNameNoExten, pattern, string.Empty);
 
             return $"{newName} ({newNumber})";
-        }
-
-        public static void RenameExtension(this FileInfo source, string newExtension)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            if (newExtension == null)
-                throw new ArgumentNullException(nameof(newExtension));
-
-            if (newExtension != string.Empty && newExtension.Substring(0, 1) != ".")
-                newExtension = "." + newExtension;
-
-            var newPath = Path.Combine(source.DirectoryName, Path.GetFileNameWithoutExtension(source.FullName) + newExtension);
-
-            source.MoveTo(newPath);
-        }
-
-        public static void RemoveExtension(this FileInfo source)
-        {
-            RenameExtension(source, string.Empty);
         }
     }
 }
