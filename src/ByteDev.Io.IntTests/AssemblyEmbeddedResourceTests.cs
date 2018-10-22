@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Reflection;
 using ByteDev.Testing.Nunit;
+using ByteDev.Testing.TestBuilders.FileSystem;
 using NUnit.Framework;
 
 namespace ByteDev.Io.IntTests
@@ -9,6 +10,8 @@ namespace ByteDev.Io.IntTests
     public class AssemblyEmbeddedResourceTests : IoTestBase
     {
         private const string ExistingEmbeddedFile = "EmbeddedResource1.txt";
+        private const string ExistingContentFile = "ContentFile1.txt";
+        private const string NotExistingEmbeddedFile = "SomeFileNotExist.txt";
 
         private void SetupWorkingDir(string methodName)
         {
@@ -33,13 +36,13 @@ namespace ByteDev.Io.IntTests
 
                 Assert.That(sut.Assembly, Is.EqualTo(typeof(AssemblyEmbeddedResourceTests).Assembly));
                 Assert.That(sut.FileName, Is.EqualTo(ExistingEmbeddedFile));
-                Assert.That(sut.ResourceName, Is.EqualTo("ByteDev.Io.IntTests.AssemblyTestFiles.EmbeddedResource1.txt"));
+                Assert.That(sut.ResourceName, Is.EqualTo($"ByteDev.Io.IntTests.AssemblyTestFiles.{ExistingEmbeddedFile}"));
             }
 
             [Test]
-            public void WhenAssemblyDoesNotHaveTheEmbeddedFile_ThenThrowException()
+            public void WhenEmbeddedFileDoesNotExist_ThenThrowException()
             {
-                Assert.Throws<FileNotFoundException>(() => AssemblyEmbeddedResource.CreateFromAssemblyContaining<AssemblyEmbeddedResourceTests>("SomeFileNotExist.txt"));
+                Assert.Throws<FileNotFoundException>(() => AssemblyEmbeddedResource.CreateFromAssemblyContaining<AssemblyEmbeddedResourceTests>(NotExistingEmbeddedFile));
             }
 
             [Test]
@@ -51,7 +54,7 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenFileIsContentFile_ThenThrowException()
             {
-                Assert.Throws<FileNotFoundException>(() => AssemblyEmbeddedResource.CreateFromAssemblyContaining<AssemblyEmbeddedResource>("ContentFile1.txt"));
+                Assert.Throws<FileNotFoundException>(() => AssemblyEmbeddedResource.CreateFromAssemblyContaining<AssemblyEmbeddedResource>(ExistingContentFile));
             }
         }
 
@@ -61,11 +64,23 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenNoFileExistsOnDisk_ThenSaveToDisk()
             {
-                var sut = AssemblyEmbeddedResource.CreateFromAssemblyContaining<AssemblyEmbeddedResourceTests>("EmbeddedResource1.txt");
+                var sut = AssemblyEmbeddedResource.CreateFromAssemblyContaining<AssemblyEmbeddedResourceTests>(ExistingEmbeddedFile);
 
                 var fileInfo = sut.Save(Path.Combine(WorkingDir, sut.FileName));
 
                 AssertFile.Exists(fileInfo);
+            }
+
+            [Test]
+            public void WhenFileAlreadyExists_ThenThrowException()
+            {
+                var saveFilePath = Path.Combine(WorkingDir, ExistingEmbeddedFile);
+
+                FileTestBuilder.InFileSystem.WithFilePath(saveFilePath).Build();
+
+                var sut = AssemblyEmbeddedResource.CreateFromAssemblyContaining<AssemblyEmbeddedResourceTests>(ExistingEmbeddedFile);
+
+                Assert.Throws<IOException>(() => sut.Save(saveFilePath));
             }
         }
     }

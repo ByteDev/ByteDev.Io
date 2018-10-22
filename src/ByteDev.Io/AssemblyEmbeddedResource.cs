@@ -32,13 +32,17 @@ namespace ByteDev.Io
 
         public FileInfo Save(string filePath)
         {
-            using (var writer = new FileStream(filePath, FileMode.CreateNew))
+            using (var fileStream = new FileStream(filePath, FileMode.CreateNew))
             {
-                using (var databaseStream = Assembly.GetManifestResourceStream(ResourceName))
+                using (var stream = Assembly.GetManifestResourceStream(ResourceName))
                 {
-                    if (databaseStream == null) return new FileInfo(filePath);
-                    databaseStream.Seek(0, SeekOrigin.Begin);
-                    databaseStream.CopyTo(writer);
+                    if (stream == null)
+                    {
+                        return new FileInfo(filePath);
+                    }
+
+                    stream.Seek(0, SeekOrigin.Begin);
+                    stream.CopyTo(fileStream);
                 }
             }
 

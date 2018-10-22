@@ -1,5 +1,6 @@
 #addin nuget:?package=Cake.Incubator&version=3.0.0
 #tool "nuget:?package=NUnit.Runners&version=2.6.4"
+#load "ByteDev.Io.cake"
 
 var nugetSources = new[] {"https://api.nuget.org/v3/index.json"};
 
@@ -108,32 +109,3 @@ Task("Default")
     .IsDependentOn("CreateNuGetPackages");
 
 RunTarget(target);
-
-// -----------------------
-
-string GetConfiguration()
-{
-	if(HasArgument("Configuration"))
-	{
-		return Argument<string>("Configuration");
-	}
-
-	return EnvironmentVariable("Configuration") != null ? 
-		EnvironmentVariable("Configuration") : 
-		"Release";
-}
-
-string GetNuGetVersion()
-{
-	var settings = new GitVersionSettings
-	{
-		OutputType = GitVersionOutput.Json
-	};
-
-	GitVersion versionInfo = GitVersion(settings);
-
-	Information("GitVersion:");
-	Information(versionInfo.Dump<GitVersion>());
-
-	return versionInfo.NuGetVersion;
-}
