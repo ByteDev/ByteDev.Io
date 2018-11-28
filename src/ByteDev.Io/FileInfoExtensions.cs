@@ -17,13 +17,12 @@ namespace ByteDev.Io
 
             var path = source.FullName;
             var dir = Path.GetDirectoryName(path);
-            var fileExt = Path.GetExtension(path);
 
             while (File.Exists(path))
             {
-                var fileNameNoExten = Path.GetFileNameWithoutExtension(path);
+                var fileName = Path.GetFileName(path);
 
-                path = Path.Combine(dir, GetNextFileNameWithNumber(fileNameNoExten) + fileExt);
+                path = Path.Combine(dir, GetNextFileNameWithNumber(fileName));
             }
 
             return new FileInfo(path);
@@ -78,8 +77,11 @@ namespace ByteDev.Io
             return extension;
         }
 
-        private static string GetNextFileNameWithNumber(string fileNameNoExten)
+        private static string GetNextFileNameWithNumber(string fileName)
         {
+            var fileExt = Path.GetExtension(fileName);
+            var fileNameNoExten = Path.GetFileNameWithoutExtension(fileName);
+
             const string pattern = @" \([\d]+\)$";
 
             var match = Regex.Match(fileNameNoExten, pattern);
@@ -93,7 +95,7 @@ namespace ByteDev.Io
 
             var newName = Regex.Replace(fileNameNoExten, pattern, string.Empty);
 
-            return $"{newName} ({newNumber})";
+            return $"{newName} ({newNumber})" + fileExt;
         }
     }
 }
