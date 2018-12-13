@@ -5,11 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="AssemblyTestFiles\EmbeddedResource1.txt" />
+    <None Remove="TestFiles\EmbeddedResource1.txt" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="AssemblyTestFiles\EmbeddedResource1.txt" />
+    <EmbeddedResource Include="TestFiles\EmbeddedResource1.txt" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,7 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="AssemblyTestFiles\ContentFile1.txt">
+    <None Update="TestFiles\ContentFile1.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
