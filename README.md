@@ -5,15 +5,23 @@
 
 Set of IO related .NET utility classes.
 
-## Code
+## Installation
 
 ByteDev.Io has been written as a .NET Standard 2.0 library, so you can consume it from a .NET Core or .NET Framework 4.6.1 (or greater) application.
 
-Unit tests and integration tests are also provided in the solution.
+ByteDev.Io is hosted as a package on nuget.org.  To install from the Package Manager Console in Visual Studio run:
+
+`Install-Package ByteDev.Io`
+
+Further details can be found on the [nuget page](https://www.nuget.org/packages/ByteDev.Io/).
+
+## Code
+
+The repo can be cloned from git bash:
+
+`git clone https://github.com/ByteDev/ByteDev.Io`
 
 ## Usage
-
-Add a reference to ByteDev.Io.  A nuget reference can be found [here](https://www.nuget.org/packages/ByteDev.Io/).
 
 Main public classes:
 
