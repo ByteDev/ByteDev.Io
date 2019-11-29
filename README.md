@@ -27,6 +27,12 @@ Main public classes:
 
 - FileSytem: provides a small set of methods for working with files and directories. Including moving, copying, swapping, etc.
 - FileSize: represents a binary file size.
-- FileInfoExtensions: provides FileInfo extension methods.
-- DirectoryInfoExtensions: provides DirectoryInfo extension methods.
+- FileComparer: provides functionality to compare two files.
+- AssemblyEbeddedResource: provides functionality for easily retrieving embedded resources from assemblies.
+- IsolatedStorageIo: provides isolated storage operations.
 
+Extension method classes:
+- FileInfoExtensions
+- DirectoryInfoExtensions
+- StreamExtensions
+- AssemblyExtensions
