@@ -6,12 +6,12 @@ namespace ByteDev.Io
     public class AssemblyEmbeddedResource
     {
         public Assembly Assembly { get; }
+
         public string ResourceName { get; }
+
         public string FileName { get; }
 
-        private AssemblyEmbeddedResource(Assembly assembly,
-            string resourceName,
-            string fileName)
+        private AssemblyEmbeddedResource(Assembly assembly, string resourceName, string fileName)
         {
             Assembly = assembly;
             ResourceName = resourceName;

@@ -1,5 +1,8 @@
 ﻿namespace ByteDev.Io
 {
+    /// <summary>
+    /// File operation behaviour type.
+    /// </summary>
     public enum FileOperationBehaviourType
     {
         /// <summary>
