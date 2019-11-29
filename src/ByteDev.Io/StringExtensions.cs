@@ -2,13 +2,16 @@
 
 namespace ByteDev.Io
 {
+    /// <summary>
+    /// Extension methods for <see cref="T:System.String" />.
+    /// </summary>
     public static class StringExtensions
     {
         /// <summary>
-        /// Appends a back slash to the path if one doesnt exist
+        /// Appends a back slash to the path if one doesn't exist.
         /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
+        /// <param name="path">Path to append back slash to.</param>
+        /// <returns><paramref name="path" /> with appended back slash.</returns>
         public static string AppendBackSlash(this string path)
         {
             if (string.IsNullOrEmpty(path))
