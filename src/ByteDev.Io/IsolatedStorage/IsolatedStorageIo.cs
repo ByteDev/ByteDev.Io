@@ -4,8 +4,16 @@ using System.Xml;
 
 namespace ByteDev.Io.IsolatedStorage
 {
+    /// <summary>
+    /// Represents wrapper for isolated storage operations.
+    /// </summary>
     public class IsolatedStorageIo
     {
+        /// <summary>
+        /// Indicates whether the isolated storage file exists.
+        /// </summary>
+        /// <param name="fileName">File name.</param>
+        /// <returns>True if the file exists; otherwise returns false.</returns>
         public bool Exists(IsolatedStorageFileName fileName)
         {
             using (var file = GetStorageFile())
@@ -14,6 +22,10 @@ namespace ByteDev.Io.IsolatedStorage
             }
         }
 
+        /// <summary>
+        /// Deletes a file from isolated storage.
+        /// </summary>
+        /// <param name="fileName">File name of file to delete.</param>
         public void Delete(IsolatedStorageFileName fileName)
         {
             using (var file = GetStorageFile())
@@ -22,11 +34,21 @@ namespace ByteDev.Io.IsolatedStorage
             }
         }
 
+        /// <summary>
+        /// Writes XML to a isolated storage file.
+        /// </summary>
+        /// <param name="fileName">File name of file to write to.</param>
+        /// <param name="xmlDocument">XML document to write to isolated storage.</param>
         public void Write(IsolatedStorageFileName fileName, XmlDocument xmlDocument)
         {
             Write(fileName, xmlDocument.OuterXml);
         }
 
+        /// <summary>
+        /// Writes string to a isolated storage file.
+        /// </summary>
+        /// <param name="fileName">File name of file to write to.</param>
+        /// <param name="content">String to write to the file.</param>
         public void Write(IsolatedStorageFileName fileName, string content)
         {
             IsolatedStorageFile file = GetStorageFile();
@@ -40,6 +62,11 @@ namespace ByteDev.Io.IsolatedStorage
             }
         }
 
+        /// <summary>
+        /// Read the contents of a isolated storage file as XML.
+        /// </summary>
+        /// <param name="fileName">File name of file to read from.</param>
+        /// <returns>XML from the file.</returns>
         public XmlDocument ReadAsXml(IsolatedStorageFileName fileName)
         {
             var xmlDoc = new XmlDocument();
@@ -47,6 +74,11 @@ namespace ByteDev.Io.IsolatedStorage
             return xmlDoc;
         }
 
+        /// <summary>
+        /// Read the contents of a isolated storage file.
+        /// </summary>
+        /// <param name="fileName">File name of file to read from.</param>
+        /// <returns>Content from the file.</returns>
         public string Read(IsolatedStorageFileName fileName)
         {
             IsolatedStorageFile file = GetStorageFile();

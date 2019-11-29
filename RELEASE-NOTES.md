@@ -1,9 +1,9 @@
 # Release Notes
 
-## 3.2.2 - ?
+## 4.0.0 - ?
 
 Breaking changes:
-* (None)
+* IsolatedStorageFileName.FileType is now FileExtension.
 
 New features:
 * (None)
