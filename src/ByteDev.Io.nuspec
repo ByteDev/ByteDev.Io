@@ -10,7 +10,7 @@
     <description>Set of IO related .NET utility classes.</description>
     <copyright>Copyright 2019</copyright>
     <tags>io file directory folder</tags>
-    <icon>images\icon.png</icon>
+    <iconUrl>https://raw.githubusercontent.com/bytedev/ByteDev.Io/master/images/icon.png</iconUrl>
   </metadata>
   <files>
     <file src="ByteDev.Io\bin\Release\netstandard2.0\ByteDev.Io.dll" target="lib\netstandard2.0" />
