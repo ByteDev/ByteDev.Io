@@ -1,25 +1,27 @@
 # Release Notes
 
-## 4.0.1 - 12 April 2020
+## 5.0.0 - 12 April 2020
 
 Breaking changes:
-- (None)
+- IsolatedStorageIo now takes IsolatedStorageFileType in the constructor.
+- IsolatedStorageIo.ReadAsXml is now ReadAsXmlDoc.
 
 New features:
-- (None)
+- Added IIsolatedStorageIo.
+- Added IsolatedStorageIo.ReadAsXDoc.
 
 Bug fixes / internal changes:
-- Added .NET Standard package dependency
+- Added .NET Standard package dependency.
 
 ## 4.0.0 - 29 Nov 2019
 
 Breaking changes:
-* IsolatedStorageFileName.FileType is now FileExtension.
-* Deleted IAssemblyFileReader
+- IsolatedStorageFileName.FileType is now FileExtension.
+- Deleted IAssemblyFileReader.
 
 New features:
-* (None)
+- (None)
 
 Bug fixes / internal changes:
-* Add package icon
-* XML documentation now part of package.
+- Add package icon.
+- XML documentation now part of package.

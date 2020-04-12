@@ -13,7 +13,7 @@ namespace ByteDev.Io.IntTests.IsolatedStorage
         [SetUp]
         public void SetUp()
         {
-            _sut = new IsolatedStorageIo();
+            _sut = new IsolatedStorageIo(IsolatedStorageFileType.UserStoreForApplication);
 
             _fileName = new IsolatedStorageFileName("IsolatedStorageIoTests", new Version(1, 0), "txt");
 

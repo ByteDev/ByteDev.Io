@@ -21,6 +21,12 @@ The repo can be cloned from git bash:
 
 `git clone https://github.com/ByteDev/ByteDev.Io`
 
+## Release Notes
+
+Releases follow semantic versioning.
+
+Full details of the release notes can be viewed on [GitHub](https://github.com/ByteDev/ByteDev.Io/blob/master/docs/RELEASE-NOTES.md).
+
 ## Usage
 
 Main public classes:
