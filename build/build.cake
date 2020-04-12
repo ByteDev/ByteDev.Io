@@ -1,19 +1,23 @@
-#addin nuget:?package=Cake.Incubator&version=3.0.0
-#tool "nuget:?package=NUnit.Runners&version=2.6.4"
-#tool "nuget:?package=GitVersion.CommandLine"
+#addin "nuget:?package=Cake.Incubator&version=5.1.0"
+#tool "nuget:?package=NUnit.ConsoleRunner&version=3.11.1"
+#tool "nuget:?package=GitVersion.CommandLine&version=5.2.4"
 #load "ByteDev.Utilities.cake"
+
+var solutionName = "ByteDev.Io";
+var projName = "ByteDev.Io";
+
+var solutionFilePath = "../" + solutionName + ".sln";
+var nuspecFilePath = projName + ".nuspec";
 
 var nugetSources = new[] {"https://api.nuget.org/v3/index.json"};
 
 var target = Argument("target", "Default");
 
-var solutionFilePath = "../src/ByteDev.Io.sln";
-
 var artifactsDirectory = Directory("../artifacts");
 var nugetDirectory = artifactsDirectory + Directory("NuGet");
-	
+
 var configuration = GetBuildConfiguration();
-	
+
 Information("Configurtion: " + configuration);
 
 
@@ -75,7 +79,7 @@ Task("IntegrationTests")
 
 		DotNetCoreIntTests(settings);
 	});
-	
+
 Task("CreateNuGetPackages")
     .IsDependentOn("IntegrationTests")
     .Does(() =>
@@ -88,7 +92,7 @@ Task("CreateNuGetPackages")
 			OutputDirectory = nugetDirectory
 		};
                 
-		NuGetPack("../src/ByteDev.Io.nuspec", nugetSettings);
+		NuGetPack(nuspecFilePath, nugetSettings);
     });
 
    
