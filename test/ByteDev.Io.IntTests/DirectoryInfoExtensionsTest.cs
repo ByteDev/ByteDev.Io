@@ -243,13 +243,29 @@ namespace ByteDev.Io.IntTests
                 DirectoryTestBuilder.InFileSystem.WithPath(GetAbsolutePathFor("Dir1")).Build();
                 FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePathFor(@"Dir1\Dir1GetSizeTest1.txt")).WithSize(20).Build();
 
+                var sut = Createsut();
+
+                var result = sut.GetSize();
+
+                Assert.That(result, Is.EqualTo(15));
+            }
+
+            [Test]
+            public void WhenDirectoryHasFilesAndSubDirectoriesWithFiles_AndInclude_ThenReturnSumOfAllFileSizes()
+            {
+                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePathFor("GetSizeTest10.txt")).WithSize(5).Build();
+                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePathFor("GetSizeTest11.txt")).WithSize(10).Build();
+
+                DirectoryTestBuilder.InFileSystem.WithPath(GetAbsolutePathFor("Dir1")).Build();
+                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePathFor(@"Dir1\Dir1GetSizeTest1.txt")).WithSize(20).Build();
+
                 DirectoryTestBuilder.InFileSystem.WithPath(GetAbsolutePathFor("Dir2")).Build();
                 FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePathFor(@"Dir2\Dir2GetSizeTest1.txt")).WithSize(30).Build();
                 FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePathFor(@"Dir2\Dir2GetSizeTest2.txt")).WithSize(35).Build();
 
                 var sut = Createsut();
 
-                var result = sut.GetSize();
+                var result = sut.GetSize(true);
 
                 Assert.That(result, Is.EqualTo(100));
             }
@@ -287,6 +303,51 @@ namespace ByteDev.Io.IntTests
                 _sut.CreateDirectory();
 
                 AssertDir.Exists(path);
+            }
+        }
+
+        [TestFixture]
+        public class IsEmpty : DirectoryInfoExtensionsTest
+        {
+            [SetUp]
+            public void Setup()
+            {
+                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
+                EmptyWorkingDir();
+            }
+
+            [Test]
+            public void WhenIsEmpty_ThenReturnTrue()
+            {
+                var sut = new DirectoryInfo(WorkingDir);
+
+                var result = sut.IsEmpty();
+
+                Assert.That(result, Is.True);
+            }
+
+            [Test]
+            public void WhenHasFile_ThenReturnFalse()
+            {
+                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test1.txt")).Build();
+
+                var sut = new DirectoryInfo(WorkingDir);
+
+                var result = sut.IsEmpty();
+
+                Assert.That(result, Is.False);
+            }
+
+            [Test]
+            public void WhenHasDirectory_ThenReturnFalse()
+            {
+                DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "NewFolder")).Build();
+
+                var sut = new DirectoryInfo(WorkingDir);
+
+                var result = sut.IsEmpty();
+
+                Assert.That(result, Is.False);
             }
         }
     }

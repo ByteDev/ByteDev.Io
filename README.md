@@ -29,16 +29,75 @@ Full details of the release notes can be viewed on [GitHub](https://github.com/B
 
 ## Usage
 
-Main public classes:
+### Main public classes
 
-- FileSytem: provides a small set of methods for working with files and directories. Including moving, copying, swapping, etc.
-- FileSize: represents a binary file size.
-- FileComparer: provides functionality to compare two files.
-- AssemblyEbeddedResource: provides functionality for easily retrieving embedded resources from assemblies.
-- IsolatedStorageIo: provides isolated storage operations.
+To use these main public classes simply reference `ByteDev.Io`.
 
-Extension method classes:
-- FileInfoExtensions
-- DirectoryInfoExtensions
-- StreamExtensions
-- AssemblyExtensions
+**FileSytem**: Provides a small set of methods for working with files and directories.
+
+Methods:
+- IsDirectory
+- FirstExists
+- MoveFile
+- CopyFile
+- SwapFileNames
+- DeleteDirectoriesWithName
+
+**FileSize:** Represents a binary file size.
+
+**FileComparer**: Provides functionality to compare two files.
+
+Methods:
+- IsSourceBigger
+- IsSourceBiggerOrEqual
+- IsSourceModifiedMoreRecently
+
+**AssemblyEmbeddedResource:** Provides functionality for easily retrieving embedded resources from assemblies.
+
+Methods:
+- CreateFromAssemblyContaining
+- CreateFromAssembly
+- Save
+
+**IsolatedStorageIo:** Provides isolated storage operations.
+
+Methods:
+- Exists
+- Delete
+- Write
+- Read
+- ReadAsXmlDoc
+- ReadAsXDoc
+
+---
+
+### Extension method classes
+
+To use the extension methods simply reference `ByteDev.Io`.
+
+AssemblyExtensions
+- GetManifestResourceName
+
+DirectoryInfoExtensions
+- CreateDirectory
+- DeleteDirectories
+- DeleteFiles
+- Empty
+- GetFilesByExtensions
+- GetAudioFiles
+- GetImageFiles
+- GetVideoFiles
+- GetSize
+- IsEmpty
+
+FileInfoExtensions
+- AddExtension
+- GetNextAvailableFileName
+- RenameExtension
+- RemoveExtension
+- HasExtension
+- IsBinary
+
+StreamExtensions
+- ReadAsString
+- ReadAsMemoryStream

@@ -1,5 +1,17 @@
 # Release Notes
 
+## 6.0.0 - ?? May 2020
+
+Breaking changes:
+- Remove StringExtensions.AppendBackSlash
+- DirectoryInfoExtensions.GetSize now take optional `includeSubDirectories` param (default false)
+
+New features:
+- Added FileInfoExtensions.IsBinary
+
+Bug fixes / internal changes:
+- (None)
+
 ## 5.0.0 - 12 April 2020
 
 Breaking changes:

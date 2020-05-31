@@ -90,12 +90,46 @@ namespace ByteDev.Io
         /// </summary>
         /// <param name="source">The file to check.</param>
         /// <returns>True if the file has an extension; otherwise returns false.</returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
         public static bool HasExtension(this FileInfo source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
             return !string.IsNullOrEmpty(Path.GetExtension(source.FullName));
+        }
+
+        /// <summary>
+        /// Indicates whether the file is (probably) binary or not. Implementation checks the first
+        /// 8000 characters for the NUL character.
+        /// </summary>
+        /// <param name="source">The file to check.</param>
+        /// <returns>True if the file is (probably) binary; otherwise returns false.</returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
+        public static bool IsBinary(this FileInfo source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            const int charsToCheck = 8000;
+            const char nulChar = '\0';
+
+            using (var streamReader = new StreamReader(source.FullName))
+            {
+                for (var i = 0; i < charsToCheck; i++)
+                {
+                    if (streamReader.EndOfStream)
+                        return false;
+
+                    if ((char) streamReader.Read() == nulChar)
+                    {
+                        Console.WriteLine($"i: {i}");
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         private static string AddExtensionDotPrefix(string extension)

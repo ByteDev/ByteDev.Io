@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace ByteDev.Io.IntTests
 {
     [TestFixture]
-    public class FileInfoExtensionsTest : IoTestBase
+    public class FileInfoExtensionsTests : IoTestBase
     {
         private void SetupWorkingDir(string methodName)
         {
@@ -16,7 +16,7 @@ namespace ByteDev.Io.IntTests
         }
 
         [TestFixture]
-        public class HasExtension : FileInfoExtensionsTest
+        public class HasExtension : FileInfoExtensionsTests
         {
             [SetUp]
             public void Setup()
@@ -47,7 +47,7 @@ namespace ByteDev.Io.IntTests
         }
 
         [TestFixture]
-        public class AddExtension : FileInfoExtensionsTest
+        public class AddExtension : FileInfoExtensionsTests
         {
             [SetUp]
             public void Setup()
@@ -96,7 +96,7 @@ namespace ByteDev.Io.IntTests
         }
 
         [TestFixture]
-        public class RemoveExtension : FileInfoExtensionsTest
+        public class RemoveExtension : FileInfoExtensionsTests
         {
             [SetUp]
             public void Setup()
@@ -128,7 +128,7 @@ namespace ByteDev.Io.IntTests
         }
 
         [TestFixture]
-        public class RenameExtension : FileInfoExtensionsTest
+        public class RenameExtension : FileInfoExtensionsTests
         {
             [SetUp]
             public void Setup()
@@ -213,7 +213,7 @@ namespace ByteDev.Io.IntTests
         }
 
         [TestFixture]
-        public class GetNextAvailableFileName : FileInfoExtensionsTest
+        public class GetNextAvailableFileName : FileInfoExtensionsTests
         {
             [SetUp]
             public void Setup()
@@ -289,6 +289,64 @@ namespace ByteDev.Io.IntTests
             private string GetExpectedPath(string fileName)
             {
                 return Path.Combine(WorkingDir, fileName);
+            }
+        }
+
+        [TestFixture]
+        public class IsBinary : FileInfoExtensionsTests
+        {
+            [SetUp]
+            public void Setup()
+            {
+                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
+                EmptyWorkingDir();
+            }
+
+            [Test]
+            public void WhenFileIsNotBinary_ThenReturnFalse()
+            {
+                var sut = FileTestBuilder.InFileSystem
+                    .WithFilePath(Path.Combine(WorkingDir, "Test1.txt"))
+                    .WithSize(10000)
+                    .Build();
+
+                var result = sut.IsBinary();
+
+                Assert.That(result, Is.False);
+            }
+
+            [Test]
+            public void WhenFileIsBinary_ThenReturnTrue()
+            {
+                var sut = FileTestBuilder.InFileSystem
+                    .WithFilePath(Path.Combine(WorkingDir, "Test1.bin"))
+                    .WithText("abc123\0123")
+                    .Build();
+
+                var result = sut.IsBinary();
+
+                Assert.That(result, Is.True);
+            }
+
+            [TestCase(@"C:\Windows\notepad.exe")]
+            [TestCase(@"C:\Windows\regedit.exe")]
+            [TestCase(@"C:\Windows\write.exe")]
+            [TestCase(@"C:\Windows\explorer.exe")]
+            [TestCase(@"C:\Windows\System32\Windows.UI.Xaml.dll")]
+            public void WhenRealWorldBinaryFiles_ThenReturnTrue(string file)
+            {
+                if (File.Exists(file))
+                {
+                    var sut = new FileInfo(file);
+
+                    var result = sut.IsBinary();
+
+                    Assert.That(result, Is.True);
+                }
+                else
+                {
+                    Console.WriteLine($"'{file}' does not exist.");
+                }
             }
         }
     }

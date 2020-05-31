@@ -153,21 +153,35 @@ namespace ByteDev.Io
             if (!source.Exists) 
                 source.Create();
         }
-        
+
         /// <summary>
-        /// Retrieves the total size of the directory and its subdirectories.
+        /// Retrieves the total size of the directory and optionally it's subdirectories.
         /// </summary>
         /// <param name="source">Directory to retrieve the size on.</param>
+        /// <param name="includeSubDirectories">True include all subdirectories; false does not.</param>
         /// <returns>Size of <paramref name="source" /> in bytes.</returns>
-        public static long GetSize(this DirectoryInfo source)
+        public static long GetSize(this DirectoryInfo source, bool includeSubDirectories = false)
         {
             // Go through all files adding their size
             var size = source.GetFiles().Sum(fileInfo => fileInfo.Exists ? fileInfo.Length : 0);
 
-            // Go through all subdirectories adding their size
-            size += source.GetDirectories().Sum(dirInfo => dirInfo.Exists ? dirInfo.GetSize() : 0);
+            if (includeSubDirectories)
+            {
+                // Go through all subdirectories adding their size
+                size += source.GetDirectories().Sum(dirInfo => dirInfo.Exists ? dirInfo.GetSize() : 0);
+            }
 
             return size;
+        }
+
+        /// <summary>
+        /// Indicates whether the directory is empty or not.
+        /// </summary>
+        /// <param name="source">Directory to perform the operation on.</param>
+        /// <returns>True if empty; otherwise false.</returns>
+        public static bool IsEmpty(this DirectoryInfo source)
+        {
+            return !source.EnumerateFileSystemInfos().Any();
         }
     }
 }
