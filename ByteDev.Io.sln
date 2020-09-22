@@ -5,9 +5,9 @@ VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ByteDev.Io", "src\ByteDev.Io\ByteDev.Io.csproj", "{3D21595C-C100-41F4-AF14-4BAF5016CB7B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ByteDev.Io.UnitTests", "test\ByteDev.Io.UnitTests\ByteDev.Io.UnitTests.csproj", "{5F97FB91-62E8-4614-AE60-621D02A75871}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ByteDev.Io.UnitTests", "tests\ByteDev.Io.UnitTests\ByteDev.Io.UnitTests.csproj", "{5F97FB91-62E8-4614-AE60-621D02A75871}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ByteDev.Io.IntTests", "test\ByteDev.Io.IntTests\ByteDev.Io.IntTests.csproj", "{82A967E6-41D2-44DD-BBD1-BD425B313611}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ByteDev.Io.IntTests", "tests\ByteDev.Io.IntTests\ByteDev.Io.IntTests.csproj", "{82A967E6-41D2-44DD-BBD1-BD425B313611}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{78207A9F-B975-49A2-96D4-D8C11A0D709B}"
 EndProject

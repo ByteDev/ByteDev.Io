@@ -10,7 +10,9 @@
     <description>Set of IO related .NET utility classes.</description>
     <copyright>Copyright 2019</copyright>
     <tags>io file directory folder</tags>
-    <iconUrl>https://raw.githubusercontent.com/bytedev/ByteDev.Io/master/images/icon.png</iconUrl>
+	<projectUrl>https://github.com/ByteDev/ByteDev.Io</projectUrl>
+    <icon>images\icon.png</icon>
+    <license type="file">LICENSE</license>	
     <dependencies>
       <group targetFramework=".NETStandard2.0" />
     </dependencies>
@@ -19,5 +21,6 @@
     <file src="..\src\ByteDev.Io\bin\Release\netstandard2.0\ByteDev.Io.dll" target="lib\netstandard2.0" />
     <file src="..\src\ByteDev.Io\bin\Release\netstandard2.0\ByteDev.Io.xml" target="lib\netstandard2.0" />
     <file src="..\images\icon.png" target="images\" />
+    <file src="..\LICENSE*" target="" />
   </files>
 </package>
