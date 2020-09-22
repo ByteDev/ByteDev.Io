@@ -1,6 +1,6 @@
 # Release Notes
 
-## 6.0.0 - ?? May 2020
+## 6.0.0 - ?? September 2020
 
 Breaking changes:
 - Remove StringExtensions.AppendBackSlash
@@ -8,6 +8,11 @@ Breaking changes:
 
 New features:
 - Added FileInfoExtensions.IsBinary
+- Added StreamExtensions.IsEmpty
+- Added StreamExtensions.ReadAsBytes
+- Added StreamExtensions.WriteToFile
+- Added StreamExtensions.WriteToFileAsync
+- Added StreamFactory type
 
 Bug fixes / internal changes:
 - Package related fixes

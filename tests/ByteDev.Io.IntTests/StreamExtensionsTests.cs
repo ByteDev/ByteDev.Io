@@ -1,5 +1,7 @@
 ﻿using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
+using ByteDev.Testing.NUnit;
 using ByteDev.Testing.TestBuilders.FileSystem;
 using NUnit.Framework;
 
@@ -15,7 +17,7 @@ namespace ByteDev.Io.IntTests
         }
         
         [TestFixture]
-        public class ReadAsString : StreamExtensionsTests
+        public class WriteToFile : StreamExtensionsTests
         {
             [SetUp]
             public void SetUp()
@@ -28,16 +30,69 @@ namespace ByteDev.Io.IntTests
             }
 
             [Test]
-            public void WhenFileContainsText_ThenReturnText()
+            public void WhenStreamContainsText_ThenWriteToFile()
             {
-                const string text = "test text";
-                var filePath = Path.Combine(WorkingDir, "test1.txt");
+                var filePath = Path.Combine(WorkingDir, "Stream-WriteToFile1.txt");
 
-                FileTestBuilder.InFileSystem.WithText(text).WithFilePath(filePath).Build();
+                var sut = StreamFactory.Create("ABC");
 
-                var result = File.Open(filePath, FileMode.Open).ReadAsString();
+                sut.WriteToFile(filePath);
 
-                Assert.That(result, Is.EqualTo(text));
+                AssertFile.SizeEquals(filePath, 3);
+            }
+
+            [Test]
+            public void WhenFileAlreadyExists_ThenOverWrite()
+            {
+                var filePath = Path.Combine(WorkingDir, "Stream-WriteToFile2.txt");
+
+                FileTestBuilder.InFileSystem.WithFilePath(filePath).WithText("A").Build();
+
+                var sut = StreamFactory.Create("ABC");
+
+                sut.WriteToFile(filePath);
+
+                AssertFile.SizeEquals(filePath, 3);
+            }
+        }
+
+        [TestFixture]
+        public class WriteToFileAsync : StreamExtensionsTests
+        {
+            [SetUp]
+            public void SetUp()
+            {
+                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
+
+                var dirInfo = DirectoryTestBuilder.InFileSystem.WithPath(WorkingDir).Build();
+
+                dirInfo.Empty();
+            }
+
+            [Test]
+            public async Task WhenStreamContainsText_ThenWriteToFile()
+            {
+                var filePath = Path.Combine(WorkingDir, "Stream-WriteToFile1.txt");
+
+                var sut = StreamFactory.Create("ABC");
+
+                await sut.WriteToFileAsync(filePath);
+
+                AssertFile.SizeEquals(filePath, 3);
+            }
+
+            [Test]
+            public async Task WhenFileAlreadyExists_ThenOverWrite()
+            {
+                var filePath = Path.Combine(WorkingDir, "Stream-WriteToFile2.txt");
+
+                FileTestBuilder.InFileSystem.WithFilePath(filePath).WithText("A").Build();
+
+                var sut = StreamFactory.Create("ABC");
+
+                await sut.WriteToFileAsync(filePath);
+
+                AssertFile.SizeEquals(filePath, 3);
             }
         }
     }

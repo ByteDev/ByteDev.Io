@@ -69,6 +69,8 @@ Methods:
 - ReadAsXmlDoc
 - ReadAsXDoc
 
+**StreamFactory**: Provides simple functionality to create memory streams.
+
 ---
 
 ### Extension method classes
@@ -99,5 +101,9 @@ FileInfoExtensions
 - IsBinary
 
 StreamExtensions
+- IsEmpty
+- ReadAsBytes
 - ReadAsString
 - ReadAsMemoryStream
+- WriteToFile
+- WriteToFileAsync

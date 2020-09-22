@@ -11,6 +11,20 @@ namespace ByteDev.Io
     public static class StreamExtensions
     {
         /// <summary>
+        /// Determines if the stream is empty.
+        /// </summary>
+        /// <param name="source">Stream to check.</param>
+        /// <returns>True if the stream is empty; otherwise false.</returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
+        public static bool IsEmpty(this Stream source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Length == 0;
+        }
+
+        /// <summary>
         /// Read the stream as a UTF8 encoded string.
         /// </summary>
         /// <param name="source">Stream to read.</param>
@@ -33,12 +47,43 @@ namespace ByteDev.Io
         /// <exception cref="T:System.ArgumentNullException"><paramref name="encoding" /> is null.</exception>
         public static string ReadAsString(this Stream source, Encoding encoding, bool tryStartFromBeginning = true)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
             if (encoding == null)
                 throw new ArgumentNullException(nameof(encoding));
 
-            using (MemoryStream ms = ReadAsMemoryStream(source, tryStartFromBeginning))
+            if (tryStartFromBeginning && source.CanSeek)
+                source.Position = 0;
+
+            using (var sr = new StreamReader(source, encoding))
             {
-                return encoding.GetString(ms.ToArray());
+                return sr.ReadToEnd();
+            }
+        }
+
+        /// <summary>
+        /// Read the stream as a byte array.
+        /// </summary>
+        /// <param name="source">Stream to read.</param>
+        /// <param name="tryStartFromBeginning">Indicates whether to read from the beginning of the stream if possible.</param>
+        /// <returns>Array of bytes from the stream.</returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
+        public static byte[] ReadAsBytes(this Stream source, bool tryStartFromBeginning = true)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            if (tryStartFromBeginning && source.CanSeek)
+                source.Position = 0;
+
+            if (source is MemoryStream memoryStream)
+                return memoryStream.ToArray();
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                source.CopyTo(ms);
+                return ms.ToArray();
             }
         }
 
@@ -57,28 +102,31 @@ namespace ByteDev.Io
             if (tryStartFromBeginning && source.CanSeek)
                 source.Position = 0;
 
-            var memoryStream = new MemoryStream();
-            source.CopyTo(memoryStream);
-            memoryStream.Position = 0;
-            return memoryStream;
+            var memStream = new MemoryStream();
+            source.CopyTo(memStream);
+            memStream.Position = 0;
+            return memStream;
         }
 
         /// <summary>
-        /// Determines if the stream is empty.
+        /// Writes the stream to file. If the file exists it will be overwritten.
         /// </summary>
-        /// <param name="source">Stream to check.</param>
-        /// <returns>True if the stream is empty; otherwise false.</returns>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
-        public static bool IsEmpty(this Stream source)
+        /// <param name="source">Stream to write to file</param>
+        /// <param name="filePath">File path.</param>
+        public static void WriteToFile(this Stream source, string filePath)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            return source.Length == 0;
+            using (Stream file = File.Create(filePath))
+            {
+                source.Seek(0, SeekOrigin.Begin);
+                source.CopyTo(file);
+            }
         }
-
+        
         /// <summary>
-        /// Writes the stream to file.
+        /// Writes the stream to file. If the file exists it will be overwritten.
         /// </summary>
         /// <param name="source">Stream to write to file.</param>
         /// <param name="filePath">File path.</param>
@@ -93,21 +141,6 @@ namespace ByteDev.Io
                 source.Seek(0, SeekOrigin.Begin);
                 await source.CopyToAsync(file);
             }
-        }
-    }
-
-    public static class StreamHelper
-    {
-        public static Stream CreateStream(string data)
-        {
-            return CreateStream(data, Encoding.UTF8);
-        }
-
-        public static Stream CreateStream(string data, Encoding encoding)
-        {
-            byte[] bytes = encoding.GetBytes(data);
-            
-            return new MemoryStream(bytes);
         }
     }
 }
