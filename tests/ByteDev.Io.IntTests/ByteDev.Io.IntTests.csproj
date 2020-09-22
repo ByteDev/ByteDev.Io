@@ -13,10 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.8.0" />
-    <PackageReference Include="NUnit" Version="3.10.1" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.10.0" />
-	  <PackageReference Include="ByteDev.Common" Version="4.0.0" />
+    <PackageReference Include="ByteDev.Testing.NUnit" Version="1.1.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,9 +26,6 @@
   <ItemGroup>
     <Reference Include="ByteDev.Testing">
       <HintPath>..\..\lib\ByteDev.Testing-1.4.1.0\ByteDev.Testing.dll</HintPath>
-    </Reference>
-    <Reference Include="ByteDev.Testing.Nunit">
-      <HintPath>..\..\lib\ByteDev.Testing.Nunit-1.2.0.0\ByteDev.Testing.Nunit.dll</HintPath>
     </Reference>
   </ItemGroup>
 

@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Reflection;
-using ByteDev.Testing.Nunit;
+using ByteDev.Testing.NUnit;
 using ByteDev.Testing.TestBuilders.FileSystem;
 using NUnit.Framework;
 

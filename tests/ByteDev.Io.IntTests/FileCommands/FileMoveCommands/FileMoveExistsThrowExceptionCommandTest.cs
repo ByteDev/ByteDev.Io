@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Reflection;
 using ByteDev.Io.FileCommands.FileMoveCommands;
-using ByteDev.Testing.Nunit;
+using ByteDev.Testing.NUnit;
 using NUnit.Framework;
 
 namespace ByteDev.Io.IntTests.FileCommands.FileMoveCommands

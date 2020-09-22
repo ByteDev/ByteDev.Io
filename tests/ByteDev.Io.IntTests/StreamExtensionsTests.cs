@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace ByteDev.Io.IntTests
 {
     [TestFixture]
-    public class StreamExtensionsTest : IoTestBase
+    public class StreamExtensionsTests : IoTestBase
     {
         private void SetupWorkingDir(string methodName)
         {
@@ -15,7 +15,7 @@ namespace ByteDev.Io.IntTests
         }
         
         [TestFixture]
-        public class ReadAsString : StreamExtensionsTest
+        public class ReadAsString : StreamExtensionsTests
         {
             [SetUp]
             public void SetUp()

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Reflection;
 using NUnit.Framework;
 
 namespace ByteDev.Io.UnitTests
@@ -13,9 +12,7 @@ namespace ByteDev.Io.UnitTests
             [Test]
             public void WhenAssemblyIsNull_ThenThrowException()
             {
-                Assembly sut = null;
-
-                Assert.Throws<ArgumentNullException>(() => sut.GetManifestResourceName("SomeFile.txt"));
+                Assert.Throws<ArgumentNullException>(() => AssemblyExtensions.GetManifestResourceName(null, "SomeFile.txt"));
             }
         }
     }

@@ -5,7 +5,7 @@ namespace ByteDev.Io.IntTests
 {
     public abstract class IoTestBase : IoBase
     {
-        protected IoTestBase() : base(@"C:\Temp\ByteDev.Common.IntTests.Io\")
+        protected IoTestBase() : base(@"C:\Temp\ByteDev.Io.IntTests\")
         {
         }
 
