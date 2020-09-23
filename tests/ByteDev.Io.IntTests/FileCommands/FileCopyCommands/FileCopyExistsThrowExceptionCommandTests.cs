@@ -1,13 +1,13 @@
 ﻿using System.IO;
 using System.Reflection;
-using ByteDev.Io.FileCommands.FileMoveCommands;
+using ByteDev.Io.FileCommands.FileCopyCommands;
 using ByteDev.Testing.NUnit;
 using NUnit.Framework;
 
-namespace ByteDev.Io.IntTests.FileCommands.FileMoveCommands
+namespace ByteDev.Io.IntTests.FileCommands.FileCopyCommands
 {
     [TestFixture]
-    public class FileMoveExistsThrowExceptionCommandTest : FileCommandTestBase
+    public class FileCopyExistsThrowExceptionCommandTests : FileCommandTestBase
     {
         [SetUp]
         public void SetUp()
@@ -19,13 +19,13 @@ namespace ByteDev.Io.IntTests.FileCommands.FileMoveCommands
         }
 
         [Test]
-        public void WhenSourceFileExists_ThenMoveFile()
+        public void WhenSourceFileExists_ThenCopyFile()
         {
             var sourceFile = CreateSourceFile(FileName1);
-
+            
             var result = Act(sourceFile.FullName, Path.Combine(DestinationDir, FileName1));
 
-            AssertFile.NotExists(sourceFile);
+            AssertFile.Exists(sourceFile);
             AssertFile.Exists(result);
         }
 
@@ -48,7 +48,7 @@ namespace ByteDev.Io.IntTests.FileCommands.FileMoveCommands
 
         private FileInfo Act(string sourceFile, string destinationFile)
         {
-            var command = new FileMoveExistsThrowExceptionCommand(sourceFile, destinationFile);
+            var command = new FileCopyExistsThrowExceptionCommand(sourceFile, destinationFile);
 
             command.Execute();
 
@@ -60,6 +60,5 @@ namespace ByteDev.Io.IntTests.FileCommands.FileMoveCommands
             var type = MethodBase.GetCurrentMethod().DeclaringType;
             SetWorkingDir(type, methodName);
         }
-
     }
 }

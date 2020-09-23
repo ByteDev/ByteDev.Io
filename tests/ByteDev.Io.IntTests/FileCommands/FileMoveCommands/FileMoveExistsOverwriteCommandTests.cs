@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace ByteDev.Io.IntTests.FileCommands.FileMoveCommands
 {
     [TestFixture]
-    public class FileMoveExistsOverwriteCommandTest : FileCommandTestBase
+    public class FileMoveExistsOverwriteCommandTests : FileCommandTestBase
     {
         [SetUp]
         public void SetUp()

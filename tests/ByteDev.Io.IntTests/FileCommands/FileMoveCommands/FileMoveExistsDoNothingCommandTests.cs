@@ -1,13 +1,13 @@
 ﻿using System.IO;
 using System.Reflection;
-using ByteDev.Io.FileCommands.FileCopyCommands;
+using ByteDev.Io.FileCommands.FileMoveCommands;
 using ByteDev.Testing.NUnit;
 using NUnit.Framework;
 
-namespace ByteDev.Io.IntTests.FileCommands.FileCopyCommands
+namespace ByteDev.Io.IntTests.FileCommands.FileMoveCommands
 {
     [TestFixture]
-    public class FileCopyExistsOverwriteCommandTest : FileCommandTestBase
+    public class FileMoveExistsDoNothingCommandTests : FileCommandTestBase
     {
         [SetUp]
         public void SetUp()
@@ -19,24 +19,18 @@ namespace ByteDev.Io.IntTests.FileCommands.FileCopyCommands
         }
 
         [Test]
-        public void WhenSourceFileExists_ThenCopyFile()
+        public void WhenDestinationFileDoesNotExist_ThenMoveFile()
         {
             var sourceFile = CreateSourceFile(FileName1);
 
             var result = Act(sourceFile.FullName, Path.Combine(DestinationDir, FileName1));
 
-            AssertFile.Exists(sourceFile);
+            AssertFile.NotExists(sourceFile);
             AssertFile.Exists(result);
         }
 
         [Test]
-        public void WhenSourceFileDoesNotExist_ThenThrowException()
-        {
-            Assert.Throws<FileNotFoundException>(() => Act(Path.Combine(SourceDir, FileName1), Path.Combine(DestinationDir, FileName1)));
-        }
-
-        [Test]
-        public void WhenDestinationFileAlreadyExists_ThenOverwriteFile()
+        public void WhenDestinationFileExists_ThenDoNothing()
         {
             var sourceFile = CreateSourceFile(FileName1, 1);
             var destinationFile = CreateDestinationFile(FileName1, 10);
@@ -44,12 +38,12 @@ namespace ByteDev.Io.IntTests.FileCommands.FileCopyCommands
             var result = Act(sourceFile.FullName, destinationFile.FullName);
 
             AssertFile.SizeEquals(sourceFile, 1);
-            AssertFile.SizeEquals(result, 1);
+            AssertFile.SizeEquals(result, 10);
         }
 
         private FileInfo Act(string sourceFile, string destinationFile)
         {
-            var command = new FileCopyExistsOverwriteCommand(sourceFile, destinationFile);
+            var command = new FileMoveExistsDoNothingCommand(sourceFile, destinationFile);
 
             command.Execute();
 

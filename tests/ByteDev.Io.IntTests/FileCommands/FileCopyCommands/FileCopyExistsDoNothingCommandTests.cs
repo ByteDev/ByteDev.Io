@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace ByteDev.Io.IntTests.FileCommands.FileCopyCommands
 {
     [TestFixture]
-    public class FileCopyExistsThrowExceptionCommandTest : FileCommandTestBase
+    public class FileCopyExistsDoNothingCommandTests : FileCommandTestBase
     {
         [SetUp]
         public void SetUp()
@@ -19,10 +19,10 @@ namespace ByteDev.Io.IntTests.FileCommands.FileCopyCommands
         }
 
         [Test]
-        public void WhenSourceFileExists_ThenCopyFile()
+        public void WhenDestinationFileDoesNotExist_ThenCopyFile()
         {
             var sourceFile = CreateSourceFile(FileName1);
-            
+
             var result = Act(sourceFile.FullName, Path.Combine(DestinationDir, FileName1));
 
             AssertFile.Exists(sourceFile);
@@ -30,25 +30,20 @@ namespace ByteDev.Io.IntTests.FileCommands.FileCopyCommands
         }
 
         [Test]
-        public void WhenSourceFileDoesNotExist_ThenThrowException()
+        public void WhenDestinationFileExists_ThenDoNothing()
         {
-            Assert.Throws<FileNotFoundException>(() => Act(Path.Combine(SourceDir, FileName1), Path.Combine(DestinationDir, FileName1)));
-        }
+            var sourceFile = CreateSourceFile(FileName1, 1);
+            var destinationFile = CreateDestinationFile(FileName1, 10);
 
-        [Test]
-        public void WhenDestinationFileAlreadyExists_ThenThrowException()
-        {
-            CreateSourceFile(FileName1);
-            CreateDestinationFile(FileName1);
+            var result = Act(sourceFile.FullName, destinationFile.FullName);
 
-            var ex = Assert.Throws<IOException>(() => Act(Path.Combine(SourceDir, FileName1), Path.Combine(DestinationDir, FileName1)));
-
-            Assert.That(ex.Message, Does.Contain("already exists").IgnoreCase);
+            AssertFile.SizeEquals(sourceFile, 1);
+            AssertFile.SizeEquals(result, 10);
         }
 
         private FileInfo Act(string sourceFile, string destinationFile)
         {
-            var command = new FileCopyExistsThrowExceptionCommand(sourceFile, destinationFile);
+            var command = new FileCopyExistsDoNothingCommand(sourceFile, destinationFile);
 
             command.Execute();
 

@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Reflection;
 using ByteDev.Io.FileCommands.FileCopyCommands;
 using ByteDev.Testing.NUnit;
@@ -8,7 +7,7 @@ using NUnit.Framework;
 namespace ByteDev.Io.IntTests.FileCommands.FileCopyCommands
 {
     [TestFixture]
-    public class FileCopySourceSizeGreaterOverwriteCommandTest : FileCommandTestBase
+    public class FileCopyExistsOverwriteCommandTests : FileCommandTestBase
     {
         [SetUp]
         public void SetUp()
@@ -20,7 +19,7 @@ namespace ByteDev.Io.IntTests.FileCommands.FileCopyCommands
         }
 
         [Test]
-        public void WhenDestinationFileDoesNotExist_ThenCopyFile()
+        public void WhenSourceFileExists_ThenCopyFile()
         {
             var sourceFile = CreateSourceFile(FileName1);
 
@@ -37,32 +36,20 @@ namespace ByteDev.Io.IntTests.FileCommands.FileCopyCommands
         }
 
         [Test]
-        public void WhenDestinationFileIsSmaller_ThenOverwriteWithSourceFile()
+        public void WhenDestinationFileAlreadyExists_ThenOverwriteFile()
         {
-            const int sourceSize = 3;
-
-            var sourceFile = CreateSourceFile(FileName1, sourceSize);
-            var destinationFile = CreateDestinationFile(FileName1, sourceSize - 1);
+            var sourceFile = CreateSourceFile(FileName1, 1);
+            var destinationFile = CreateDestinationFile(FileName1, 10);
 
             var result = Act(sourceFile.FullName, destinationFile.FullName);
 
-            AssertFile.SizeEquals(result, sourceSize);
+            AssertFile.SizeEquals(sourceFile, 1);
+            AssertFile.SizeEquals(result, 1);
         }
 
-        [Test]
-        public void WhenDestinationFileIsBigger_ThenThrowException()
-        {
-            const int destinationSize = 3;
-
-            var sourceFile = CreateSourceFile(FileName1, destinationSize - 1);
-            var destinationFile = CreateDestinationFile(FileName1, destinationSize);
-
-            Assert.Throws<InvalidOperationException>(() => Act(sourceFile.FullName, destinationFile.FullName));
-        }
-        
         private FileInfo Act(string sourceFile, string destinationFile)
         {
-            var command = new FileCopySourceSizeGreaterOverwriteCommand(sourceFile, destinationFile);
+            var command = new FileCopyExistsOverwriteCommand(sourceFile, destinationFile);
 
             command.Execute();
 

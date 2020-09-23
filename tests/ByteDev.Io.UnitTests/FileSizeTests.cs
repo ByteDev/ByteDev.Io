@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace ByteDev.Io.UnitTests
 {
     [TestFixture]
-    public class FileSizeTest
+    public class FileSizeTests
     {
         protected FileSize CreateBinarySut(long size)
         {
@@ -17,7 +17,7 @@ namespace ByteDev.Io.UnitTests
         }
 
         [TestFixture]
-        public class Constructor : FileSizeTest
+        public class Constructor : FileSizeTests
         {
             [Test]
             public void WhenSizeIsLessThanZero_ThenThrowException()
@@ -27,7 +27,7 @@ namespace ByteDev.Io.UnitTests
         }
 
         [TestFixture]
-        public class ReadableSize : FileSizeTest
+        public class ReadableSize : FileSizeTests
         {
             [TestCase(0, "0 B")]
             [TestCase(1, "1 B")]
@@ -61,7 +61,7 @@ namespace ByteDev.Io.UnitTests
         }
 
         [TestFixture]
-        public class TotalBytes : FileSizeTest
+        public class TotalBytes : FileSizeTests
         {
             [Test]
             public void WhenBytesIsZero_ThenReturnZero()
@@ -83,7 +83,7 @@ namespace ByteDev.Io.UnitTests
         }
 
         [TestFixture]
-        public class TotalKiloBytes : FileSizeTest
+        public class TotalKiloBytes : FileSizeTests
         {
             [Test]
             public void WhenBytesIsZero_ThenReturnZero()
@@ -127,7 +127,7 @@ namespace ByteDev.Io.UnitTests
         }
 
         [TestFixture]
-        public class TotalMegaBytes : FileSizeTest
+        public class TotalMegaBytes : FileSizeTests
         {
             [Test]
             public void WhenBytesIsZero_ThenReturnZero()

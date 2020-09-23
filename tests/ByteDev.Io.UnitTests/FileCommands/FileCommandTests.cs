@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace ByteDev.Io.UnitTests.FileCommands
 {
     [TestFixture]
-    public class FileCommandTest
+    public class FileCommandTests
     {
         private const string Source = "source.txt";
         private const string Destination = "destination.txt";

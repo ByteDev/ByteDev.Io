@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
 using ByteDev.Io.FileCommands.FileCopyCommands;
 using ByteDev.Testing.NUnit;
@@ -7,7 +8,7 @@ using NUnit.Framework;
 namespace ByteDev.Io.IntTests.FileCommands.FileCopyCommands
 {
     [TestFixture]
-    public class FileCopyExistsDoNothingCommandTest : FileCommandTestBase
+    public class FileCopySourceIsNewerOverwriteCommandTests : FileCommandTestBase
     {
         [SetUp]
         public void SetUp()
@@ -30,20 +31,43 @@ namespace ByteDev.Io.IntTests.FileCommands.FileCopyCommands
         }
 
         [Test]
-        public void WhenDestinationFileExists_ThenDoNothing()
+        public void WhenSourceFileDoesNotExist_ThenThrowException()
         {
-            var sourceFile = CreateSourceFile(FileName1, 1);
-            var destinationFile = CreateDestinationFile(FileName1, 10);
+            Assert.Throws<FileNotFoundException>(() => Act(Path.Combine(SourceDir, FileName1), Path.Combine(DestinationDir, FileName1)));
+        }
+
+        [Test]
+        public void WhenSourceFileIsNewer_ThenCopyFile()
+        {
+            var sourceFile = CreateSourceFile(FileName1);
+            var destinationFile = CreateDestinationFile(FileName1);
+
+            PauseHalfSecond();
+
+            AppendCharToFile(sourceFile.FullName);
 
             var result = Act(sourceFile.FullName, destinationFile.FullName);
 
-            AssertFile.SizeEquals(sourceFile, 1);
-            AssertFile.SizeEquals(result, 10);
+            AssertFile.Exists(sourceFile);
+            AssertFile.Exists(result);
         }
 
+        [Test]
+        public void WhenSourceFileIsOlder_ThenThrowException()
+        {
+            var sourceFile = CreateSourceFile(FileName1);
+            var destinationFile = CreateDestinationFile(FileName1);
+
+            PauseHalfSecond();
+
+            AppendCharToFile(destinationFile.FullName);
+
+            Assert.Throws<InvalidOperationException>(() => Act(sourceFile.FullName, destinationFile.FullName));
+        }
+        
         private FileInfo Act(string sourceFile, string destinationFile)
         {
-            var command = new FileCopyExistsDoNothingCommand(sourceFile, destinationFile);
+            var command = new FileCopySourceIsNewerOverwriteCommand(sourceFile, destinationFile);
 
             command.Execute();
 

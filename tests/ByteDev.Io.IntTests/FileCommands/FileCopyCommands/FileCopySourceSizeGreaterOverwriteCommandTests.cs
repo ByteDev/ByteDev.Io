@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace ByteDev.Io.IntTests.FileCommands.FileCopyCommands
 {
     [TestFixture]
-    public class FileCopySourceIsNewerOverwriteCommandTest : FileCommandTestBase
+    public class FileCopySourceSizeGreaterOverwriteCommandTests : FileCommandTestBase
     {
         [SetUp]
         public void SetUp()
@@ -37,37 +37,32 @@ namespace ByteDev.Io.IntTests.FileCommands.FileCopyCommands
         }
 
         [Test]
-        public void WhenSourceFileIsNewer_ThenCopyFile()
+        public void WhenDestinationFileIsSmaller_ThenOverwriteWithSourceFile()
         {
-            var sourceFile = CreateSourceFile(FileName1);
-            var destinationFile = CreateDestinationFile(FileName1);
+            const int sourceSize = 3;
 
-            PauseHalfSecond();
-
-            AppendCharToFile(sourceFile.FullName);
+            var sourceFile = CreateSourceFile(FileName1, sourceSize);
+            var destinationFile = CreateDestinationFile(FileName1, sourceSize - 1);
 
             var result = Act(sourceFile.FullName, destinationFile.FullName);
 
-            AssertFile.Exists(sourceFile);
-            AssertFile.Exists(result);
+            AssertFile.SizeEquals(result, sourceSize);
         }
 
         [Test]
-        public void WhenSourceFileIsOlder_ThenThrowException()
+        public void WhenDestinationFileIsBigger_ThenThrowException()
         {
-            var sourceFile = CreateSourceFile(FileName1);
-            var destinationFile = CreateDestinationFile(FileName1);
+            const int destinationSize = 3;
 
-            PauseHalfSecond();
-
-            AppendCharToFile(destinationFile.FullName);
+            var sourceFile = CreateSourceFile(FileName1, destinationSize - 1);
+            var destinationFile = CreateDestinationFile(FileName1, destinationSize);
 
             Assert.Throws<InvalidOperationException>(() => Act(sourceFile.FullName, destinationFile.FullName));
         }
         
         private FileInfo Act(string sourceFile, string destinationFile)
         {
-            var command = new FileCopySourceIsNewerOverwriteCommand(sourceFile, destinationFile);
+            var command = new FileCopySourceSizeGreaterOverwriteCommand(sourceFile, destinationFile);
 
             command.Execute();
 

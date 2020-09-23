@@ -1,13 +1,13 @@
 ﻿using System.IO;
 using System.Reflection;
-using ByteDev.Io.FileCommands.FileCopyCommands;
+using ByteDev.Io.FileCommands.FileMoveCommands;
 using ByteDev.Testing.NUnit;
 using NUnit.Framework;
 
-namespace ByteDev.Io.IntTests.FileCommands.FileCopyCommands
+namespace ByteDev.Io.IntTests.FileCommands.FileMoveCommands
 {
     [TestFixture]
-    public class FileCopyExistsRenameWithNumberCommandTest : FileCommandTestBase
+    public class FileMoveExistsRenameWithNumberCommandTests : FileCommandTestBase
     {
         [SetUp]
         public void SetUp()
@@ -19,18 +19,18 @@ namespace ByteDev.Io.IntTests.FileCommands.FileCopyCommands
         }
 
         [Test]
-        public void WhenDestinationFileDoesNotExist_ThenCopyFile()
+        public void WhenDestinationFileDoesNotExist_ThenMoveFile()
         {
             var sourceFile = CreateSourceFile(FileName1);
 
             var result = Act(sourceFile.FullName, Path.Combine(DestinationDir, FileName1));
 
-            AssertFile.Exists(sourceFile);
+            AssertFile.NotExists(sourceFile);
             AssertFile.Exists(result);
         }
 
         [Test]
-        public void WhenDestinationFileExists_ThenCopyAndRename()
+        public void WhenDestinationFileExists_ThenMoveAndRename()
         {
             var origFileName = "Test1.txt";
             var newFileName = "Test1 (2).txt";
@@ -42,13 +42,13 @@ namespace ByteDev.Io.IntTests.FileCommands.FileCopyCommands
 
             Assert.That(result.Name, Is.EqualTo(newFileName));
 
-            AssertFile.SizeEquals(sourceFile, 1);
+            AssertFile.NotExists(sourceFile);
             AssertFile.SizeEquals(destinationFile, 10);
             AssertFile.SizeEquals(result.FullName, 1);
         }
 
         [Test]
-        public void WhenDestinationFile_AndNextFileExists_ThenCopyAndRename()
+        public void WhenDestinationFile_AndNextFileExists_ThenMoveAndRename()
         {
             var origFileName = "Test1.txt";
             var destFile2 = "Test1 (2).txt";
@@ -62,7 +62,7 @@ namespace ByteDev.Io.IntTests.FileCommands.FileCopyCommands
 
             Assert.That(result.Name, Is.EqualTo(newFileName));
 
-            AssertFile.SizeEquals(sourceFileInfo, 1);
+            AssertFile.NotExists(sourceFileInfo);
             AssertFile.SizeEquals(destFile1Info, 10);
             AssertFile.SizeEquals(destFile2Info, 20);
             AssertFile.SizeEquals(result.FullName, 1);
@@ -70,7 +70,7 @@ namespace ByteDev.Io.IntTests.FileCommands.FileCopyCommands
 
         private FileInfo Act(string sourceFile, string destinationFile)
         {
-            var command = new FileCopyExistsRenameWithNumberCommand(sourceFile, destinationFile);
+            var command = new FileMoveExistsRenameWithNumberCommand(sourceFile, destinationFile);
 
             command.Execute();
 
@@ -82,5 +82,6 @@ namespace ByteDev.Io.IntTests.FileCommands.FileCopyCommands
             var type = MethodBase.GetCurrentMethod().DeclaringType;
             SetWorkingDir(type, methodName);
         }
+
     }
 }

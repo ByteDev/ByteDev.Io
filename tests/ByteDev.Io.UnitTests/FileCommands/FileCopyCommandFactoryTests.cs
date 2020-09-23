@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace ByteDev.Io.UnitTests.FileCommands
 {
     [TestFixture]
-    public class FileCopyCommandFactoryTest
+    public class FileCopyCommandFactoryTests
     {
         private FileCopyCommandFactory _sut;
 
@@ -17,7 +17,7 @@ namespace ByteDev.Io.UnitTests.FileCommands
         }
 
         [TestFixture]
-        public class Create : FileCopyCommandFactoryTest
+        public class Create : FileCopyCommandFactoryTests
         {
             [Test]
             public void WhenTypeNotHandled_ThenThrowException()

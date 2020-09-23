@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace ByteDev.Io.IntTests
 {
     [TestFixture]
-    public class FileComparerTest : IoTestBase
+    public class FileComparerTests : IoTestBase
     {
         private const string FileName1 = "file1.txt";
         private const string FileName2 = "file2.txt";
@@ -44,7 +44,7 @@ namespace ByteDev.Io.IntTests
         }
 
         [TestFixture]
-        public class IsSourceBigger : FileComparerTest
+        public class IsSourceBigger : FileComparerTests
         {
             [Test]
             public void WhenSourceDoesNotExist_ThenThrowException()
@@ -106,7 +106,7 @@ namespace ByteDev.Io.IntTests
         }
 
         [TestFixture]
-        public class IsSourceBiggerOrEqual : FileComparerTest
+        public class IsSourceBiggerOrEqual : FileComparerTests
         {
             [Test]
             public void WhenSourceDoesNotExist_ThenThrowException()
@@ -168,7 +168,7 @@ namespace ByteDev.Io.IntTests
         }
 
         [TestFixture]
-        public class IsSourceModifiedMoreRecently : FileComparerTest
+        public class IsSourceModifiedMoreRecently : FileComparerTests
         {
             [Test]
             public void WhenSourceDoesNotExist_ThenThrowException()

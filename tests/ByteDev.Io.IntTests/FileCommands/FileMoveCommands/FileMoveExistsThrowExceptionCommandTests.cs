@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Reflection;
 using ByteDev.Io.FileCommands.FileMoveCommands;
 using ByteDev.Testing.NUnit;
@@ -8,7 +7,7 @@ using NUnit.Framework;
 namespace ByteDev.Io.IntTests.FileCommands.FileMoveCommands
 {
     [TestFixture]
-    public class FileMoveSourceSizeGreaterOverwriteCommandTest : FileCommandTestBase
+    public class FileMoveExistsThrowExceptionCommandTests : FileCommandTestBase
     {
         [SetUp]
         public void SetUp()
@@ -20,7 +19,7 @@ namespace ByteDev.Io.IntTests.FileCommands.FileMoveCommands
         }
 
         [Test]
-        public void WhenDestinationFileDoesNotExist_ThenMoveFile()
+        public void WhenSourceFileExists_ThenMoveFile()
         {
             var sourceFile = CreateSourceFile(FileName1);
 
@@ -37,33 +36,19 @@ namespace ByteDev.Io.IntTests.FileCommands.FileMoveCommands
         }
 
         [Test]
-        public void WhenDestinationFileIsSmaller_ThenOverwriteWithSourceFile()
+        public void WhenDestinationFileAlreadyExists_ThenThrowException()
         {
-            const int sourceSize = 3;
+            CreateSourceFile(FileName1);
+            CreateDestinationFile(FileName1);
 
-            var sourceFile = CreateSourceFile(FileName1, sourceSize);
-            var destinationFile = CreateDestinationFile(FileName1, sourceSize - 1);
+            var ex = Assert.Throws<IOException>(() => Act(Path.Combine(SourceDir, FileName1), Path.Combine(DestinationDir, FileName1)));
 
-            var result = Act(sourceFile.FullName, destinationFile.FullName);
-
-            AssertFile.NotExists(sourceFile);
-            AssertFile.SizeEquals(result, sourceSize);
-        }
-
-        [Test]
-        public void WhenDestinationFileIsBigger_ThenThrowException()
-        {
-            const int destinationSize = 3;
-
-            var sourceFile = CreateSourceFile(FileName1, destinationSize - 1);
-            var destinationFile = CreateDestinationFile(FileName1, destinationSize);
-
-            Assert.Throws<InvalidOperationException>(() => Act(sourceFile.FullName, destinationFile.FullName));
+            Assert.That(ex.Message, Does.Contain("already exists").IgnoreCase);
         }
 
         private FileInfo Act(string sourceFile, string destinationFile)
         {
-            var command = new FileMoveSourceSizeGreaterOverwriteCommand(sourceFile, destinationFile);
+            var command = new FileMoveExistsThrowExceptionCommand(sourceFile, destinationFile);
 
             command.Execute();
 
