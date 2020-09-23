@@ -36,6 +36,7 @@ To use these main public classes simply reference `ByteDev.Io`.
 **FileSytem**: Provides a small set of methods for working with files and directories.
 
 Methods:
+- IsFile
 - IsDirectory
 - FirstExists
 - MoveFile

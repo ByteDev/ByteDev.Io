@@ -19,6 +19,17 @@ namespace ByteDev.Io
         private FileCopyCommandFactory FileCopyCommandFactory => _fileCopyCommandFactory ?? (_fileCopyCommandFactory = new FileCopyCommandFactory());
 
         /// <summary>
+        /// Indicates whether <paramref name="path" /> is a file.
+        /// </summary>
+        /// <param name="path">Path to check.</param>
+        /// <returns>True if <paramref name="path" /> is a file; otherwise returns false.</returns>
+        /// <exception cref="T:ByteDev.Io.PathNotFoundException"><paramref name="path" /> does not exist.</exception>
+        public bool IsFile(string path)
+        {
+            return !IsDirectory(path);
+        }
+
+        /// <summary>
         /// Indicates whether <paramref name="path" /> is a directory.
         /// </summary>
         /// <param name="path">Path to check.</param>
@@ -40,7 +51,7 @@ namespace ByteDev.Io
         /// Returns the path of the first file or directory that exists. If no matching path can
         /// be found then an exception will be thrown.
         /// </summary>
-        /// <param name="paths">Collection of paths.</param>
+        /// <param name="paths">Collection of paths (to files or directories).</param>
         /// <returns>String of first path that exists.</returns>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="paths" /> is null.</exception>
         /// <exception cref="T:System.ArgumentException"><paramref name="paths" /> is empty.</exception>

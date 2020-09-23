@@ -3,12 +3,13 @@
 ## 6.0.0 - ?? September 2020
 
 Breaking changes:
-- Remove StringExtensions.AppendBackSlash
-- DirectoryInfoExtensions.GetSize now take optional `includeSubDirectories` param (default false)
+- Removed StringExtensions.AppendBackSlash
+- DirectoryInfoExtensions.GetSize now takes optional `includeSubDirectories` param (default false)
 - FileSystem.DeleteDirectoriesWithName is now a DirectoryInfoExtension
 
 New features:
 - Added FileInfoExtensions.IsBinary
+- Added FileSystem.IsFile
 - Added StreamExtensions.IsEmpty
 - Added StreamExtensions.ReadAsBytes
 - Added StreamExtensions.WriteToFile

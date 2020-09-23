@@ -24,6 +24,43 @@ namespace ByteDev.Io.IntTests
         }
 
         [TestFixture]
+        public class IsFile : FileSystemTests
+        {
+            [SetUp]
+            public new void Setup()
+            {
+                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
+                CreateOrEmptyWorkingDir();
+            }
+
+            [Test]
+            public void WhenPathDoesNotExist_ThenThrowException()
+            {
+                Assert.Throws<PathNotFoundException>(() => _sut.IsFile(@"C:\7b4feb7ab70845a78bec2511b532f55a"));
+            }
+
+            [Test]
+            public void WhenFileExists_ThenReturnTrue()
+            {
+                var fileInfo = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "test.txt")).Build();
+
+                var result = _sut.IsFile(fileInfo.FullName);
+
+                Assert.That(result, Is.True);
+            }
+
+            [Test]
+            public void WhenDirectoryExists_ThenReturnFalse()
+            {
+                var dirInfo = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "TestDir")).Build();
+
+                var result = _sut.IsFile(dirInfo.FullName);
+
+                Assert.That(result, Is.False);
+            }
+        }
+
+        [TestFixture]
         public class IsDirectory : FileSystemTests
         {
             [SetUp]

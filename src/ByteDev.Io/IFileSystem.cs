@@ -9,6 +9,14 @@ namespace ByteDev.Io
     public interface IFileSystem
     {
         /// <summary>
+        /// Indicates whether <paramref name="path" /> is a file.
+        /// </summary>
+        /// <param name="path">Path to check.</param>
+        /// <returns>True if <paramref name="path" /> is a file; otherwise returns false.</returns>
+        /// <exception cref="T:ByteDev.Io.PathNotFoundException"><paramref name="path" /> does not exist.</exception>
+        bool IsFile(string path);
+
+        /// <summary>
         /// Indicates whether <paramref name="path" /> is a directory.
         /// </summary>
         /// <param name="path">Path to check.</param>
