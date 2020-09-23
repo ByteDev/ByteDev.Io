@@ -241,6 +241,37 @@ namespace ByteDev.Io.IntTests
         }
 
         [TestFixture]
+        public class RenameExtensionToLower : FileInfoExtensionsTests
+        {
+            [SetUp]
+            public void Setup()
+            {
+                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
+                EmptyWorkingDir();
+            }
+
+            [Test]
+            public void WhenFileHasExtension_ThenMakeLowerCase()
+            {
+                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test.TXT")).Build();
+
+                sut.RenameExtensionToLower();
+
+                AssertFile.Exists(Path.Combine(WorkingDir, "Test.txt"));
+            }
+
+            [Test]
+            public void WhenFileHasNoExtension_ThenDoNothing()
+            {
+                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test")).Build();
+
+                sut.RenameExtensionToLower();
+
+                AssertFile.Exists(Path.Combine(WorkingDir, "Test"));
+            }
+        }
+
+        [TestFixture]
         public class RemoveExtension : FileInfoExtensionsTests
         {
             [SetUp]
@@ -262,7 +293,7 @@ namespace ByteDev.Io.IntTests
             }
 
             [Test]
-            public void WhenFileHasNoExtension_ThenDoNotRenameFile()
+            public void WhenFileHasNoExtension_ThenDoNothing()
             {
                 var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test")).Build();
 

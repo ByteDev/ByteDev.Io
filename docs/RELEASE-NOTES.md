@@ -11,6 +11,7 @@ Breaking changes:
 New features:
 - Added FileInfoExtensions.IsBinary
 - Added FileInfoExtensions.GetExtension
+- Added FileInfoExtensions.RenameExtensionToLower
 - Added FileSystem.IsFile
 - Added StreamExtensions.IsEmpty
 - Added StreamExtensions.ReadAsBytes

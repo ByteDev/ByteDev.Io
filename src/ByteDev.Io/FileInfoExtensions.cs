@@ -55,7 +55,7 @@ namespace ByteDev.Io
         /// Gets the file's extension.
         /// </summary>
         /// <param name="source">File to perform the operation on.</param>
-        /// <param name="includeDotPrefix">Indicates if the "." extension prefix should be returned if an extension exists.</param>
+        /// <param name="includeDotPrefix">Indicates if the "." extension prefix should be returned as part of the extension if an extension exists.</param>
         /// <returns>File extension as a string.</returns>
         public static string GetExtension(this FileInfo source, bool includeDotPrefix = true)
         {
@@ -116,9 +116,28 @@ namespace ByteDev.Io
         }
 
         /// <summary>
+        /// Rename the file's extension to lower case.
+        /// </summary>
+        /// <param name="source">File to perform the operation on.</param>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
+        public static void RenameExtensionToLower(this FileInfo source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            var extension = source.GetExtension();
+
+            if (!string.IsNullOrEmpty(extension))
+            {
+                AddOrRenameExtension(source, extension.ToLower());
+            }
+        }
+
+        /// <summary>
         /// Remove the file's extension if it has one.
         /// </summary>
         /// <param name="source">File to perform the operation on.</param>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
         public static void RemoveExtension(this FileInfo source)
         {
             AddOrRenameExtension(source, string.Empty);
