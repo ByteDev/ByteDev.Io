@@ -21,52 +21,62 @@ namespace ByteDev.Io
             if(source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            var path = source.FullName;
-            var dir = Path.GetDirectoryName(path);
+            var filePath = source.FullName;
+            var dirPath = Path.GetDirectoryName(filePath);
 
-            while (File.Exists(path))
+            if (dirPath == null)
+                throw new InvalidOperationException($"Directory path in '{filePath}' could not be determined.");
+
+            while (File.Exists(filePath))
             {
-                var fileName = Path.GetFileName(path);
+                var fileName = Path.GetFileName(filePath);
 
-                path = Path.Combine(dir, GetNextFileNameWithNumber(fileName));
+                filePath = Path.Combine(dirPath, GetNextFileNameWithNumber(fileName));
             }
 
-            return new FileInfo(path);
+            return new FileInfo(filePath);
         }
 
         /// <summary>
-        /// Rename the file extension.
+        /// Indicates whether the file has an extension.
         /// </summary>
-        /// <param name="source">The file to rename.</param>
-        /// <param name="newExtension">New extension.</param>
+        /// <param name="source">File to perform the operation on.</param>
+        /// <returns>True if the file has an extension; otherwise returns false.</returns>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="newExtension" /> is null.</exception>
-        public static void RenameExtension(this FileInfo source, string newExtension)
+        public static bool HasExtension(this FileInfo source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            if (newExtension == null)
-                throw new ArgumentNullException(nameof(newExtension));
-
-            var newPath = Path.Combine(source.DirectoryName, Path.GetFileNameWithoutExtension(source.FullName) + AddExtensionDotPrefix(newExtension));
-
-            source.MoveTo(newPath);
+            return !string.IsNullOrEmpty(Path.GetExtension(source.FullName));
         }
 
         /// <summary>
-        /// Remove the file extension.
+        /// Gets the file's extension.
         /// </summary>
-        /// <param name="source">The file to remove extension.</param>
-        public static void RemoveExtension(this FileInfo source)
+        /// <param name="source">File to perform the operation on.</param>
+        /// <param name="includeDotPrefix">Indicates if the "." extension prefix should be returned if an extension exists.</param>
+        /// <returns>File extension as a string.</returns>
+        public static string GetExtension(this FileInfo source, bool includeDotPrefix = true)
         {
-            RenameExtension(source, string.Empty);
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            var extension = Path.GetExtension(source.FullName);
+
+            if (includeDotPrefix || string.IsNullOrEmpty(extension))
+            {
+                return extension;
+            }
+
+            return extension.Substring(1);
         }
 
         /// <summary>
-        /// Add a file extension to a file that does not have an extension.
+        /// Add a file extension to the file. If the file already has an extension then
+        /// an exception is thrown.
         /// </summary>
-        /// <param name="source">The file to add the extension to.</param>
+        /// <param name="source">File to perform the operation on.</param>
         /// <param name="extension">The extension to add.</param>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="extension" /> is null.</exception>
@@ -86,17 +96,32 @@ namespace ByteDev.Io
         }
 
         /// <summary>
-        /// Indicates whether the file has an extension.
+        /// Adds or renames the file's extension.
         /// </summary>
-        /// <param name="source">The file to check.</param>
-        /// <returns>True if the file has an extension; otherwise returns false.</returns>
+        /// <param name="source">File to perform the operation on.</param>
+        /// <param name="newExtension">New extension.</param>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
-        public static bool HasExtension(this FileInfo source)
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="newExtension" /> is null.</exception>
+        public static void AddOrRenameExtension(this FileInfo source, string newExtension)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            return !string.IsNullOrEmpty(Path.GetExtension(source.FullName));
+            if (newExtension == null)
+                throw new ArgumentNullException(nameof(newExtension));
+
+            var newPath = Path.Combine(source.DirectoryName, Path.GetFileNameWithoutExtension(source.FullName) + AddExtensionDotPrefix(newExtension));
+
+            source.MoveTo(newPath);
+        }
+
+        /// <summary>
+        /// Remove the file's extension if it has one.
+        /// </summary>
+        /// <param name="source">File to perform the operation on.</param>
+        public static void RemoveExtension(this FileInfo source)
+        {
+            AddOrRenameExtension(source, string.Empty);
         }
 
         /// <summary>

@@ -6,7 +6,7 @@ namespace ByteDev.Io
     /// <summary>
     /// Represents a comparer of files.
     /// </summary>
-    public class FileComparer
+    public static class FileComparer
     {
         /// <summary>
         /// Indicates whether <paramref name="sourceFile" /> is bigger than <paramref name="destinationFile" />.

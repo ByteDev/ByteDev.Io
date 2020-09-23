@@ -6,9 +6,11 @@ Breaking changes:
 - Removed StringExtensions.AppendBackSlash
 - DirectoryInfoExtensions.GetSize now takes optional `includeSubDirectories` param (default false)
 - FileSystem.DeleteDirectoriesWithName is now a DirectoryInfoExtension
+- FileInfo.RenameExtension is now FileInfo.AddOrRenameExtension
 
 New features:
 - Added FileInfoExtensions.IsBinary
+- Added FileInfoExtensions.GetExtension
 - Added FileSystem.IsFile
 - Added StreamExtensions.IsEmpty
 - Added StreamExtensions.ReadAsBytes
