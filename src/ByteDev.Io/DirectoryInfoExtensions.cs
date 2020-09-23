@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -29,6 +30,7 @@ namespace ByteDev.Io
         /// </summary>
         /// <param name="source">Directory to perform the operation on.</param>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
+        /// <exception cref="T:System.IO.DirectoryNotFoundException">Directory not found.</exception>
         public static void Empty(this DirectoryInfo source)
         {
             DeleteFiles(source);
@@ -73,9 +75,24 @@ namespace ByteDev.Io
         }
 
         /// <summary>
+        /// Delete directory if the directory is empty. If the directory does not exist then
+        /// an exception will be thrown.
+        /// </summary>
+        /// <param name="source">Directory to perform the operation on.</param>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
+        /// <exception cref="T:System.IO.DirectoryNotFoundException">Directory not found.</exception>
+        public static void DeleteIfEmpty(this DirectoryInfo source)
+        {
+            if (IsEmpty(source))
+            {
+                source.Delete(true);
+            }
+        }
+
+        /// <summary>
         /// Delete all files in the directory.
         /// </summary>
-        /// <param name="source">The directory to delete all files from.</param>
+        /// <param name="source">Directory to perform the operation on.</param>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
         public static void DeleteFiles(this DirectoryInfo source)
         {
@@ -91,7 +108,7 @@ namespace ByteDev.Io
         /// <summary>
         /// Delete all files in the directory with particular extension.
         /// </summary>
-        /// <param name="source">The directory to delete all files with the extension from.</param>
+        /// <param name="source">Directory to perform the operation on.</param>
         /// <param name="extension">File extension search pattern.</param>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="extension" /> is null.</exception>
@@ -107,9 +124,41 @@ namespace ByteDev.Io
         }
 
         /// <summary>
+        /// Delete all files except files with file names contained in <paramref name="fileNames" />.
+        /// File names in the list are case sensitive.
+        /// </summary>
+        /// <param name="source">Directory to perform the operation on.</param>
+        /// <param name="fileNames">File name except list.</param>
+        /// <param name="recursive">True potentially delete files in sub directories; otherwise do not.</param>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="fileNames" /> is null.</exception>
+        public static void DeleteFilesExcept(this DirectoryInfo source, IList<string> fileNames, bool recursive = false)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            if (fileNames == null)
+                throw new ArgumentNullException(nameof(fileNames));
+
+            foreach (var fileInfo in source.GetFiles())
+            {
+                if (!fileNames.Contains(fileInfo.Name))
+                    fileInfo.Delete();
+            }
+
+            if (recursive)
+            {
+                foreach (var dirInfo in source.GetDirectories())
+                {
+                    DeleteFilesExcept(dirInfo, fileNames);
+                }
+            }
+        }
+
+        /// <summary>
         /// Delete all directories in the directory.
         /// </summary>
-        /// <param name="source">The directory to delete all directories from.</param>
+        /// <param name="source">Directory to perform the operation on.</param>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
         public static void DeleteDirectories(this DirectoryInfo source)
         {
@@ -125,7 +174,7 @@ namespace ByteDev.Io
         /// <summary>
         /// Deletes all directories and sub directories with name <paramref name="directoryName" />.
         /// </summary>
-        /// <param name="source">Base directory path.</param>
+        /// <param name="source">Directory to perform the operation on.</param>
         /// <param name="directoryName">Name of directories to delete.</param>
         /// <returns>Count of directories deleted.</returns>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
@@ -149,10 +198,26 @@ namespace ByteDev.Io
         }
 
         /// <summary>
+        /// Deletes all empty directories within the directory.
+        /// </summary>
+        /// <param name="source">Directory to perform the operation on.</param>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
+        public static void DeleteEmptyDirectories(this DirectoryInfo source)
+        {
+            if(source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            foreach (var dirInfo in source.GetDirectories())
+            {
+                DeleteIfEmpty(dirInfo);
+            }
+        }
+
+        /// <summary>
         /// Retrieves the total size of all the directory's files and optionally it's subdirectories.
         /// </summary>
-        /// <param name="source">Directory to retrieve the size on.</param>
-        /// <param name="includeSubDirectories">True include all subdirectories; false do not.</param>
+        /// <param name="source">Directory to perform the operation on.</param>
+        /// <param name="includeSubDirectories">True include all sub directories; false do not.</param>
         /// <returns>Size of <paramref name="source" /> in bytes.</returns>
         public static long GetSize(this DirectoryInfo source, bool includeSubDirectories = false)
         {

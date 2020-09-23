@@ -83,9 +83,12 @@ AssemblyExtensions
 DirectoryInfoExtensions
 - CreateDirectory
 - DeleteIfExists
+- DeleteIfEmpty
 - DeleteDirectories
 - DeleteDirectoriesWithName
+- DeleteEmptyDirectories
 - DeleteFiles
+- DeleteFilesExcept
 - Empty
 - EmptyIfExists
 - GetFilesByExtensions

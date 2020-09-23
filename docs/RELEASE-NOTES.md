@@ -11,6 +11,9 @@ Breaking changes:
 New features:
 - Added DirectoryInfoExtensions.EmptyIfExists
 - Added DirectoryInfoExtensions.DeleteIfExists
+- Added DirectoryInfoExtensions.DeleteIfEmpty
+- Added DirectoryInfoExtensions.DeleteFilesExcept
+- Added DirectoryInfoExtensions.DeleteEmptyDirectories
 - Added FileInfoExtensions.IsBinary
 - Added FileInfoExtensions.GetExtension
 - Added FileInfoExtensions.RenameExtensionToLower

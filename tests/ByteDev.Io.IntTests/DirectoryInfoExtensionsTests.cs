@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using ByteDev.Testing.NUnit;
 using ByteDev.Testing.TestBuilders.FileSystem;
@@ -165,6 +166,48 @@ namespace ByteDev.Io.IntTests
         }
 
         [TestFixture]
+        public class DeleteIfEmpty : DirectoryInfoExtensionsTests
+        {
+            [SetUp]
+            public void Setup()
+            {
+                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            }
+
+            [Test]
+            public void WhenDirectoryDoesNotExist_ThenThrowException()
+            {
+                var sut = DirectoryDoesNotExist;
+
+                Assert.Throws<DirectoryNotFoundException>(() => sut.DeleteIfEmpty());
+            }
+
+            [Test]
+            public void WhenDirectoryIsNotEmpty_ThenDoNotDelete()
+            {
+                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test1.txt")).Build();
+
+                var sut = CreateSut();
+
+                sut.DeleteIfEmpty();
+
+                AssertDir.ContainsFiles(sut, 1);
+            }
+
+            [Test]
+            public void WhenDirectoryIsEmpty_ThenDelete()
+            {
+                var sut = CreateSut();
+
+                sut.Empty();
+
+                sut.DeleteIfEmpty();
+
+                AssertDir.NotExists(sut);
+            }
+        }
+
+        [TestFixture]
         public class DeleteFiles : DirectoryInfoExtensionsTests
         {
             [SetUp]
@@ -213,6 +256,71 @@ namespace ByteDev.Io.IntTests
                 sut.DeleteFiles("");
 
                 AssertDir.ContainsFiles(sut, 1);
+            }
+        }
+
+        [TestFixture]
+        public class DeleteFilesExcept : DirectoryInfoExtensionsTests
+        {
+            [SetUp]
+            public void Setup()
+            {
+                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            }
+
+            [Test]
+            public void WhenContainsFilesNotOnExceptList_ThenDeleteFiles()
+            {
+                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("Test1.txt")).Build();
+                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("Test2.txt")).Build();
+                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("Test3.txt")).Build();
+                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("Test4.txt")).Build();
+                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("Test5.txt")).Build();
+
+                var testDir = DirectoryTestBuilder.InFileSystem.WithPath(GetAbsolutePath("DirTest1")).Build();
+
+                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath(@"DirTest1\Test1.txt")).Build();
+                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath(@"DirTest1\Test2.txt")).Build();
+                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath(@"DirTest1\Test3.txt")).Build();
+
+                var sut = CreateSut();
+
+                sut.DeleteFilesExcept(new List<string> { "Test1.txt", "Test2.txt" }, false);
+
+                AssertDir.ContainsFiles(sut, 2);
+                AssertDir.ContainsFiles(testDir, 3);
+            }
+        }
+
+        [TestFixture]
+        public class DeleteFilesExcept_Recursive : DirectoryInfoExtensionsTests
+        {
+            [SetUp]
+            public void Setup()
+            {
+                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            }
+
+            [Test]
+            public void WhenContainsFilesNotOnExceptList_ThenDeleteFiles()
+            {
+                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("Test1.txt")).Build();
+                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("Test2.txt")).Build();
+                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("Test3.txt")).Build();
+                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("Test4.txt")).Build();
+                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("Test5.txt")).Build();
+
+                var testDir = DirectoryTestBuilder.InFileSystem.WithPath(GetAbsolutePath("DirTest1")).Build();
+
+                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath(@"DirTest1\Test1.txt")).Build();
+                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath(@"DirTest1\Test3.txt")).Build();
+
+                var sut = CreateSut();
+
+                sut.DeleteFilesExcept(new List<string> { "Test1.txt", "Test2.txt" }, true);
+
+                AssertDir.ContainsFiles(sut, 2);
+                AssertDir.ContainsFiles(testDir, 1);
             }
         }
 
@@ -312,6 +420,33 @@ namespace ByteDev.Io.IntTests
                 var result = CreateSut().DeleteDirectoriesWithName("dirToDelete");
 
                 Assert.That(result, Is.EqualTo(2));
+                AssertDir.NotExists(dirToDelete1);
+                AssertDir.NotExists(dirToDelete2);
+            }
+        }
+
+        [TestFixture]
+        public class DeleteEmptyDirectories : DirectoryInfoExtensionsTests
+        {
+            [SetUp]
+            public void Setup()
+            {
+                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            }
+
+            [Test]
+            public void WhenContainsEmptyDirectories_ThenDeleteEmptyDirectories()
+            {
+                var dirToNotDelete = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToNotDelete")).Build();
+                
+                var dirToDelete1 = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToDelete1")).Build();
+                var dirToDelete2 = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToDelete2")).Build();
+
+                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(dirToNotDelete.FullName, "test.txt")).Build();
+
+                CreateSut().DeleteEmptyDirectories();
+
+                AssertDir.Exists(dirToNotDelete);
                 AssertDir.NotExists(dirToDelete1);
                 AssertDir.NotExists(dirToDelete2);
             }
