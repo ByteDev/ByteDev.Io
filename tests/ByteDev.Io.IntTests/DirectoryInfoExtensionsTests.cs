@@ -72,6 +72,14 @@ namespace ByteDev.Io.IntTests
             }
 
             [Test]
+            public void WhenDirectoryDoesNotExist_ThenThrowException()
+            {
+                var sut = DirectoryDoesNotExist;
+
+                Assert.Throws<DirectoryNotFoundException>(() => sut.Empty());
+            }
+
+            [Test]
             public void WhenThereAreFilesAndDirectories_ThenDeleteAllFilesAndDirectories()
             {
                 DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "DirTest1")).Build();
@@ -83,6 +91,40 @@ namespace ByteDev.Io.IntTests
                 var sut = CreateSut();
 
                 sut.Empty();
+
+                AssertDir.IsEmpty(sut);
+            }
+        }
+
+        [TestFixture]
+        public class EmptyIfExists : DirectoryInfoExtensionsTests
+        {
+            [SetUp]
+            public void Setup()
+            {
+                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            }
+
+            [Test]
+            public void WhenDirectoryDoesNotExist_ThenDoNothing()
+            {
+                var sut = DirectoryDoesNotExist;
+
+                Assert.DoesNotThrow(() => sut.EmptyIfExists());
+            }
+
+            [Test]
+            public void WhenThereAreFilesAndDirectories_ThenDeleteAllFilesAndDirectories()
+            {
+                DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "DirTest1")).Build();
+                DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "DirTest2")).Build();
+
+                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test1.txt")).Build();
+                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test2.txt")).Build();
+
+                var sut = CreateSut();
+
+                sut.EmptyIfExists();
 
                 AssertDir.IsEmpty(sut);
             }

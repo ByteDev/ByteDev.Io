@@ -6,6 +6,8 @@ namespace ByteDev.Io.IntTests
 {
     public abstract class IoBase
     {
+        protected DirectoryInfo DirectoryDoesNotExist = new DirectoryInfo(@"C:\463f8c76c7dd4f97b53cd1ec21fb6b9a");
+
         private readonly string _intTestsRootDirectory;
 
         protected IoBase(string intTestsRootDirectory)

@@ -24,9 +24,11 @@ namespace ByteDev.Io
         }
 
         /// <summary>
-        /// Delete all files and directories.
+        /// Delete all files and directories within the directory. If the directory does not exist then
+        /// an exception will be thrown.
         /// </summary>
-        /// <param name="source">The directory to empty.</param>
+        /// <param name="source">Directory to perform the operation on.</param>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
         public static void Empty(this DirectoryInfo source)
         {
             DeleteFiles(source);
@@ -34,11 +36,32 @@ namespace ByteDev.Io
         }
 
         /// <summary>
+        /// Delete all files and directories within the directory if the directory exists.
+        /// </summary>
+        /// <param name="source">Directory to perform the operation on.</param>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
+        public static void EmptyIfExists(this DirectoryInfo source)
+        {
+            try
+            {
+                Empty(source);
+            }
+            catch (DirectoryNotFoundException)
+            {
+                // Swallow exception
+            }
+        }
+
+        /// <summary>
         /// Delete all files in the source directory.
         /// </summary>
         /// <param name="source">The directory to delete all files from.</param>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
         public static void DeleteFiles(this DirectoryInfo source)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
             foreach (var file in source.GetFiles())
             {
                 file.Delete();

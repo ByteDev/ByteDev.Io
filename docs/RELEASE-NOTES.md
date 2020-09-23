@@ -9,6 +9,7 @@ Breaking changes:
 - FileInfo.RenameExtension is now FileInfo.AddOrRenameExtension
 
 New features:
+- Added DirectoryInfoExtensions.EmptyIfExists
 - Added FileInfoExtensions.IsBinary
 - Added FileInfoExtensions.GetExtension
 - Added FileInfoExtensions.RenameExtensionToLower

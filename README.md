@@ -86,6 +86,7 @@ DirectoryInfoExtensions
 - DeleteDirectoriesWithName
 - DeleteFiles
 - Empty
+- EmptyIfExists
 - GetFilesByExtensions
 - GetAudioFiles
 - GetImageFiles
