@@ -99,6 +99,7 @@ DirectoryInfoExtensions
 - IsEmpty
 
 FileInfoExtensions
+- DeleteIfExists
 - AddExtension
 - GetNextAvailableFileName
 - RenameExtension

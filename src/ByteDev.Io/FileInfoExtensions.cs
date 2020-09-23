@@ -10,10 +10,30 @@ namespace ByteDev.Io
     public static class FileInfoExtensions
     {
         /// <summary>
+        /// Deletes the file if it exists.
+        /// </summary>
+        /// <param name="source">File to perform the operation on.</param>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
+        public static void DeleteIfExists(this FileInfo source)
+        {
+            if(source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            try
+            {
+                source.Delete();
+            }
+            catch (FileNotFoundException)
+            {
+                // Swallow exception
+            }
+        }
+
+        /// <summary>
         /// Gets the next available file name, Windows Explorer style.
         /// For example: "Test.txt", "Test (2).txt", "Test (3).txt" etc.
         /// </summary>
-        /// <param name="source">File info to perform the operation on.</param>
+        /// <param name="source">File to perform the operation on.</param>
         /// <returns>The next available file name.</returns>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
         public static FileInfo GetNextAvailableFileName(this FileInfo source)

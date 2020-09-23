@@ -16,13 +16,42 @@ namespace ByteDev.Io.IntTests
         }
 
         [TestFixture]
+        public class DeleteIfExists : FileInfoExtensionsTests
+        {
+            [SetUp]
+            public void Setup()
+            {
+                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());                
+            }
+
+            [Test]
+            public void WhenFileExists_ThenDelete()
+            {
+                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test1.txt")).Build();
+
+                sut.DeleteIfExists();
+
+                AssertFile.NotExists(sut);
+            }
+
+            [Test]
+            public void WhenFileDoesNotExist_ThenDoNothing()
+            {
+                var sut = new FileInfo(Path.Combine(WorkingDir, "DoesntExist"));
+
+                sut.DeleteIfExists();
+
+                AssertFile.NotExists(sut);
+            }
+        }
+
+        [TestFixture]
         public class GetNextAvailableFileName : FileInfoExtensionsTests
         {
             [SetUp]
             public void Setup()
             {
                 SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());                
-                EmptyWorkingDir();
             }
 
             [Test]
@@ -102,7 +131,6 @@ namespace ByteDev.Io.IntTests
             public void Setup()
             {
                 SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
-                EmptyWorkingDir();
             }
 
             [Test]
@@ -151,7 +179,6 @@ namespace ByteDev.Io.IntTests
             public void Setup()
             {
                 SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
-                EmptyWorkingDir();
             }
 
             [Test]
@@ -247,7 +274,6 @@ namespace ByteDev.Io.IntTests
             public void Setup()
             {
                 SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
-                EmptyWorkingDir();
             }
 
             [Test]
@@ -278,7 +304,6 @@ namespace ByteDev.Io.IntTests
             public void Setup()
             {
                 SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
-                EmptyWorkingDir();
             }
 
             [Test]
@@ -310,7 +335,6 @@ namespace ByteDev.Io.IntTests
             public void Setup()
             {
                 SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
-                EmptyWorkingDir();
             }
 
             [Test]
