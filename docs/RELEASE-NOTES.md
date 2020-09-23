@@ -10,6 +10,7 @@ Breaking changes:
 
 New features:
 - Added DirectoryInfoExtensions.EmptyIfExists
+- Added DirectoryInfoExtensions.DeleteIfExists
 - Added FileInfoExtensions.IsBinary
 - Added FileInfoExtensions.GetExtension
 - Added FileInfoExtensions.RenameExtensionToLower

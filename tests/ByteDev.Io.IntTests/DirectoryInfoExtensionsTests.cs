@@ -114,7 +114,7 @@ namespace ByteDev.Io.IntTests
             }
 
             [Test]
-            public void WhenThereAreFilesAndDirectories_ThenDeleteAllFilesAndDirectories()
+            public void WhenContainsFilesAndDirectories_ThenDeleteAllFilesAndDirectories()
             {
                 DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "DirTest1")).Build();
                 DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "DirTest2")).Build();
@@ -127,6 +127,40 @@ namespace ByteDev.Io.IntTests
                 sut.EmptyIfExists();
 
                 AssertDir.IsEmpty(sut);
+            }
+        }
+
+        [TestFixture]
+        public class DeleteIfExists : DirectoryInfoExtensionsTests
+        {
+            [SetUp]
+            public void Setup()
+            {
+                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            }
+
+            [Test]
+            public void WhenDirectoryDoesNotExist_ThenDoNothing()
+            {
+                var sut = DirectoryDoesNotExist;
+
+                sut.DeleteIfExists();
+            }
+
+            [Test]
+            public void WhenContainsFilesAndDirectories_ThenDelete()
+            {
+                DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "DirTest1")).Build();
+                DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "DirTest2")).Build();
+
+                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test1.txt")).Build();
+                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test2.txt")).Build();
+
+                var sut = CreateSut();
+
+                sut.DeleteIfExists();
+
+                AssertDir.NotExists(sut);
             }
         }
 

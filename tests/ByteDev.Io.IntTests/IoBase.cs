@@ -29,6 +29,7 @@ namespace ByteDev.Io.IntTests
         protected void SetWorkingDir(Type type, string methodName)
         {
             WorkingDir = Path.Combine(_intTestsRootDirectory, type.Name, GetShortMethodName(methodName));
+            CreateOrEmptyWorkingDir();
         }
 
         protected void EmptyWorkingDir()

@@ -53,7 +53,27 @@ namespace ByteDev.Io
         }
 
         /// <summary>
-        /// Delete all files in the source directory.
+        /// Delete directory if the directory exists.
+        /// </summary>
+        /// <param name="source">Directory to perform the operation on.</param>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
+        public static void DeleteIfExists(this DirectoryInfo source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            try
+            {
+                source.Delete(true);
+            }
+            catch (DirectoryNotFoundException)
+            {
+                // Swallow exception
+            }
+        }
+
+        /// <summary>
+        /// Delete all files in the directory.
         /// </summary>
         /// <param name="source">The directory to delete all files from.</param>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
@@ -87,7 +107,7 @@ namespace ByteDev.Io
         }
 
         /// <summary>
-        /// Delete all directories in the source directory.
+        /// Delete all directories in the directory.
         /// </summary>
         /// <param name="source">The directory to delete all directories from.</param>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
