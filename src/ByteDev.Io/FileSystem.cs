@@ -37,7 +37,8 @@ namespace ByteDev.Io
         }
 
         /// <summary>
-        /// Returns the path of the first file that exists.
+        /// Returns the path of the first file or directory that exists. If no matching path can
+        /// be found then an exception will be thrown.
         /// </summary>
         /// <param name="paths">Collection of paths.</param>
         /// <returns>String of first path that exists.</returns>
@@ -164,47 +165,6 @@ namespace ByteDev.Io
                 throw new ArgumentNullException(nameof(fileInfo2));
 
             SwapFileNames(fileInfo1.FullName, fileInfo2.FullName);
-        }
-
-        // TODO: move to DirectoryInfoExtensions?
-
-        /// <summary>
-        /// Deletes all directories and sub directories with name <paramref name="directoryName" />.
-        /// </summary>
-        /// <param name="basePath">Base directory path.</param>
-        /// <param name="directoryName">Name of directories to delete.</param>
-        /// <returns>Count of directories deleted.</returns>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="basePath" /> is null.</exception>
-        /// <exception cref="T:System.ArgumentException"><paramref name="directoryName" /> was null or empty.</exception>
-        public int DeleteDirectoriesWithName(DirectoryInfo basePath, string directoryName)
-        {
-            if(basePath == null)
-                throw new ArgumentNullException(nameof(basePath));
-
-            if(string.IsNullOrEmpty(directoryName))
-                throw new ArgumentException("Directory name to delete was null or empty.", nameof(directoryName));
-
-            DirectoryInfo[] subDirs = basePath.GetDirectories(directoryName, SearchOption.AllDirectories);
-
-            foreach (var dir in subDirs)
-            {
-                Directory.Delete(dir.FullName, true);
-            }
-
-            return subDirs.Length;
-        }
-
-        /// <summary>
-        /// Deletes all directories and sub directories with name <paramref name="directoryName" />.
-        /// </summary>
-        /// <param name="basePath">Base directory path.</param>
-        /// <param name="directoryName">Name of directories to delete.</param>
-        /// <returns>Count of directories deleted.</returns>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="basePath" /> is null.</exception>
-        /// <exception cref="T:System.ArgumentException"><paramref name="directoryName" /> was null or empty.</exception>
-        public int DeleteDirectoriesWithName(string basePath, string directoryName)
-        {
-            return DeleteDirectoriesWithName(new DirectoryInfo(basePath), directoryName);
         }
     }
 }

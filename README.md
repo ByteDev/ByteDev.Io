@@ -41,7 +41,6 @@ Methods:
 - MoveFile
 - CopyFile
 - SwapFileNames
-- DeleteDirectoriesWithName
 
 **FileSize:** Represents a binary file size.
 
@@ -83,6 +82,7 @@ AssemblyExtensions
 DirectoryInfoExtensions
 - CreateDirectory
 - DeleteDirectories
+- DeleteDirectoriesWithName
 - DeleteFiles
 - Empty
 - GetFilesByExtensions

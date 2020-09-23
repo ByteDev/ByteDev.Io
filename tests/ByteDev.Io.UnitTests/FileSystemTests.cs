@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace ByteDev.Io.UnitTests
 {
     [TestFixture]
-    public class FileSystemTest
+    public class FileSystemTests
     {
         private const string FileExists = @"C:\Windows\explorer.exe";
 
@@ -19,7 +19,7 @@ namespace ByteDev.Io.UnitTests
         }
 
         [TestFixture]
-        public class FirstExists : FileSystemTest
+        public class FirstExists : FileSystemTests
         {
             [Test]
             public void WhenPathsIsNull_ThenThrowException()
@@ -34,7 +34,7 @@ namespace ByteDev.Io.UnitTests
             }
         }
 
-        public class SwapFileNames : FileSystemTest
+        public class SwapFileNames : FileSystemTests
         {
             [Test]
             public void WhenFileInfo1IsNull_ThenThrowException()
@@ -58,28 +58,6 @@ namespace ByteDev.Io.UnitTests
             public void WhenFile2IsNull_ThenThrowException()
             {
                 Assert.Throws<ArgumentNullException>(() => _sut.SwapFileNames(FileExists, null));
-            }
-        }
-
-        [TestFixture]
-        public class DeleteDirectoriesWithName : FileSystemTest
-        {
-            [Test]
-            public void WhenBasePathDirInfoIsNull_ThenThrowException()
-            {
-                Assert.Throws<ArgumentNullException>(() => _sut.DeleteDirectoriesWithName(null as DirectoryInfo, "someDir"));
-            }
-
-            [Test]
-            public void WhenBasePathIsNull_ThenThrowException()
-            {
-                Assert.Throws<ArgumentNullException>(() => _sut.DeleteDirectoriesWithName(null as string, "someDir"));
-            }
-
-            [Test]
-            public void WhenDirNameIsNull_ThenThrowException()
-            {
-                Assert.Throws<ArgumentException>(() => _sut.DeleteDirectoriesWithName(@"C:\Temp", null));
             }
         }
     }

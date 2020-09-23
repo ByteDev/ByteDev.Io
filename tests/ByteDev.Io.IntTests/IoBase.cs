@@ -43,7 +43,7 @@ namespace ByteDev.Io.IntTests
             return DirectoryTestBuilder.InFileSystem.WithPath(WorkingDir).EmptyIfExists().Build();
         }
 
-        protected string GetAbsolutePathFor(string path)
+        protected string GetAbsolutePath(string path)
         {
             return Path.Combine(WorkingDir, path);
         }

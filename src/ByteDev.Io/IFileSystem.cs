@@ -71,21 +71,5 @@ namespace ByteDev.Io
         /// <param name="file1">Name of first file.</param>
         /// <param name="file2">Name of second file.</param>
         void SwapFileNames(string file1, string file2);
-
-        /// <summary>
-        /// Deletes all directories and sub directories with name <paramref name="directoryName" />.
-        /// </summary>
-        /// <param name="basePath">Base directory path.</param>
-        /// <param name="directoryName">Name of directories to delete.</param>
-        /// <returns>Count of directories deleted.</returns>
-        int DeleteDirectoriesWithName(DirectoryInfo basePath, string directoryName);
-
-        /// <summary>
-        /// Deletes all directories and sub directories with name <paramref name="directoryName" />.
-        /// </summary>
-        /// <param name="basePath">Base directory path.</param>
-        /// <param name="directoryName">Name of directories to delete.</param>
-        /// <returns>Count of directories deleted.</returns>
-        int DeleteDirectoriesWithName(string basePath, string directoryName);
     }
 }

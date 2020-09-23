@@ -1,9 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace ByteDev.Io
 {
@@ -13,85 +10,17 @@ namespace ByteDev.Io
     public static class DirectoryInfoExtensions
     {
         /// <summary>
-        /// Retrieves all files with the file extensions.
+        /// Recursively create directory path. If any part of the path exists
+        /// then no exception will be thrown.
         /// </summary>
-        /// <param name="source">The directory to get files from.</param>
-        /// <param name="extensions">File extensions.</param>
-        /// <returns>Collection of files.</returns>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="extensions" /> is null.</exception>
-        public static IEnumerable<FileInfo> GetFilesByExtensions(this DirectoryInfo source, params string[] extensions)
+        /// <param name="source">Directory path to create.</param>
+        public static void CreateDirectory(this DirectoryInfo source)
         {
-            if (extensions == null)
-                throw new ArgumentNullException(nameof(extensions));
+            if (source.Parent != null) 
+                CreateDirectory(source.Parent);
 
-            var delimitedStr = new StringBuilder();
-
-            foreach (var exten in extensions)
-            {
-                if (delimitedStr.ToString() != string.Empty)
-                    delimitedStr.Append('|');
-
-                delimitedStr.Append(exten.StartsWith(".") ? exten.Substring(1) : exten);
-            }
-
-            return GetFilesByExtensions(source, delimitedStr.ToString());
-        }
-
-        /// <summary>
-        /// Retrieves all files with the file extensions.
-        /// </summary>
-        /// <param name="source">The directory to get files from.</param>
-        /// <param name="fileExtensions">File extensions delimited by pipe character.</param>
-        /// <returns>Collection of files.</returns>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
-        public static IEnumerable<FileInfo> GetFilesByExtensions(this DirectoryInfo source, string fileExtensions)
-        {
-            if(source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return source.GetFiles("*.*", SearchOption.TopDirectoryOnly)
-                .Where(file => Regex.IsMatch(file.Name, $@"^.+\.({fileExtensions})$", RegexOptions.IgnoreCase));
-        }
-
-        /// <summary>
-        /// Retrieves all image files.
-        /// </summary>
-        /// <param name="source">The directory to get all image files from.</param>
-        /// <returns>Collection of image files.</returns>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
-        public static IEnumerable<FileInfo> GetImageFiles(this DirectoryInfo source)
-        {
-            const string imageExtenions = @"jpg|jpeg|gif|png|bmp|tif|tiff";
-
-            return GetFilesByExtensions(source, imageExtenions);
-        }
-
-        /// <summary>
-        /// Retrieves all video files.
-        /// </summary>
-        /// <param name="source">The directory to get all video files from.</param>
-        /// <returns>Collection of video files.</returns>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
-        public static IEnumerable<FileInfo> GetVideoFiles(this DirectoryInfo source)
-        {
-            const string videoContainerExtensions = @"avi|mkv|mp4|m4v|mov|qt|flv|swf|wmv|asf|mpg|mpeg|vob" +
-                                                    @"264|3g2|3gp|arf|asx|bik|dash|dat|dvr|h264|m2t|m2ts|mod|mts|ogv|rmvb|tod|tp|ts|webm";
-
-            return GetFilesByExtensions(source, videoContainerExtensions);
-        }
-
-        /// <summary>
-        /// Retrieves all audio files.
-        /// </summary>
-        /// <param name="source">The directory to get all audio files from.</param>
-        /// <returns>Collection of audio files.</returns>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
-        public static IEnumerable<FileInfo> GetAudioFiles(this DirectoryInfo source)
-        {
-            const string audioContainerExtensions = @"mp3|flac|mpa|wav|m4a|aif|ogg|wma|cda|mid|midi";
-
-            return GetFilesByExtensions(source, audioContainerExtensions);
+            if (!source.Exists) 
+                source.Create();
         }
 
         /// <summary>
@@ -105,19 +34,7 @@ namespace ByteDev.Io
         }
 
         /// <summary>
-        /// Delete all directories.
-        /// </summary>
-        /// <param name="source">The directory to delete all directories from.</param>
-        public static void DeleteDirectories(this DirectoryInfo source)
-        {
-            foreach (var dir in source.GetDirectories())
-            {
-                dir.Delete(true);
-            }
-        }
-
-        /// <summary>
-        /// Delete all files.
+        /// Delete all files in the source directory.
         /// </summary>
         /// <param name="source">The directory to delete all files from.</param>
         public static void DeleteFiles(this DirectoryInfo source)
@@ -127,38 +44,72 @@ namespace ByteDev.Io
                 file.Delete();
             }
         }
-        
+
         /// <summary>
         /// Delete all files in the directory with particular extension.
         /// </summary>
         /// <param name="source">The directory to delete all files with the extension from.</param>
-        /// <param name="extension">File extension without period prefix.</param>
+        /// <param name="extension">File extension search pattern.</param>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="extension" /> is null.</exception>
         public static void DeleteFiles(this DirectoryInfo source, string extension)
         {
-            foreach (var file in source.GetFiles("*." + extension))
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            foreach (var file in source.GetFiles(ExtensionSearchPattern.Create(extension)))
             {
                 file.Delete();
             }
         }
 
         /// <summary>
-        /// Recursively create directory.
+        /// Delete all directories in the source directory.
         /// </summary>
-        /// <param name="source">Directory path to create.</param>
-        public static void CreateDirectory(this DirectoryInfo source)
+        /// <param name="source">The directory to delete all directories from.</param>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
+        public static void DeleteDirectories(this DirectoryInfo source)
         {
-            if (source.Parent != null) 
-                CreateDirectory(source.Parent);
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
 
-            if (!source.Exists) 
-                source.Create();
+            foreach (var dir in source.GetDirectories())
+            {
+                dir.Delete(true);
+            }
         }
 
         /// <summary>
-        /// Retrieves the total size of the directory and optionally it's subdirectories.
+        /// Deletes all directories and sub directories with name <paramref name="directoryName" />.
+        /// </summary>
+        /// <param name="source">Base directory path.</param>
+        /// <param name="directoryName">Name of directories to delete.</param>
+        /// <returns>Count of directories deleted.</returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
+        /// <exception cref="T:System.ArgumentException"><paramref name="directoryName" /> was null or empty.</exception>
+        public static int DeleteDirectoriesWithName(this DirectoryInfo source, string directoryName)
+        {
+            if(source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            if(string.IsNullOrEmpty(directoryName))
+                throw new ArgumentException("Directory name to delete was null or empty.");
+
+            DirectoryInfo[] subDirs = source.GetDirectories(directoryName, SearchOption.AllDirectories);
+
+            foreach (var dir in subDirs)
+            {
+                Directory.Delete(dir.FullName, true);
+            }
+
+            return subDirs.Length;
+        }
+
+        /// <summary>
+        /// Retrieves the total size of all the directory's files and optionally it's subdirectories.
         /// </summary>
         /// <param name="source">Directory to retrieve the size on.</param>
-        /// <param name="includeSubDirectories">True include all subdirectories; false does not.</param>
+        /// <param name="includeSubDirectories">True include all subdirectories; false do not.</param>
         /// <returns>Size of <paramref name="source" /> in bytes.</returns>
         public static long GetSize(this DirectoryInfo source, bool includeSubDirectories = false)
         {
