@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using ByteDev.Testing.TestBuilders.FileSystem;
+using ByteDev.Testing.Builders;
 
 namespace ByteDev.Io.IntTests.FileCommands
 {
@@ -13,23 +13,23 @@ namespace ByteDev.Io.IntTests.FileCommands
         protected void SetupSourceDir()
         {
             SourceDir = Path.Combine(WorkingDir, "Source");
-            DirectoryTestBuilder.InFileSystem.WithPath(SourceDir).EmptyIfExists().Build();
+            DirectoryBuilder.InFileSystem.WithPath(SourceDir).EmptyIfExists().Build();
         }
 
         protected void SetupDestinationDir()
         {
             DestinationDir = Path.Combine(WorkingDir, "Destination");
-            DirectoryTestBuilder.InFileSystem.WithPath(DestinationDir).EmptyIfExists().Build();
+            DirectoryBuilder.InFileSystem.WithPath(DestinationDir).EmptyIfExists().Build();
         }
 
         protected FileInfo CreateSourceFile(string filePath, long size = 0)
         {
-            return FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(SourceDir, filePath)).WithSize(size).Build();
+            return FileBuilder.InFileSystem.WithPath(Path.Combine(SourceDir, filePath)).WithSize(size).Build();
         }
 
         protected FileInfo CreateDestinationFile(string filePath, long size = 0)
         {
-            return FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(DestinationDir, filePath)).WithSize(size).Build();
+            return FileBuilder.InFileSystem.WithPath(Path.Combine(DestinationDir, filePath)).WithSize(size).Build();
         }
     }
 }

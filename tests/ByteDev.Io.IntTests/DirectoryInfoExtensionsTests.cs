@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using ByteDev.Testing.Builders;
 using ByteDev.Testing.NUnit;
-using ByteDev.Testing.TestBuilders.FileSystem;
 using NUnit.Framework;
 
 namespace ByteDev.Io.IntTests
@@ -83,11 +83,11 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenThereAreFilesAndDirectories_ThenDeleteAllFilesAndDirectories()
             {
-                DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "DirTest1")).Build();
-                DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "DirTest2")).Build();
+                DirectoryBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "DirTest1")).Build();
+                DirectoryBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "DirTest2")).Build();
 
-                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test1.txt")).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test2.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test1.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test2.txt")).Build();
 
                 var sut = CreateSut();
 
@@ -117,11 +117,11 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenContainsFilesAndDirectories_ThenDeleteAllFilesAndDirectories()
             {
-                DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "DirTest1")).Build();
-                DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "DirTest2")).Build();
+                DirectoryBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "DirTest1")).Build();
+                DirectoryBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "DirTest2")).Build();
 
-                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test1.txt")).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test2.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test1.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test2.txt")).Build();
 
                 var sut = CreateSut();
 
@@ -151,11 +151,11 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenContainsFilesAndDirectories_ThenDelete()
             {
-                DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "DirTest1")).Build();
-                DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "DirTest2")).Build();
+                DirectoryBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "DirTest1")).Build();
+                DirectoryBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "DirTest2")).Build();
 
-                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test1.txt")).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test2.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test1.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test2.txt")).Build();
 
                 var sut = CreateSut();
 
@@ -185,7 +185,7 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenDirectoryIsNotEmpty_ThenDoNotDelete()
             {
-                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test1.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test1.txt")).Build();
 
                 var sut = CreateSut();
 
@@ -220,8 +220,8 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenThereAreTwoFiles_ThenDeleteAllFiles()
             {
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("Test1.txt")).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("Test2.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath("Test1.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath("Test2.txt")).Build();
 
                 var sut = CreateSut();
 
@@ -233,9 +233,9 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenExtensionSpecified_ThenDeleteOnlyFilesWithExtension()
             {
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("Test1.txt")).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("Test2.txt")).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("Test3.log")).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath("Test1.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath("Test2.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath("Test3.log")).Build();
 
                 var sut = CreateSut();
 
@@ -247,9 +247,9 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenExtensionIsEmpty_ThenDeleteOnlyFilesWithNoExtension()
             {
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("Test1")).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("Test2")).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("Test3.log")).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath("Test1")).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath("Test2")).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath("Test3.log")).Build();
 
                 var sut = CreateSut();
 
@@ -271,17 +271,17 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenContainsFilesNotOnExceptList_ThenDeleteFiles()
             {
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("Test1.txt")).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("Test2.txt")).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("Test3.txt")).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("Test4.txt")).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("Test5.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath("Test1.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath("Test2.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath("Test3.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath("Test4.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath("Test5.txt")).Build();
 
-                var testDir = DirectoryTestBuilder.InFileSystem.WithPath(GetAbsolutePath("DirTest1")).Build();
+                var testDir = DirectoryBuilder.InFileSystem.WithPath(GetAbsolutePath("DirTest1")).Build();
 
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath(@"DirTest1\Test1.txt")).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath(@"DirTest1\Test2.txt")).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath(@"DirTest1\Test3.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath(@"DirTest1\Test1.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath(@"DirTest1\Test2.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath(@"DirTest1\Test3.txt")).Build();
 
                 var sut = CreateSut();
 
@@ -304,16 +304,16 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenContainsFilesNotOnExceptList_ThenDeleteFiles()
             {
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("Test1.txt")).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("Test2.txt")).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("Test3.txt")).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("Test4.txt")).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("Test5.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath("Test1.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath("Test2.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath("Test3.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath("Test4.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath("Test5.txt")).Build();
 
-                var testDir = DirectoryTestBuilder.InFileSystem.WithPath(GetAbsolutePath("DirTest1")).Build();
+                var testDir = DirectoryBuilder.InFileSystem.WithPath(GetAbsolutePath("DirTest1")).Build();
 
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath(@"DirTest1\Test1.txt")).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath(@"DirTest1\Test3.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath(@"DirTest1\Test1.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath(@"DirTest1\Test3.txt")).Build();
 
                 var sut = CreateSut();
 
@@ -336,8 +336,8 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenThereAreDirectories_ThenDeleteAllDirectories()
             {
-                DirectoryTestBuilder.InFileSystem.WithPath(GetAbsolutePath("DirTest1")).Build();
-                DirectoryTestBuilder.InFileSystem.WithPath(GetAbsolutePath("DirTest2")).Build();
+                DirectoryBuilder.InFileSystem.WithPath(GetAbsolutePath("DirTest1")).Build();
+                DirectoryBuilder.InFileSystem.WithPath(GetAbsolutePath("DirTest2")).Build();
 
                 var sut = CreateSut();
 
@@ -359,7 +359,7 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenNoMatches_ThenReturnZero()
             {
-                DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToNotDelete")).Build();
+                DirectoryBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToNotDelete")).Build();
 
                 var result = CreateSut().DeleteDirectoriesWithName("dirToDelete");
 
@@ -369,9 +369,9 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenMatchInBase_ThenDelete()
             {
-                var dirToNotDelete = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToNotDelete")).Build();
+                var dirToNotDelete = DirectoryBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToNotDelete")).Build();
 
-                var dirToDelete = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToDelete")).Build();
+                var dirToDelete = DirectoryBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToDelete")).Build();
 
                 var result = CreateSut().DeleteDirectoriesWithName("dirToDelete");
 
@@ -383,9 +383,9 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenCaseInsensitiveMatchInBase_ThenDelete()
             {
-                var dirToNotDelete = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToNotDelete")).Build();
+                var dirToNotDelete = DirectoryBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToNotDelete")).Build();
 
-                var dirToDelete = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "DIRtoDELETE")).Build();
+                var dirToDelete = DirectoryBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "DIRtoDELETE")).Build();
 
                 var result = CreateSut().DeleteDirectoriesWithName("dirToDelete");
 
@@ -397,11 +397,11 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenMatchingDirHasFiles_ThenDelete()
             {
-                DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToNotDelete")).Build();
+                DirectoryBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToNotDelete")).Build();
 
-                var dirToDelete = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToDelete")).Build();
+                var dirToDelete = DirectoryBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToDelete")).Build();
 
-                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(dirToDelete.FullName, "test.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(Path.Combine(dirToDelete.FullName, "test.txt")).Build();
 
                 var result = CreateSut().DeleteDirectoriesWithName("dirToDelete");
 
@@ -412,10 +412,10 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenMatchesInSubDir_ThenDelete()
             {
-                var dirToNotDelete = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToNotDelete")).Build();
-                var dirToDelete1 = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToDelete")).Build();
+                var dirToNotDelete = DirectoryBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToNotDelete")).Build();
+                var dirToDelete1 = DirectoryBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToDelete")).Build();
 
-                var dirToDelete2 = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(dirToNotDelete.FullName, "dirToDelete")).Build();
+                var dirToDelete2 = DirectoryBuilder.InFileSystem.WithPath(Path.Combine(dirToNotDelete.FullName, "dirToDelete")).Build();
 
                 var result = CreateSut().DeleteDirectoriesWithName("dirToDelete");
 
@@ -437,12 +437,12 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenContainsEmptyDirectories_ThenDeleteEmptyDirectories()
             {
-                var dirToNotDelete = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToNotDelete")).Build();
+                var dirToNotDelete = DirectoryBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToNotDelete")).Build();
                 
-                var dirToDelete1 = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToDelete1")).Build();
-                var dirToDelete2 = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToDelete2")).Build();
+                var dirToDelete1 = DirectoryBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToDelete1")).Build();
+                var dirToDelete2 = DirectoryBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "dirToDelete2")).Build();
 
-                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(dirToNotDelete.FullName, "test.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(Path.Combine(dirToNotDelete.FullName, "test.txt")).Build();
 
                 CreateSut().DeleteEmptyDirectories();
 
@@ -465,7 +465,7 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenFileHasSizeZero_ThenReturnZero()
             {
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("GetSizeTest0.txt")).WithSize(0).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath("GetSizeTest0.txt")).WithSize(0).Build();
 
                 var sut = CreateSut();
 
@@ -479,7 +479,7 @@ namespace ByteDev.Io.IntTests
             {
                 const long fileSize = 1;
 
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("GetSizeTest1.txt")).WithSize(fileSize).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath("GetSizeTest1.txt")).WithSize(fileSize).Build();
 
                 var sut = CreateSut();
 
@@ -491,9 +491,9 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenThreeFilesExist_ThenReturnSumOfFileSizes()
             {
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("GetSizeTest10.txt")).WithSize(5).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("GetSizeTest11.txt")).WithSize(10).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("GetSizeTest12.txt")).WithSize(20).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath("GetSizeTest10.txt")).WithSize(5).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath("GetSizeTest11.txt")).WithSize(10).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath("GetSizeTest12.txt")).WithSize(20).Build();
 
                 var sut = CreateSut();
 
@@ -505,11 +505,11 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenDirectoryHasFilesAndSubDirectoriesWithFiles_ThenReturnSumOfAllFileSizes()
             {
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("GetSizeTest10.txt")).WithSize(5).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("GetSizeTest11.txt")).WithSize(10).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath("GetSizeTest10.txt")).WithSize(5).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath("GetSizeTest11.txt")).WithSize(10).Build();
 
-                DirectoryTestBuilder.InFileSystem.WithPath(GetAbsolutePath("Dir1")).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath(@"Dir1\Dir1GetSizeTest1.txt")).WithSize(20).Build();
+                DirectoryBuilder.InFileSystem.WithPath(GetAbsolutePath("Dir1")).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath(@"Dir1\Dir1GetSizeTest1.txt")).WithSize(20).Build();
 
                 var sut = CreateSut();
 
@@ -521,15 +521,15 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenDirectoryHasFilesAndSubDirectoriesWithFiles_AndInclude_ThenReturnSumOfAllFileSizes()
             {
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("GetSizeTest10.txt")).WithSize(5).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath("GetSizeTest11.txt")).WithSize(10).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath("GetSizeTest10.txt")).WithSize(5).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath("GetSizeTest11.txt")).WithSize(10).Build();
 
-                DirectoryTestBuilder.InFileSystem.WithPath(GetAbsolutePath("Dir1")).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath(@"Dir1\Dir1GetSizeTest1.txt")).WithSize(20).Build();
+                DirectoryBuilder.InFileSystem.WithPath(GetAbsolutePath("Dir1")).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath(@"Dir1\Dir1GetSizeTest1.txt")).WithSize(20).Build();
 
-                DirectoryTestBuilder.InFileSystem.WithPath(GetAbsolutePath("Dir2")).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath(@"Dir2\Dir2GetSizeTest1.txt")).WithSize(30).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(GetAbsolutePath(@"Dir2\Dir2GetSizeTest2.txt")).WithSize(35).Build();
+                DirectoryBuilder.InFileSystem.WithPath(GetAbsolutePath("Dir2")).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath(@"Dir2\Dir2GetSizeTest1.txt")).WithSize(30).Build();
+                FileBuilder.InFileSystem.WithPath(GetAbsolutePath(@"Dir2\Dir2GetSizeTest2.txt")).WithSize(35).Build();
 
                 var sut = CreateSut();
 
@@ -562,7 +562,7 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenHasFile_ThenReturnFalse()
             {
-                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test1.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test1.txt")).Build();
 
                 var sut = new DirectoryInfo(WorkingDir);
 
@@ -574,7 +574,7 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenHasDirectory_ThenReturnFalse()
             {
-                DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "NewFolder")).Build();
+                DirectoryBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "NewFolder")).Build();
 
                 var sut = new DirectoryInfo(WorkingDir);
 

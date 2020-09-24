@@ -1,6 +1,6 @@
 ﻿using System.IO;
 using System.Reflection;
-using ByteDev.Testing.TestBuilders.FileSystem;
+using ByteDev.Testing.Builders;
 using NUnit.Framework;
 
 namespace ByteDev.Io.IntTests
@@ -22,12 +22,12 @@ namespace ByteDev.Io.IntTests
 
         private FileInfo CreateSourceFile(string fileName, long size = 0)
         {
-            return FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(_sourceDir, fileName)).WithSize(size).Build();
+            return FileBuilder.InFileSystem.WithPath(Path.Combine(_sourceDir, fileName)).WithSize(size).Build();
         }
 
         private FileInfo CreateDestinationFile(string fileName, long size = 0)
         {
-            return FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(_destinationDir, fileName)).WithSize(size).Build();
+            return FileBuilder.InFileSystem.WithPath(Path.Combine(_destinationDir, fileName)).WithSize(size).Build();
         }
 
         [SetUp]
@@ -39,8 +39,8 @@ namespace ByteDev.Io.IntTests
             _sourceDir = Path.Combine(WorkingDir, "Source");
             _destinationDir = Path.Combine(WorkingDir, "Destination");
 
-            DirectoryTestBuilder.InFileSystem.WithPath(_sourceDir).EmptyIfExists().Build();
-            DirectoryTestBuilder.InFileSystem.WithPath(_destinationDir).EmptyIfExists().Build();
+            DirectoryBuilder.InFileSystem.WithPath(_sourceDir).EmptyIfExists().Build();
+            DirectoryBuilder.InFileSystem.WithPath(_destinationDir).EmptyIfExists().Build();
         }
 
         [TestFixture]

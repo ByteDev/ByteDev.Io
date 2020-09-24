@@ -1,8 +1,8 @@
 ﻿using System.IO;
 using System.Reflection;
 using ByteDev.Io.IntTests.TestFiles;
+using ByteDev.Testing.Builders;
 using ByteDev.Testing.NUnit;
-using ByteDev.Testing.TestBuilders.FileSystem;
 using NUnit.Framework;
 
 namespace ByteDev.Io.IntTests
@@ -73,7 +73,7 @@ namespace ByteDev.Io.IntTests
             {
                 var saveFilePath = Path.Combine(WorkingDir, TestFileNames.ExistingEmbeddedFile);
 
-                FileTestBuilder.InFileSystem.WithFilePath(saveFilePath).Build();
+                FileBuilder.InFileSystem.WithPath(saveFilePath).Build();
 
                 var sut = AssemblyEmbeddedResource.CreateFromAssemblyContaining<AssemblyEmbeddedResourceTests>(TestFileNames.ExistingEmbeddedFile);
 

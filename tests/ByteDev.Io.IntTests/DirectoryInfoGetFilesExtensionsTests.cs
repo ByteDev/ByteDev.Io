@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Reflection;
-using ByteDev.Testing.TestBuilders.FileSystem;
+using ByteDev.Testing.Builders;
 using NUnit.Framework;
 
 namespace ByteDev.Io.IntTests
@@ -48,7 +48,7 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenDirHasNoImages_ThenReturnEmpty()
             {
-                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "NotImage.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "NotImage.txt")).Build();
 
                 var result = Createsut().GetImageFiles();
 
@@ -58,13 +58,13 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenDirHasImages_AndNonImage_ThenReturnTheImages()
             {
-                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "NotImage.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "NotImage.txt")).Build();
 
-                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Image.jpg")).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Image.gif")).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Image.png")).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Image.jpeg")).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Image.bmp")).Build();
+                FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Image.jpg")).Build();
+                FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Image.gif")).Build();
+                FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Image.png")).Build();
+                FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Image.jpeg")).Build();
+                FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Image.bmp")).Build();
 
                 var result = Createsut().GetImageFiles().ToList();
 
@@ -86,9 +86,9 @@ namespace ByteDev.Io.IntTests
             {
                 EmptyWorkingDir();
 
-                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test1.txt")).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test2.text")).Build();
-                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test1.gif")).Build();
+                FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test1.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test2.text")).Build();
+                FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test1.gif")).Build();
 
                 var result = Createsut().GetFilesByExtensions(".txt", "text");
 

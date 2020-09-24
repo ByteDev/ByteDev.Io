@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using ByteDev.Testing.TestBuilders.FileSystem;
+using ByteDev.Testing.Builders;
 
 namespace ByteDev.Io.IntTests
 {
@@ -43,7 +43,7 @@ namespace ByteDev.Io.IntTests
 
         protected DirectoryInfo CreateOrEmptyWorkingDir()
         {
-            return DirectoryTestBuilder.InFileSystem.WithPath(WorkingDir).EmptyIfExists().Build();
+            return DirectoryBuilder.InFileSystem.WithPath(WorkingDir).EmptyIfExists().Build();
         }
 
         protected string GetAbsolutePath(string path)

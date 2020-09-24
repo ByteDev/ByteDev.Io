@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="ByteDev.Testing" Version="1.0.0" />
     <PackageReference Include="ByteDev.Testing.NUnit" Version="1.2.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
     <PackageReference Include="NUnit" Version="3.12.0" />
@@ -21,12 +22,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\ByteDev.Io\ByteDev.Io.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="ByteDev.Testing">
-      <HintPath>..\..\lib\ByteDev.Testing-1.4.1.0\ByteDev.Testing.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
   <ItemGroup>

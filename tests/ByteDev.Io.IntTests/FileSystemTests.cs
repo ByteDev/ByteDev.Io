@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Reflection;
+using ByteDev.Testing.Builders;
 using ByteDev.Testing.NUnit;
-using ByteDev.Testing.TestBuilders.FileSystem;
 using NUnit.Framework;
 
 namespace ByteDev.Io.IntTests
@@ -42,7 +42,7 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenFileExists_ThenReturnTrue()
             {
-                var fileInfo = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "test.txt")).Build();
+                var fileInfo = FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "test.txt")).Build();
 
                 var result = _sut.IsFile(fileInfo.FullName);
 
@@ -52,7 +52,7 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenDirectoryExists_ThenReturnFalse()
             {
-                var dirInfo = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "TestDir")).Build();
+                var dirInfo = DirectoryBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "TestDir")).Build();
 
                 var result = _sut.IsFile(dirInfo.FullName);
 
@@ -79,7 +79,7 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenFileExists_ThenReturnFalse()
             {
-                var fileInfo = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "test.txt")).Build();
+                var fileInfo = FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "test.txt")).Build();
 
                 var result = _sut.IsDirectory(fileInfo.FullName);
 
@@ -89,7 +89,7 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenDirectoryExists_ThenReturnTrue()
             {
-                var dirInfo = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "TestDir")).Build();
+                var dirInfo = DirectoryBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "TestDir")).Build();
 
                 var result = _sut.IsDirectory(dirInfo.FullName);
 
@@ -122,7 +122,7 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenOneFilePathMatches_ThenReturnPath()
             {
-                var testFile = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "test2.txt")).Build();
+                var testFile = FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "test2.txt")).Build();
 
                 string[] paths =
                 {
@@ -138,8 +138,8 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenPathsMixed_AndDirectoryFound_ThenReturnDirectory()
             {
-                var testDir = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "TestDirectory")).Build();
-                var testFile = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "test2.txt")).Build();
+                var testDir = DirectoryBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "TestDirectory")).Build();
+                var testFile = FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "test2.txt")).Build();
 
                 string[] paths =
                 {
@@ -157,8 +157,8 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenPathsMixed_AndFileFound_ThenReturnFile()
             {
-                var testDir = DirectoryTestBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "TestDirectory")).Build();
-                var testFile = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "test2.txt")).Build();
+                var testDir = DirectoryBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "TestDirectory")).Build();
+                var testFile = FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "test2.txt")).Build();
 
                 string[] paths =
                 {
@@ -190,8 +190,8 @@ namespace ByteDev.Io.IntTests
                 _sourceDir = Path.Combine(WorkingDir, "Source");
                 _destinationDir = Path.Combine(WorkingDir, "Destination");
 
-                DirectoryTestBuilder.InFileSystem.WithPath(_sourceDir).EmptyIfExists().Build();
-                DirectoryTestBuilder.InFileSystem.WithPath(_destinationDir).EmptyIfExists().Build();
+                DirectoryBuilder.InFileSystem.WithPath(_sourceDir).EmptyIfExists().Build();
+                DirectoryBuilder.InFileSystem.WithPath(_destinationDir).EmptyIfExists().Build();
             }
 
             [Test]
@@ -212,7 +212,7 @@ namespace ByteDev.Io.IntTests
 
             private FileInfo CreateSourceFile(string filePath, long size = 0)
             {
-                return FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(_sourceDir, filePath)).WithSize(size).Build();
+                return FileBuilder.InFileSystem.WithPath(Path.Combine(_sourceDir, filePath)).WithSize(size).Build();
             }
         }
 
@@ -232,8 +232,8 @@ namespace ByteDev.Io.IntTests
                 _sourceDir = Path.Combine(WorkingDir, "Source");
                 _destinationDir = Path.Combine(WorkingDir, "Destination");
 
-                DirectoryTestBuilder.InFileSystem.WithPath(_sourceDir).EmptyIfExists().Build();
-                DirectoryTestBuilder.InFileSystem.WithPath(_destinationDir).EmptyIfExists().Build();
+                DirectoryBuilder.InFileSystem.WithPath(_sourceDir).EmptyIfExists().Build();
+                DirectoryBuilder.InFileSystem.WithPath(_destinationDir).EmptyIfExists().Build();
             }
 
             [Test]
@@ -254,7 +254,7 @@ namespace ByteDev.Io.IntTests
 
             private FileInfo CreateSourceFile(string filePath, long size = 0)
             {
-                return FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(_sourceDir, filePath)).WithSize(size).Build();
+                return FileBuilder.InFileSystem.WithPath(Path.Combine(_sourceDir, filePath)).WithSize(size).Build();
             }
         }
 
@@ -277,8 +277,8 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenBothFilesExist_ThenSwapFileNames()
             {
-                var file1 = FileTestBuilder.InFileSystem.WithFilePath(_filePath1).WithSize(1).Build();
-                var file2 = FileTestBuilder.InFileSystem.WithFilePath(_filePath2).WithSize(2).Build();
+                var file1 = FileBuilder.InFileSystem.WithPath(_filePath1).WithSize(1).Build();
+                var file2 = FileBuilder.InFileSystem.WithPath(_filePath2).WithSize(2).Build();
 
                 _sut.SwapFileNames(file1, file2);
 
@@ -290,14 +290,14 @@ namespace ByteDev.Io.IntTests
             public void WhenFirstFileDoesNotExist_ThenThrowException()
             {
                 var file1 = new FileInfo(_filePath1);
-                var file2 = FileTestBuilder.InFileSystem.WithFilePath(_filePath2).WithSize(2).Build();
+                var file2 = FileBuilder.InFileSystem.WithPath(_filePath2).WithSize(2).Build();
 
                 Assert.Throws<FileNotFoundException>(() => Act(file1, file2));
             }
             [Test]
             public void WhenSecondFileDoesNotExist_ThenThrowException()
             {
-                var file1 = FileTestBuilder.InFileSystem.WithFilePath(_filePath1).WithSize(1).Build();
+                var file1 = FileBuilder.InFileSystem.WithPath(_filePath1).WithSize(1).Build();
                 var file2 = new FileInfo(_filePath2);
 
                 Assert.Throws<FileNotFoundException>(() => Act(file1, file2));
@@ -306,7 +306,7 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenSecondFileDoesNotExist_ThenRenameFirstFileBackToOriginalName()
             {
-                var file1 = FileTestBuilder.InFileSystem.WithFilePath(_filePath1).WithSize(1).Build();
+                var file1 = FileBuilder.InFileSystem.WithPath(_filePath1).WithSize(1).Build();
                 var file2 = new FileInfo(_filePath2);
 
                 Assert.Throws<FileNotFoundException>(() => Act(file1, file2));

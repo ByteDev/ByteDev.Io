@@ -1,8 +1,8 @@
 ﻿using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
+using ByteDev.Testing.Builders;
 using ByteDev.Testing.NUnit;
-using ByteDev.Testing.TestBuilders.FileSystem;
 using NUnit.Framework;
 
 namespace ByteDev.Io.IntTests
@@ -24,7 +24,7 @@ namespace ByteDev.Io.IntTests
             {
                 SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
 
-                var dirInfo = DirectoryTestBuilder.InFileSystem.WithPath(WorkingDir).Build();
+                var dirInfo = DirectoryBuilder.InFileSystem.WithPath(WorkingDir).Build();
 
                 dirInfo.Empty();
             }
@@ -46,7 +46,7 @@ namespace ByteDev.Io.IntTests
             {
                 var filePath = Path.Combine(WorkingDir, "Stream-WriteToFile2.txt");
 
-                FileTestBuilder.InFileSystem.WithFilePath(filePath).WithText("A").Build();
+                FileBuilder.InFileSystem.WithPath(filePath).WithText("A").Build();
 
                 var sut = StreamFactory.Create("ABC");
 
@@ -64,7 +64,7 @@ namespace ByteDev.Io.IntTests
             {
                 SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
 
-                var dirInfo = DirectoryTestBuilder.InFileSystem.WithPath(WorkingDir).Build();
+                var dirInfo = DirectoryBuilder.InFileSystem.WithPath(WorkingDir).Build();
 
                 dirInfo.Empty();
             }
@@ -86,7 +86,7 @@ namespace ByteDev.Io.IntTests
             {
                 var filePath = Path.Combine(WorkingDir, "Stream-WriteToFile2.txt");
 
-                FileTestBuilder.InFileSystem.WithFilePath(filePath).WithText("A").Build();
+                FileBuilder.InFileSystem.WithPath(filePath).WithText("A").Build();
 
                 var sut = StreamFactory.Create("ABC");
 

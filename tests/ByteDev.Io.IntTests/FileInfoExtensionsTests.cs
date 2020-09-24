@@ -2,8 +2,8 @@
 using System.IO;
 using System.Reflection;
 using ByteDev.Io.IntTests.TestFiles;
+using ByteDev.Testing.Builders;
 using ByteDev.Testing.NUnit;
-using ByteDev.Testing.TestBuilders.FileSystem;
 using NUnit.Framework;
 
 namespace ByteDev.Io.IntTests
@@ -28,7 +28,7 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenFileExists_ThenDelete()
             {
-                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test1.txt")).Build();
+                var sut = FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test1.txt")).Build();
 
                 sut.DeleteIfExists();
 
@@ -70,7 +70,7 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenFirstFileExists_ThenReturnSecondFileName()
             {
-                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test1.txt")).Build();
+                var sut = FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test1.txt")).Build();
 
                 var result = sut.GetNextAvailableFileName();
 
@@ -80,7 +80,7 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenSecondFileExists_ThenReturnThirdFileName()
             {
-                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test1 (2).txt")).Build();
+                var sut = FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test1 (2).txt")).Build();
 
                 var result = sut.GetNextAvailableFileName();
 
@@ -90,9 +90,9 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenFirstAndThirdFileExists_ThenReturnSecondFileName()
             {
-                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test (3).txt")).Build();
+                FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test (3).txt")).Build();
 
-                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test.txt")).Build();
+                var sut = FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test.txt")).Build();
 
                 var result = sut.GetNextAvailableFileName();
 
@@ -102,7 +102,7 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenFileWithZeroFlagExists_ThenReturnFirstFileName()
             {
-                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test (0).txt")).Build();
+                var sut = FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test (0).txt")).Build();
 
                 var result = sut.GetNextAvailableFileName();
 
@@ -112,7 +112,7 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenFileExistsWithNonSpacedFlag_ThenReturnSecondFileName()
             {
-                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test(1).txt")).Build();
+                var sut = FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test(1).txt")).Build();
 
                 var result = sut.GetNextAvailableFileName();
 
@@ -145,7 +145,7 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenFileHasNoExtension_ThenAddExtension()
             {
-                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test")).Build();
+                var sut = FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test")).Build();
 
                 sut.AddExtension(".log");
 
@@ -156,7 +156,7 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenFileAlreadyHasExtension_ThenThrowException()
             {
-                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test.txt")).Build();
+                var sut = FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test.txt")).Build();
 
                 Assert.Throws<InvalidOperationException>(() => sut.AddExtension(".log"));
             }
@@ -164,7 +164,7 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenExtensionHasNoDotPrefix_ThenAddWithDotPrefix()
             {
-                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test")).Build();
+                var sut = FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test")).Build();
 
                 sut.AddExtension("log");
 
@@ -193,9 +193,9 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenTargetNameAlreadyExists_ThenThrowException()
             {
-                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test.log")).Build();
+                FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test.log")).Build();
                 
-                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test.txt")).Build();
+                var sut = FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test.txt")).Build();
 
                 var ex = Assert.Throws<IOException>(() => sut.RenameExtension(".log"));
                 Assert.That(ex.Message, Is.EqualTo("Cannot create a file when that file already exists."));
@@ -204,7 +204,7 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenNewExtensionIsEmpty_ThenRemoveExtension()
             {
-                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test.txt")).Build();
+                var sut = FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test.txt")).Build();
 
                 sut.RenameExtension(string.Empty);
 
@@ -214,7 +214,7 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenNewAndOldExtensionAreEqual_ThenKeepExtension()
             {
-                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test.txt")).Build();
+                var sut = FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test.txt")).Build();
 
                 sut.RenameExtension(".txt");
 
@@ -224,7 +224,7 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenNewExtensionIsDifferent_ThenRenameExtension()
             {
-                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test.txt")).Build();
+                var sut = FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test.txt")).Build();
 
                 sut.RenameExtension(".log");
 
@@ -235,9 +235,9 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenNewExtensionIsDifferent_AndNewFileExists_ThenThrowException()
             {
-                FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test.log")).Build();
+                FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test.log")).Build();
 
-                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test.txt")).Build();
+                var sut = FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test.txt")).Build();
 
                 var ex = Assert.Throws<IOException>(() => sut.RenameExtension(".log"));      
                 Assert.That(ex.Message, Is.EqualTo("Cannot create a file when that file already exists."));
@@ -248,7 +248,7 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenExtensionHasNoDotPrefix_ThenAddDotPrefix()
             {
-                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test.txt")).Build();
+                var sut = FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test.txt")).Build();
 
                 sut.RenameExtension("log");
 
@@ -259,7 +259,7 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenExistingFileHasNoExtension_ThenAddFileExtension()
             {
-                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test")).Build();
+                var sut = FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test")).Build();
 
                 sut.RenameExtension(".log");
                 
@@ -280,7 +280,7 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenFileHasExtension_ThenMakeLowerCase()
             {
-                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test.TXT")).Build();
+                var sut = FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test.TXT")).Build();
 
                 sut.RenameExtensionToLower();
 
@@ -290,7 +290,7 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenFileHasNoExtension_ThenDoNothing()
             {
-                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test")).Build();
+                var sut = FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test")).Build();
 
                 sut.RenameExtensionToLower();
 
@@ -310,7 +310,7 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenFileHasExtension_ThenRemoveExtension()
             {
-                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test.txt")).Build();
+                var sut = FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test.txt")).Build();
 
                 sut.RemoveExtension();
 
@@ -321,7 +321,7 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenFileHasNoExtension_ThenDoNothing()
             {
-                var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test")).Build();
+                var sut = FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test")).Build();
 
                 sut.RemoveExtension();
 
@@ -341,8 +341,8 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenFileIsNotBinary_ThenReturnFalse()
             {
-                var sut = FileTestBuilder.InFileSystem
-                    .WithFilePath(Path.Combine(WorkingDir, "Test1.txt"))
+                var sut = FileBuilder.InFileSystem
+                    .WithPath(Path.Combine(WorkingDir, "Test1.txt"))
                     .WithSize(10000)
                     .Build();
 
@@ -354,8 +354,8 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenFileHasConsecutiveNul_ThenReturnTrue()
             {
-                var sut = FileTestBuilder.InFileSystem
-                    .WithFilePath(Path.Combine(WorkingDir, "Test1.bin"))
+                var sut = FileBuilder.InFileSystem
+                    .WithPath(Path.Combine(WorkingDir, "Test1.bin"))
                     .WithText("abc123\0\0123")
                     .Build();
 
@@ -367,8 +367,8 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenFileHasOneNul_AndTwoConsecutiveSpecified_ThenReturnFalse()
             {
-                var sut = FileTestBuilder.InFileSystem
-                    .WithFilePath(Path.Combine(WorkingDir, "Test1.bin"))
+                var sut = FileBuilder.InFileSystem
+                    .WithPath(Path.Combine(WorkingDir, "Test1.bin"))
                     .WithText("abc123\0123")
                     .Build();
 
