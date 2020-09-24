@@ -55,6 +55,19 @@ namespace ByteDev.Io
         }
 
         /// <summary>
+        /// Retrieves all audio files.
+        /// </summary>
+        /// <param name="source">The directory to get all audio files from.</param>
+        /// <returns>Collection of audio files.</returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
+        public static IEnumerable<FileInfo> GetAudioFiles(this DirectoryInfo source)
+        {
+            const string audioContainerExtensions = @"mp3|flac|mpa|wav|m4a|aif|ogg|wma|cda|mid|midi";
+
+            return GetFilesByExtensions(source, audioContainerExtensions);
+        }
+
+        /// <summary>
         /// Retrieves all image files.
         /// </summary>
         /// <param name="source">The directory to get all image files from.</param>
@@ -80,19 +93,5 @@ namespace ByteDev.Io
 
             return GetFilesByExtensions(source, videoContainerExtensions);
         }
-
-        /// <summary>
-        /// Retrieves all audio files.
-        /// </summary>
-        /// <param name="source">The directory to get all audio files from.</param>
-        /// <returns>Collection of audio files.</returns>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
-        public static IEnumerable<FileInfo> GetAudioFiles(this DirectoryInfo source)
-        {
-            const string audioContainerExtensions = @"mp3|flac|mpa|wav|m4a|aif|ogg|wma|cda|mid|midi";
-
-            return GetFilesByExtensions(source, audioContainerExtensions);
-        }
-
     }
 }

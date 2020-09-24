@@ -18,6 +18,7 @@ namespace ByteDev.Io
             /// Multiplier of 1024.
             /// </summary>
             BinaryMultiplier = 1024,
+
             /// <summary>
             /// Multiplier of 1000.
             /// </summary>

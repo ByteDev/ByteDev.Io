@@ -25,44 +25,6 @@ namespace ByteDev.Io
         }
 
         /// <summary>
-        /// Read the stream as a UTF8 encoded string.
-        /// </summary>
-        /// <param name="source">Stream to read.</param>
-        /// <param name="tryStartFromBeginning">Indicates whether to read from the beginning of the stream if possible.</param>
-        /// <returns>A UTF8 encoded string from the stream.</returns>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
-        public static string ReadAsString(this Stream source, bool tryStartFromBeginning = true)
-        {
-            return ReadAsString(source, Encoding.UTF8, tryStartFromBeginning);
-        }
-
-        /// <summary>
-        /// Read the stream as a string.
-        /// </summary>
-        /// <param name="source">Stream to read.</param>
-        /// <param name="encoding">Encoding to use when reading from the stream.</param>
-        /// <param name="tryStartFromBeginning">Indicates whether to read from the beginning of the stream if possible.</param>
-        /// <returns>Encoding string from the stream.</returns>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="encoding" /> is null.</exception>
-        public static string ReadAsString(this Stream source, Encoding encoding, bool tryStartFromBeginning = true)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            if (encoding == null)
-                throw new ArgumentNullException(nameof(encoding));
-
-            if (tryStartFromBeginning && source.CanSeek)
-                source.Position = 0;
-
-            using (var sr = new StreamReader(source, encoding))
-            {
-                return sr.ReadToEnd();
-            }
-        }
-
-        /// <summary>
         /// Read the stream as a byte array.
         /// </summary>
         /// <param name="source">Stream to read.</param>
@@ -106,6 +68,44 @@ namespace ByteDev.Io
             source.CopyTo(memStream);
             memStream.Position = 0;
             return memStream;
+        }
+
+        /// <summary>
+        /// Read the stream as a UTF8 encoded string.
+        /// </summary>
+        /// <param name="source">Stream to read.</param>
+        /// <param name="tryStartFromBeginning">Indicates whether to read from the beginning of the stream if possible.</param>
+        /// <returns>A UTF8 encoded string from the stream.</returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
+        public static string ReadAsString(this Stream source, bool tryStartFromBeginning = true)
+        {
+            return ReadAsString(source, Encoding.UTF8, tryStartFromBeginning);
+        }
+
+        /// <summary>
+        /// Read the stream as a string.
+        /// </summary>
+        /// <param name="source">Stream to read.</param>
+        /// <param name="encoding">Encoding to use when reading from the stream.</param>
+        /// <param name="tryStartFromBeginning">Indicates whether to read from the beginning of the stream if possible.</param>
+        /// <returns>Encoding string from the stream.</returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="encoding" /> is null.</exception>
+        public static string ReadAsString(this Stream source, Encoding encoding, bool tryStartFromBeginning = true)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            if (encoding == null)
+                throw new ArgumentNullException(nameof(encoding));
+
+            if (tryStartFromBeginning && source.CanSeek)
+                source.Position = 0;
+
+            using (var sr = new StreamReader(source, encoding))
+            {
+                return sr.ReadToEnd();
+            }
         }
 
         /// <summary>

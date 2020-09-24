@@ -76,8 +76,8 @@ namespace ByteDev.Io
         /// <summary>
         /// Swaps the file names of two files.
         /// </summary>
-        /// <param name="file1">Name of first file.</param>
-        /// <param name="file2">Name of second file.</param>
-        void SwapFileNames(string file1, string file2);
+        /// <param name="filePath1">Name of first file.</param>
+        /// <param name="filePath2">Name of second file.</param>
+        void SwapFileNames(string filePath1, string filePath2);
     }
 }

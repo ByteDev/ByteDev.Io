@@ -15,12 +15,6 @@ ByteDev.Io is hosted as a package on nuget.org.  To install from the Package Man
 
 Further details can be found on the [nuget page](https://www.nuget.org/packages/ByteDev.Io/).
 
-## Code
-
-The repo can be cloned from git bash:
-
-`git clone https://github.com/ByteDev/ByteDev.Io`
-
 ## Release Notes
 
 Releases follow semantic versioning.
@@ -29,13 +23,14 @@ Full details of the release notes can be viewed on [GitHub](https://github.com/B
 
 ## Usage
 
-### Main public classes
-
 To use these main public classes simply reference `ByteDev.Io`.
 
-**FileSytem**: Provides a small set of methods for working with files and directories.
+### FileSytem
+
+Provides a small set of methods for working with files and directories.
 
 Methods:
+
 - IsFile
 - IsDirectory
 - FirstExists
@@ -43,25 +38,105 @@ Methods:
 - CopyFile
 - SwapFileNames
 
-**FileSize:** Represents a binary file size.
+```csharp
+// Initialize object
+IFileSystem fs = new FileSystem();
+```
 
-**FileComparer**: Provides functionality to compare two files.
+```csharp
+// Is it a file? Is it a directory?
+
+bool isFile = fs.IsFile(@"C:\Temp\Something");
+bool isDir = fs.IsDirectory(@"C:\Temp\Something");
+```
+
+```csharp
+// Return first thing that exists
+
+string[] paths =
+{
+    @"C:\Temp\Test1.txt",
+    @"C:\Temp\Test2.txt",
+    @"C:\Temp\TestDirectory",
+};
+
+var path = fs.FirstExists(paths);
+```
+
+```csharp
+// Move a file
+
+string sourceFile = @"C:\Temp\TestFile1.txt";
+string destinationFile = @"C:\Windows\TestFile1.txt";
+
+FileInfo info = fs.MoveFile(sourceFile, destinationFile, 
+    FileOperationBehaviourType.DestExistsOverwrite);
+
+// info.FullName = @"C:\Windows\TestFile1.txt" if successful
+```
+
+```csharp
+// Copy a file
+
+string sourceFile = @"C:\Temp\TestFile1.txt";
+string destinationFile = @"C:\Windows\TestFile1.txt";
+
+FileInfo info = fs.CopyFile(sourceFile, destinationFile, 
+    FileOperationBehaviourType.DestExistsOverwrite);
+
+// info.FullName = @"C:\Windows\TestFile1.txt" if successful
+```
+
+```csharp
+// Swap two existing file's names
+
+string file1 = @"C:\Temp\archive1.png";
+string file2 = @"C:\Temp\cover.png";
+
+fs.SwapFileNames(file1, file2);
+```
+
+### FileSize
+
+Represents file size.
+
+```csharp
+long numberOfBytes = 1048576;
+
+FileSize fileSize = new FileSize(numberOfBytes, FileSize.MultiplierType.DecimalMultiplier);
+
+Console.Write(fileSize.ReadableSize);           // "1 MB"
+Console.Write(fileSize.TotalBytes);             // 1048576
+Console.Write(fileSize.TotalKiloBytes);         // 1048
+Console.Write(fileSize.TotalMegaBytes);         // 1
+```
+
+### FileComparer
+
+Provides functionality to compare two files.
 
 Methods:
+
 - IsSourceBigger
 - IsSourceBiggerOrEqual
 - IsSourceModifiedMoreRecently
 
-**AssemblyEmbeddedResource:** Provides functionality for easily retrieving embedded resources from assemblies.
+### AssemblyEmbeddedResource
+
+Provides functionality for easily retrieving embedded resources from assemblies.
 
 Methods:
+
 - CreateFromAssemblyContaining
 - CreateFromAssembly
 - Save
 
-**IsolatedStorageIo:** Provides isolated storage operations.
+### IsolatedStorageIo
+
+Provides functionality for isolated storage operations. To use reference namespace: `ByteDev.Io.IsolatedStorage`.
 
 Methods:
+
 - Exists
 - Delete
 - Write
@@ -69,18 +144,40 @@ Methods:
 - ReadAsXmlDoc
 - ReadAsXDoc
 
-**StreamFactory**: Provides simple functionality to create memory streams.
+```csharp
+var io = new IsolatedStorageIo(IsolatedStorageFileType.UserStoreForApplication);
+
+var fileName = new IsolatedStorageFileName("MyIsolatedFile", new Version(1, 0), ".txt");
+
+io.Write(fileName, "Some data");
+
+bool exists = io.Exists(fileName);
+
+string data = io.Read(fileName);
+
+io.Delete(fileName);
+```
+
+### StreamFactory
+
+Provides simple functionality to create memory streams.
+
+```csharp
+MemoryStream stream = StreamFactory.Create("some text");
+```
 
 ---
 
-### Extension method classes
+### AssemblyExtensions
 
-To use the extension methods simply reference `ByteDev.Io`.
+Methods:
 
-AssemblyExtensions
 - GetManifestResourceName
 
-DirectoryInfoExtensions
+### DirectoryInfoExtensions
+
+Methods:
+
 - CreateDirectory
 - DeleteIfExists
 - DeleteIfEmpty
@@ -98,19 +195,26 @@ DirectoryInfoExtensions
 - GetSize
 - IsEmpty
 
-FileInfoExtensions
-- DeleteIfExists
+### FileInfoExtensions
+
+Methods:
+
 - AddExtension
+- DeleteIfExists
+- GetExtension
 - GetNextAvailableFileName
-- RenameExtension
-- RemoveExtension
 - HasExtension
 - IsBinary
+- RenameExtension
+- RemoveExtension
 
-StreamExtensions
+### StreamExtensions
+
+Methods:
+
 - IsEmpty
 - ReadAsBytes
-- ReadAsString
 - ReadAsMemoryStream
+- ReadAsString
 - WriteToFile
 - WriteToFileAsync

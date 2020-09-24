@@ -1,6 +1,6 @@
 # Release Notes
 
-## 6.0.0 - ?? September 2020
+## 6.0.0 - 24 September 2020
 
 Breaking changes:
 - Removed StringExtensions.AppendBackSlash

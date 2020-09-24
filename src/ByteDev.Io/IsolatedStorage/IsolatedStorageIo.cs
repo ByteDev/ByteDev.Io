@@ -36,7 +36,8 @@ namespace ByteDev.Io.IsolatedStorage
         }
 
         /// <summary>
-        /// Deletes a file from isolated storage.
+        /// Deletes a file from isolated storage. If the file does not exist
+        /// then no exception will be thrown.
         /// </summary>
         /// <param name="fileName">File name of file to delete.</param>
         public void Delete(IsolatedStorageFileName fileName)
@@ -48,7 +49,8 @@ namespace ByteDev.Io.IsolatedStorage
         }
 
         /// <summary>
-        /// Writes XML to a isolated storage file.
+        /// Writes XML document to a isolated storage file. If file already exists then it 
+        /// will be overwritten.
         /// </summary>
         /// <param name="fileName">File name of file to write to.</param>
         /// <param name="xmlDocument">XML document to write to isolated storage.</param>
@@ -58,7 +60,8 @@ namespace ByteDev.Io.IsolatedStorage
         }
 
         /// <summary>
-        /// Writes string to a isolated storage file.
+        /// Writes string to a isolated storage file. If file already exists then it 
+        /// will be overwritten.
         /// </summary>
         /// <param name="fileName">File name of file to write to.</param>
         /// <param name="content">String to write to the file.</param>
@@ -84,7 +87,8 @@ namespace ByteDev.Io.IsolatedStorage
         public XmlDocument ReadAsXmlDoc(IsolatedStorageFileName fileName)
         {
             var xmlDoc = new XmlDocument();
-            xmlDoc.LoadXml(Read(fileName));
+            var xml = Read(fileName);
+            xmlDoc.LoadXml(xml);
             return xmlDoc;
         }
 

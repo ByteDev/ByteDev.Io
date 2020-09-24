@@ -10,6 +10,29 @@ namespace ByteDev.Io
     public static class FileInfoExtensions
     {
         /// <summary>
+        /// Add a file extension to the file. If the file already has an extension then
+        /// an exception is thrown.
+        /// </summary>
+        /// <param name="source">File to perform the operation on.</param>
+        /// <param name="extension">The extension to add.</param>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="extension" /> is null.</exception>
+        /// <exception cref="T:System.InvalidOperationException">File already has an extension.</exception>
+        public static void AddExtension(this FileInfo source, string extension)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            if (extension == null)
+                throw new ArgumentNullException(nameof(extension));
+
+            if (source.HasExtension())
+                throw new InvalidOperationException($"File: '{source.FullName}' already has an extension.");
+
+            source.MoveTo(source.FullName + AddExtensionDotPrefix(extension));
+        }
+
+        /// <summary>
         /// Deletes the file if it exists.
         /// </summary>
         /// <param name="source">File to perform the operation on.</param>
@@ -27,6 +50,27 @@ namespace ByteDev.Io
             {
                 // Swallow exception
             }
+        }
+
+        /// <summary>
+        /// Gets the file's extension.
+        /// </summary>
+        /// <param name="source">File to perform the operation on.</param>
+        /// <param name="includeDotPrefix">Indicates if the "." extension prefix should be returned as part of the extension if an extension exists.</param>
+        /// <returns>File extension as a string.</returns>
+        public static string GetExtension(this FileInfo source, bool includeDotPrefix = true)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            var extension = Path.GetExtension(source.FullName);
+
+            if (includeDotPrefix || string.IsNullOrEmpty(extension))
+            {
+                return extension;
+            }
+
+            return extension.Substring(1);
         }
 
         /// <summary>
@@ -72,47 +116,51 @@ namespace ByteDev.Io
         }
 
         /// <summary>
-        /// Gets the file's extension.
+        /// Determines whether the file is (probably) binary or not. Implementation checks the first
+        /// 8000 characters for a given number of consecutive NUL characters.
         /// </summary>
         /// <param name="source">File to perform the operation on.</param>
-        /// <param name="includeDotPrefix">Indicates if the "." extension prefix should be returned as part of the extension if an extension exists.</param>
-        /// <returns>File extension as a string.</returns>
-        public static string GetExtension(this FileInfo source, bool includeDotPrefix = true)
+        /// <param name="requiredConsecutiveNul">Number of consecutive NUL characters before the file is determined to be binary.</param>
+        /// <returns>True if the file is (probably) binary; otherwise returns false.</returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
+        /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="requiredConsecutiveNul" /> must be one or more.</exception>
+        public static bool IsBinary(this FileInfo source, int requiredConsecutiveNul = 1)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            var extension = Path.GetExtension(source.FullName);
+            if (requiredConsecutiveNul < 1)
+                throw new ArgumentOutOfRangeException(nameof(requiredConsecutiveNul), "Required number of consecutive NULs must be one or more.");
 
-            if (includeDotPrefix || string.IsNullOrEmpty(extension))
+            const int charsToCheck = 8000;
+            const char nulChar = '\0';
+
+            int nulCount = 0;
+
+            using (var streamReader = new StreamReader(source.FullName))
             {
-                return extension;
+                for (var i = 0; i < charsToCheck; i++)
+                {
+                    if (streamReader.EndOfStream)
+                        return false;
+
+                    if ((char) streamReader.Read() == nulChar)
+                    {
+                        nulCount++;
+
+                        // Console.WriteLine($"i: {i} ({source.Name})");
+
+                        if (nulCount >= requiredConsecutiveNul)
+                            return true;
+                    }
+                    else
+                    {
+                        nulCount = 0;
+                    }
+                }
             }
 
-            return extension.Substring(1);
-        }
-
-        /// <summary>
-        /// Add a file extension to the file. If the file already has an extension then
-        /// an exception is thrown.
-        /// </summary>
-        /// <param name="source">File to perform the operation on.</param>
-        /// <param name="extension">The extension to add.</param>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="extension" /> is null.</exception>
-        /// <exception cref="T:System.InvalidOperationException">File already has an extension.</exception>
-        public static void AddExtension(this FileInfo source, string extension)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            if (extension == null)
-                throw new ArgumentNullException(nameof(extension));
-
-            if (source.HasExtension())
-                throw new InvalidOperationException($"File: '{source.FullName}' already has an extension.");
-
-            source.MoveTo(source.FullName + AddExtensionDotPrefix(extension));
+            return false;
         }
 
         /// <summary>
@@ -162,54 +210,6 @@ namespace ByteDev.Io
         public static void RemoveExtension(this FileInfo source)
         {
             RenameExtension(source, string.Empty);
-        }
-
-        /// <summary>
-        /// Determines whether the file is (probably) binary or not. Implementation checks the first
-        /// 8000 characters for a given number of consecutive NUL characters.
-        /// </summary>
-        /// <param name="source">File to perform the operation on.</param>
-        /// <param name="requiredConsecutiveNul">Number of consecutive NUL characters before the file is determined to be binary.</param>
-        /// <returns>True if the file is (probably) binary; otherwise returns false.</returns>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
-        /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="requiredConsecutiveNul" /> must be one or more.</exception>
-        public static bool IsBinary(this FileInfo source, int requiredConsecutiveNul = 1)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            if (requiredConsecutiveNul < 1)
-                throw new ArgumentOutOfRangeException(nameof(requiredConsecutiveNul), "Required number of consecutive NULs must be one or more.");
-
-            const int charsToCheck = 8000;
-            const char nulChar = '\0';
-
-            int nulCount = 0;
-
-            using (var streamReader = new StreamReader(source.FullName))
-            {
-                for (var i = 0; i < charsToCheck; i++)
-                {
-                    if (streamReader.EndOfStream)
-                        return false;
-
-                    if ((char) streamReader.Read() == nulChar)
-                    {
-                        nulCount++;
-
-                        // Console.WriteLine($"i: {i} ({source.Name})");
-
-                        if (nulCount >= requiredConsecutiveNul)
-                            return true;
-                    }
-                    else
-                    {
-                        nulCount = 0;
-                    }
-                }
-            }
-
-            return false;
         }
 
         private static string AddExtensionDotPrefix(string extension)

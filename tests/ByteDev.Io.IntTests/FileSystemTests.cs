@@ -175,6 +175,90 @@ namespace ByteDev.Io.IntTests
         }
 
         [TestFixture]
+        public class MoveFile : FileSystemTests
+        {
+            private string _sourceDir;
+            private string _destinationDir;
+
+            private const string FileName = "Test1.txt";
+
+            [SetUp]
+            public new void Setup()
+            {
+                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
+
+                _sourceDir = Path.Combine(WorkingDir, "Source");
+                _destinationDir = Path.Combine(WorkingDir, "Destination");
+
+                DirectoryTestBuilder.InFileSystem.WithPath(_sourceDir).EmptyIfExists().Build();
+                DirectoryTestBuilder.InFileSystem.WithPath(_destinationDir).EmptyIfExists().Build();
+            }
+
+            [Test]
+            public void WhenSourceFileExists_ThenMoveFile()
+            {
+                var sourceFile = CreateSourceFile(FileName);
+
+                var result = Act(sourceFile.FullName, Path.Combine(_destinationDir, FileName));
+
+                AssertFile.NotExists(sourceFile);
+                AssertFile.Exists(result);
+            }
+
+            private FileInfo Act(string sourceFile, string destinationFile)
+            {
+                return _sut.MoveFile(new FileInfo(sourceFile), new FileInfo(destinationFile));
+            }
+
+            private FileInfo CreateSourceFile(string filePath, long size = 0)
+            {
+                return FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(_sourceDir, filePath)).WithSize(size).Build();
+            }
+        }
+
+        [TestFixture]
+        public class CopyFile : FileSystemTests
+        {
+            private string _sourceDir;
+            private string _destinationDir;
+
+            private const string FileName = "Test1.txt";
+
+            [SetUp]
+            public new void Setup()
+            {
+                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
+
+                _sourceDir = Path.Combine(WorkingDir, "Source");
+                _destinationDir = Path.Combine(WorkingDir, "Destination");
+
+                DirectoryTestBuilder.InFileSystem.WithPath(_sourceDir).EmptyIfExists().Build();
+                DirectoryTestBuilder.InFileSystem.WithPath(_destinationDir).EmptyIfExists().Build();
+            }
+
+            [Test]
+            public void WhenSourceFileExists_ThenCopyFile()
+            {
+                var sourceFile = CreateSourceFile(FileName);
+
+                var result = Act(sourceFile.FullName, Path.Combine(_destinationDir, FileName));
+
+                AssertFile.Exists(sourceFile);
+                AssertFile.Exists(result);
+            }
+
+            private FileInfo Act(string sourceFile, string destinationFile)
+            {
+                return _sut.CopyFile(new FileInfo(sourceFile), new FileInfo(destinationFile));
+            }
+
+            private FileInfo CreateSourceFile(string filePath, long size = 0)
+            {
+                return FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(_sourceDir, filePath)).WithSize(size).Build();
+            }
+        }
+
+        [TestFixture]
         public class SwapFileNames : FileSystemTests
         {
             private string _filePath1;
@@ -234,90 +318,6 @@ namespace ByteDev.Io.IntTests
             private void Act(FileInfo file1, FileInfo file2)
             {
                 _sut.SwapFileNames(file1, file2);
-            }
-        }
-
-        [TestFixture]
-        public class CopyFile : FileSystemTests
-        {
-            private string _sourceDir;
-            private string _destinationDir;
-
-            private const string FileName = "Test1.txt";
-
-            [SetUp]
-            public new void Setup()
-            {
-                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
-
-                _sourceDir = Path.Combine(WorkingDir, "Source");
-                _destinationDir = Path.Combine(WorkingDir, "Destination");
-
-                DirectoryTestBuilder.InFileSystem.WithPath(_sourceDir).EmptyIfExists().Build();
-                DirectoryTestBuilder.InFileSystem.WithPath(_destinationDir).EmptyIfExists().Build();
-            }
-
-            [Test]
-            public void WhenSourceFileExists_ThenCopyFile()
-            {
-                var sourceFile = CreateSourceFile(FileName);
-
-                var result = Act(sourceFile.FullName, Path.Combine(_destinationDir, FileName));
-
-                AssertFile.Exists(sourceFile);
-                AssertFile.Exists(result);
-            }
-
-            private FileInfo Act(string sourceFile, string destinationFile)
-            {
-                return _sut.CopyFile(new FileInfo(sourceFile), new FileInfo(destinationFile));
-            }
-
-            private FileInfo CreateSourceFile(string filePath, long size = 0)
-            {
-                return FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(_sourceDir, filePath)).WithSize(size).Build();
-            }
-        }
-
-        [TestFixture]
-        public class MoveFile : FileSystemTests
-        {
-            private string _sourceDir;
-            private string _destinationDir;
-
-            private const string FileName = "Test1.txt";
-
-            [SetUp]
-            public new void Setup()
-            {
-                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
-
-                _sourceDir = Path.Combine(WorkingDir, "Source");
-                _destinationDir = Path.Combine(WorkingDir, "Destination");
-
-                DirectoryTestBuilder.InFileSystem.WithPath(_sourceDir).EmptyIfExists().Build();
-                DirectoryTestBuilder.InFileSystem.WithPath(_destinationDir).EmptyIfExists().Build();
-            }
-
-            [Test]
-            public void WhenSourceFileExists_ThenMoveFile()
-            {
-                var sourceFile = CreateSourceFile(FileName);
-
-                var result = Act(sourceFile.FullName, Path.Combine(_destinationDir, FileName));
-
-                AssertFile.NotExists(sourceFile);
-                AssertFile.Exists(result);
-            }
-
-            private FileInfo Act(string sourceFile, string destinationFile)
-            {
-                return _sut.MoveFile(new FileInfo(sourceFile), new FileInfo(destinationFile));
-            }
-
-            private FileInfo CreateSourceFile(string filePath, long size = 0)
-            {
-                return FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(_sourceDir, filePath)).WithSize(size).Build();
             }
         }
     }

@@ -3,9 +3,6 @@ using System.Xml.Linq;
 
 namespace ByteDev.Io.IsolatedStorage
 {
-    /// <summary>
-    /// Interface for isolated storage operations.
-    /// </summary>
     public interface IIsolatedStorageIo
     {
         /// <summary>
@@ -16,20 +13,23 @@ namespace ByteDev.Io.IsolatedStorage
         bool Exists(IsolatedStorageFileName fileName);
 
         /// <summary>
-        /// Deletes a file from isolated storage.
+        /// Deletes a file from isolated storage. If the file does not exist
+        /// then no exception will be thrown.
         /// </summary>
         /// <param name="fileName">File name of file to delete.</param>
         void Delete(IsolatedStorageFileName fileName);
 
         /// <summary>
-        /// Writes XML to a isolated storage file.
+        /// Writes XML document to a isolated storage file. If file already exists then it 
+        /// will be overwritten.
         /// </summary>
         /// <param name="fileName">File name of file to write to.</param>
         /// <param name="xmlDocument">XML document to write to isolated storage.</param>
         void Write(IsolatedStorageFileName fileName, XmlDocument xmlDocument);
 
         /// <summary>
-        /// Writes string to a isolated storage file.
+        /// Writes string to a isolated storage file. If file already exists then it 
+        /// will be overwritten.
         /// </summary>
         /// <param name="fileName">File name of file to write to.</param>
         /// <param name="content">String to write to the file.</param>

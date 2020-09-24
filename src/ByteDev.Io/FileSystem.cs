@@ -132,39 +132,8 @@ namespace ByteDev.Io
         /// <summary>
         /// Swaps the file names of two files.
         /// </summary>
-        /// <param name="file1">Name of first file.</param>
-        /// <param name="file2">Name of second file.</param>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="file1" /> is null.</exception>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="file2" /> is null.</exception>
-        public void SwapFileNames(string file1, string file2)
-        {
-            if (file1 == null)
-                throw new ArgumentNullException(nameof(file1));
-
-            if (file2 == null)
-                throw new ArgumentNullException(nameof(file2));
-
-            string file1Temp = file1 + "." + Guid.NewGuid().ToString().Replace("-", string.Empty).ToLower();
-
-            File.Move(file1, file1Temp);
-
-            try
-            {
-                File.Move(file2, file1);
-            }
-            catch (FileNotFoundException)
-            {
-                File.Move(file1Temp, file1);
-            }
-            
-            File.Move(file1Temp, file2);
-        }
-
-        /// <summary>
-        /// Swaps the file names of two files.
-        /// </summary>
-        /// <param name="fileInfo1">Name of first file.</param>
-        /// <param name="fileInfo2">Name of second file.</param>
+        /// <param name="fileInfo1">First file.</param>
+        /// <param name="fileInfo2">Second file.</param>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="fileInfo1" /> is null.</exception>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="fileInfo2" /> is null.</exception>
         public void SwapFileNames(FileInfo fileInfo1, FileInfo fileInfo2)
@@ -176,6 +145,44 @@ namespace ByteDev.Io
                 throw new ArgumentNullException(nameof(fileInfo2));
 
             SwapFileNames(fileInfo1.FullName, fileInfo2.FullName);
+        }
+
+        /// <summary>
+        /// Swaps the file names of two files.
+        /// </summary>
+        /// <param name="filePath1">File path of first file.</param>
+        /// <param name="filePath2">File path of second file.</param>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="filePath1" /> is null.</exception>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="filePath2" /> is null.</exception>
+        public void SwapFileNames(string filePath1, string filePath2)
+        {
+            if (filePath1 == null)
+                throw new ArgumentNullException(nameof(filePath1));
+
+            if (filePath2 == null)
+                throw new ArgumentNullException(nameof(filePath2));
+
+            var filePath1Temp = RenameToTemp(filePath1);
+
+            try
+            {
+                File.Move(filePath2, filePath1);
+            }
+            catch (FileNotFoundException)
+            {
+                File.Move(filePath1Temp, filePath1);    // Rename temp file back cos file2 does not exist
+            }
+            
+            File.Move(filePath1Temp, filePath2);
+        }
+
+        private static string RenameToTemp(string filePath)
+        {
+            string filePathTemp = filePath + "." + Guid.NewGuid().ToString().Replace("-", string.Empty).ToLower();
+
+            File.Move(filePath, filePathTemp);
+
+            return filePathTemp;
         }
     }
 }

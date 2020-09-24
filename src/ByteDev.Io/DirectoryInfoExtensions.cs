@@ -25,36 +25,6 @@ namespace ByteDev.Io
         }
 
         /// <summary>
-        /// Delete all files and directories within the directory. If the directory does not exist then
-        /// an exception will be thrown.
-        /// </summary>
-        /// <param name="source">Directory to perform the operation on.</param>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
-        /// <exception cref="T:System.IO.DirectoryNotFoundException">Directory not found.</exception>
-        public static void Empty(this DirectoryInfo source)
-        {
-            DeleteFiles(source);
-            DeleteDirectories(source);
-        }
-
-        /// <summary>
-        /// Delete all files and directories within the directory if the directory exists.
-        /// </summary>
-        /// <param name="source">Directory to perform the operation on.</param>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
-        public static void EmptyIfExists(this DirectoryInfo source)
-        {
-            try
-            {
-                Empty(source);
-            }
-            catch (DirectoryNotFoundException)
-            {
-                // Swallow exception
-            }
-        }
-
-        /// <summary>
         /// Delete directory if the directory exists.
         /// </summary>
         /// <param name="source">Directory to perform the operation on.</param>
@@ -86,6 +56,64 @@ namespace ByteDev.Io
             if (IsEmpty(source))
             {
                 source.Delete(true);
+            }
+        }
+
+                /// <summary>
+        /// Delete all directories in the directory.
+        /// </summary>
+        /// <param name="source">Directory to perform the operation on.</param>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
+        public static void DeleteDirectories(this DirectoryInfo source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            foreach (var dir in source.GetDirectories())
+            {
+                dir.Delete(true);
+            }
+        }
+
+        /// <summary>
+        /// Deletes all directories and sub directories with name <paramref name="directoryName" />.
+        /// </summary>
+        /// <param name="source">Directory to perform the operation on.</param>
+        /// <param name="directoryName">Name of directories to delete.</param>
+        /// <returns>Count of directories deleted.</returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
+        /// <exception cref="T:System.ArgumentException"><paramref name="directoryName" /> was null or empty.</exception>
+        public static int DeleteDirectoriesWithName(this DirectoryInfo source, string directoryName)
+        {
+            if(source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            if(string.IsNullOrEmpty(directoryName))
+                throw new ArgumentException("Directory name to delete was null or empty.");
+
+            DirectoryInfo[] subDirs = source.GetDirectories(directoryName, SearchOption.AllDirectories);
+
+            foreach (var dir in subDirs)
+            {
+                Directory.Delete(dir.FullName, true);
+            }
+
+            return subDirs.Length;
+        }
+
+        /// <summary>
+        /// Deletes all empty directories within the directory.
+        /// </summary>
+        /// <param name="source">Directory to perform the operation on.</param>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
+        public static void DeleteEmptyDirectories(this DirectoryInfo source)
+        {
+            if(source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            foreach (var dirInfo in source.GetDirectories())
+            {
+                DeleteIfEmpty(dirInfo);
             }
         }
 
@@ -156,60 +184,32 @@ namespace ByteDev.Io
         }
 
         /// <summary>
-        /// Delete all directories in the directory.
+        /// Delete all files and directories within the directory. If the directory does not exist then
+        /// an exception will be thrown.
         /// </summary>
         /// <param name="source">Directory to perform the operation on.</param>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
-        public static void DeleteDirectories(this DirectoryInfo source)
+        /// <exception cref="T:System.IO.DirectoryNotFoundException">Directory not found.</exception>
+        public static void Empty(this DirectoryInfo source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            foreach (var dir in source.GetDirectories())
-            {
-                dir.Delete(true);
-            }
+            DeleteFiles(source);
+            DeleteDirectories(source);
         }
 
         /// <summary>
-        /// Deletes all directories and sub directories with name <paramref name="directoryName" />.
+        /// Delete all files and directories within the directory if the directory exists.
         /// </summary>
         /// <param name="source">Directory to perform the operation on.</param>
-        /// <param name="directoryName">Name of directories to delete.</param>
-        /// <returns>Count of directories deleted.</returns>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
-        /// <exception cref="T:System.ArgumentException"><paramref name="directoryName" /> was null or empty.</exception>
-        public static int DeleteDirectoriesWithName(this DirectoryInfo source, string directoryName)
+        public static void EmptyIfExists(this DirectoryInfo source)
         {
-            if(source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            if(string.IsNullOrEmpty(directoryName))
-                throw new ArgumentException("Directory name to delete was null or empty.");
-
-            DirectoryInfo[] subDirs = source.GetDirectories(directoryName, SearchOption.AllDirectories);
-
-            foreach (var dir in subDirs)
+            try
             {
-                Directory.Delete(dir.FullName, true);
+                Empty(source);
             }
-
-            return subDirs.Length;
-        }
-
-        /// <summary>
-        /// Deletes all empty directories within the directory.
-        /// </summary>
-        /// <param name="source">Directory to perform the operation on.</param>
-        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
-        public static void DeleteEmptyDirectories(this DirectoryInfo source)
-        {
-            if(source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            foreach (var dirInfo in source.GetDirectories())
+            catch (DirectoryNotFoundException)
             {
-                DeleteIfEmpty(dirInfo);
+                // Swallow exception
             }
         }
 
