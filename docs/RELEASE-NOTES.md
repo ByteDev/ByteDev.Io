@@ -26,6 +26,7 @@ New features:
 
 Bug fixes / internal changes:
 - Package related fixes
+- FileInfoExtensions.IsBinary not takes optional param
 
 ## 5.0.0 - 12 April 2020
 

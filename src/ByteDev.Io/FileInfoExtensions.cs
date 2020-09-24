@@ -165,19 +165,26 @@ namespace ByteDev.Io
         }
 
         /// <summary>
-        /// Indicates whether the file is (probably) binary or not. Implementation checks the first
-        /// 8000 characters for the NUL character.
+        /// Determines whether the file is (probably) binary or not. Implementation checks the first
+        /// 8000 characters for a given number of consecutive NUL characters.
         /// </summary>
-        /// <param name="source">The file to check.</param>
+        /// <param name="source">File to perform the operation on.</param>
+        /// <param name="requiredConsecutiveNul">Number of consecutive NUL characters before the file is determined to be binary.</param>
         /// <returns>True if the file is (probably) binary; otherwise returns false.</returns>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
-        public static bool IsBinary(this FileInfo source)
+        /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="requiredConsecutiveNul" /> must be one or more.</exception>
+        public static bool IsBinary(this FileInfo source, int requiredConsecutiveNul = 1)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
+            if (requiredConsecutiveNul < 1)
+                throw new ArgumentOutOfRangeException(nameof(requiredConsecutiveNul), "Required number of consecutive NULs must be one or more.");
+
             const int charsToCheck = 8000;
             const char nulChar = '\0';
+
+            int nulCount = 0;
 
             using (var streamReader = new StreamReader(source.FullName))
             {
@@ -188,8 +195,16 @@ namespace ByteDev.Io
 
                     if ((char) streamReader.Read() == nulChar)
                     {
-                        Console.WriteLine($"i: {i}");
-                        return true;
+                        nulCount++;
+
+                        // Console.WriteLine($"i: {i} ({source.Name})");
+
+                        if (nulCount >= requiredConsecutiveNul)
+                            return true;
+                    }
+                    else
+                    {
+                        nulCount = 0;
                     }
                 }
             }

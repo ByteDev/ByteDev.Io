@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Reflection;
+using ByteDev.Io.IntTests.TestFiles;
 using ByteDev.Testing.NUnit;
 using ByteDev.Testing.TestBuilders.FileSystem;
 using NUnit.Framework;
@@ -351,15 +352,38 @@ namespace ByteDev.Io.IntTests
             }
 
             [Test]
-            public void WhenFileIsBinary_ThenReturnTrue()
+            public void WhenFileHasConsecutiveNul_ThenReturnTrue()
+            {
+                var sut = FileTestBuilder.InFileSystem
+                    .WithFilePath(Path.Combine(WorkingDir, "Test1.bin"))
+                    .WithText("abc123\0\0123")
+                    .Build();
+
+                var result = sut.IsBinary(2);
+
+                Assert.That(result, Is.True);
+            }
+
+            [Test]
+            public void WhenFileHasOneNul_AndTwoConsecutiveSpecified_ThenReturnFalse()
             {
                 var sut = FileTestBuilder.InFileSystem
                     .WithFilePath(Path.Combine(WorkingDir, "Test1.bin"))
                     .WithText("abc123\0123")
                     .Build();
 
-                var result = sut.IsBinary();
+                var result = sut.IsBinary(2);
 
+                Assert.That(result, Is.False);
+            }
+
+            [TestCase(TestFileNames.Binary.Png)]
+            public void WhenFileIsBinaryTestFile_ThenReturnTrue(string filePath)
+            {
+                var sut = new FileInfo(filePath);
+
+                var result = sut.IsBinary();
+                
                 Assert.That(result, Is.True);
             }
 
