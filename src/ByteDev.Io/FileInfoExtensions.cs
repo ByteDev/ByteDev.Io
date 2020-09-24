@@ -110,19 +110,20 @@ namespace ByteDev.Io
                 throw new ArgumentNullException(nameof(extension));
 
             if (source.HasExtension())
-                throw new InvalidOperationException("File already has an extension.");
+                throw new InvalidOperationException($"File: '{source.FullName}' already has an extension.");
 
             source.MoveTo(source.FullName + AddExtensionDotPrefix(extension));
         }
 
         /// <summary>
-        /// Adds or renames the file's extension.
+        /// Renames the file's extension. If the file does not have an extension then one will
+        /// be added.
         /// </summary>
         /// <param name="source">File to perform the operation on.</param>
         /// <param name="newExtension">New extension.</param>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="newExtension" /> is null.</exception>
-        public static void AddOrRenameExtension(this FileInfo source, string newExtension)
+        public static void RenameExtension(this FileInfo source, string newExtension)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -149,7 +150,7 @@ namespace ByteDev.Io
 
             if (!string.IsNullOrEmpty(extension))
             {
-                AddOrRenameExtension(source, extension.ToLower());
+                RenameExtension(source, extension.ToLower());
             }
         }
 
@@ -160,7 +161,7 @@ namespace ByteDev.Io
         /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
         public static void RemoveExtension(this FileInfo source)
         {
-            AddOrRenameExtension(source, string.Empty);
+            RenameExtension(source, string.Empty);
         }
 
         /// <summary>

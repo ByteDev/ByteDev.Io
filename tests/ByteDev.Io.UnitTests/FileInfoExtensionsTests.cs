@@ -113,18 +113,18 @@ namespace ByteDev.Io.UnitTests
         }
 
         [TestFixture]
-        public class AddOrRenameExtension : FileInfoExtensionsTests
+        public class RenameExtension : FileInfoExtensionsTests
         {
             [Test]
             public void WhenIsNull_ThenThrowException()
             {
-                Assert.Throws<ArgumentNullException>(() => FileInfoExtensions.AddOrRenameExtension(null, ".txt"));
+                Assert.Throws<ArgumentNullException>(() => FileInfoExtensions.RenameExtension(null, ".txt"));
             }
 
             [Test]
             public void WhenNewExtensionIsNull_ThenThrowException()
             {
-                Assert.Throws<ArgumentNullException>(() => new FileInfo(@"C:\").AddOrRenameExtension(null));
+                Assert.Throws<ArgumentNullException>(() => new FileInfo(@"C:\").RenameExtension(null));
             }
         }
     }

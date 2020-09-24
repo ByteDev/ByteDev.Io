@@ -173,7 +173,7 @@ namespace ByteDev.Io.IntTests
         }
 
         [TestFixture]
-        public class AddOrRenameExtension : FileInfoExtensionsTests
+        public class RenameExtension : FileInfoExtensionsTests
         {
             [SetUp]
             public void Setup()
@@ -186,7 +186,7 @@ namespace ByteDev.Io.IntTests
             {
                 var sut = new FileInfo(Path.Combine(WorkingDir, "DoesntExist.txt"));
 
-                Assert.Throws<FileNotFoundException>(() => sut.AddOrRenameExtension(".log"));
+                Assert.Throws<FileNotFoundException>(() => sut.RenameExtension(".log"));
             }
 
             [Test]
@@ -196,7 +196,7 @@ namespace ByteDev.Io.IntTests
                 
                 var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test.txt")).Build();
 
-                var ex = Assert.Throws<IOException>(() => sut.AddOrRenameExtension(".log"));
+                var ex = Assert.Throws<IOException>(() => sut.RenameExtension(".log"));
                 Assert.That(ex.Message, Is.EqualTo("Cannot create a file when that file already exists."));
             }
 
@@ -205,7 +205,7 @@ namespace ByteDev.Io.IntTests
             {
                 var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test.txt")).Build();
 
-                sut.AddOrRenameExtension(string.Empty);
+                sut.RenameExtension(string.Empty);
 
                 AssertFile.Exists(Path.Combine(WorkingDir, "Test"));
             }
@@ -215,7 +215,7 @@ namespace ByteDev.Io.IntTests
             {
                 var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test.txt")).Build();
 
-                sut.AddOrRenameExtension(".txt");
+                sut.RenameExtension(".txt");
 
                 AssertFile.Exists(Path.Combine(WorkingDir, "Test.txt"));
             }
@@ -225,7 +225,7 @@ namespace ByteDev.Io.IntTests
             {
                 var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test.txt")).Build();
 
-                sut.AddOrRenameExtension(".log");
+                sut.RenameExtension(".log");
 
                 AssertFile.Exists(Path.Combine(WorkingDir, "Test.log"));
                 AssertFile.NotExists(Path.Combine(WorkingDir, "Test.txt"));
@@ -238,7 +238,7 @@ namespace ByteDev.Io.IntTests
 
                 var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test.txt")).Build();
 
-                var ex = Assert.Throws<IOException>(() => sut.AddOrRenameExtension(".log"));      
+                var ex = Assert.Throws<IOException>(() => sut.RenameExtension(".log"));      
                 Assert.That(ex.Message, Is.EqualTo("Cannot create a file when that file already exists."));
 
                 AssertFile.Exists(Path.Combine(WorkingDir, "Test.log"));
@@ -249,7 +249,7 @@ namespace ByteDev.Io.IntTests
             {
                 var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test.txt")).Build();
 
-                sut.AddOrRenameExtension("log");
+                sut.RenameExtension("log");
 
                 AssertFile.Exists(Path.Combine(WorkingDir, "Test.log"));
                 AssertFile.NotExists(Path.Combine(WorkingDir, "Test.txt"));
@@ -260,7 +260,7 @@ namespace ByteDev.Io.IntTests
             {
                 var sut = FileTestBuilder.InFileSystem.WithFilePath(Path.Combine(WorkingDir, "Test")).Build();
 
-                sut.AddOrRenameExtension(".log");
+                sut.RenameExtension(".log");
                 
                 AssertFile.Exists(Path.Combine(WorkingDir, "Test.log"));
                 AssertFile.NotExists(Path.Combine(WorkingDir, "Test"));
