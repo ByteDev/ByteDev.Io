@@ -1,5 +1,6 @@
 [![Build status](https://ci.appveyor.com/api/projects/status/github/bytedev/ByteDev.Io?branch=master&svg=true)](https://ci.appveyor.com/project/bytedev/ByteDev-Io/branch/master)
 [![NuGet Package](https://img.shields.io/nuget/v/ByteDev.Io.svg)](https://www.nuget.org/packages/ByteDev.Io)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/ByteDev/ByteDev.Io/blob/master/LICENSE)
 
 # ByteDev.Io
 
