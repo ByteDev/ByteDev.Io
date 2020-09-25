@@ -122,16 +122,6 @@ Methods:
 - IsSourceBiggerOrEqual
 - IsSourceModifiedMoreRecently
 
-### AssemblyEmbeddedResource
-
-Provides functionality for easily retrieving embedded resources from assemblies.
-
-Methods:
-
-- CreateFromAssemblyContaining
-- CreateFromAssembly
-- Save
-
 ### IsolatedStorageIo
 
 Provides functionality for isolated storage operations. To use reference namespace: `ByteDev.Io.IsolatedStorage`.
@@ -168,12 +158,6 @@ MemoryStream stream = StreamFactory.Create("some text");
 ```
 
 ---
-
-### AssemblyExtensions
-
-Methods:
-
-- GetManifestResourceName
 
 ### DirectoryInfoExtensions
 

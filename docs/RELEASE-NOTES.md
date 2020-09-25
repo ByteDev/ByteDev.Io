@@ -1,5 +1,17 @@
 # Release Notes
 
+## 7.0.0 - ??
+
+Breaking changes:
+- Deleted `AssemblyExtensions` (use `ByteDev.Reflection` package instead)
+- Deleted `AssemblyEmbeddedResource` (use `ByteDev.Reflection` package instead)
+
+New features:
+- (None)
+
+Bug fixes / internal changes:
+- (None)
+
 ## 6.0.0 - 24 September 2020
 
 Breaking changes:
@@ -32,7 +44,7 @@ Bug fixes / internal changes:
 
 Breaking changes:
 - `IsolatedStorageIo` now takes `IsolatedStorageFileType` in the constructor
-- `IsolatedStorageIo.ReadAsXml` is now `ReadAsXmlDoc`
+- Renamed `IsolatedStorageIo.ReadAsXml` to `ReadAsXmlDoc`
 
 New features:
 - Added `IIsolatedStorageIo`
@@ -44,7 +56,7 @@ Bug fixes / internal changes:
 ## 4.0.0 - 29 Nov 2019
 
 Breaking changes:
-- `IsolatedStorageFileName.FileType` is now `FileExtension`
+- Renamed `IsolatedStorageFileName.FileType` to `FileExtension`
 - Deleted `IAssemblyFileReader`
 
 New features:
