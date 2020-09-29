@@ -7,7 +7,8 @@ Breaking changes:
 - Deleted `AssemblyEmbeddedResource` (use `ByteDev.Reflection` package instead)
 
 New features:
-- (None)
+- Added `FileInfoExtensions.DeleteLines`
+- Added `StreamReaderExtensions.ReadLineKeepNewLineChars`
 
 Bug fixes / internal changes:
 - (None)

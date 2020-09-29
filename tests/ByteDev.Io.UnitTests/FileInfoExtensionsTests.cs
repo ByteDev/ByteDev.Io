@@ -127,5 +127,32 @@ namespace ByteDev.Io.UnitTests
                 Assert.Throws<ArgumentNullException>(() => new FileInfo(@"C:\").RenameExtension(null));
             }
         }
+
+        [TestFixture]
+        public class DeleteLine : FileInfoExtensionsTests
+        {
+            [Test]
+            public void WhenSourceIsNull_ThenThrowException()
+            {
+                Assert.Throws<ArgumentNullException>(() => FileInfoExtensions.DeleteLine(null, 1, @"C:\Test.txt"));
+            }
+
+            [Test]
+            public void WhenLineNumerLessThanOne_ThenThrowException()
+            {
+                var sut = new FileInfo(@"C:\Temp\DeleteLine-Test0.txt");
+
+                Assert.Throws<ArgumentOutOfRangeException>(() => sut.DeleteLine(0, @"C:\Temp\NewFile.txt"));
+            }
+
+            [Test]
+            public void WhenOriginalFileAndTargetAreSamePath_ThenThrowException()
+            {
+                var sut = new FileInfo(@"C:\Temp\DeleteLine-Test0.txt");
+
+                var ex = Assert.Throws<ArgumentException>(() => sut.DeleteLine(1, sut.FullName));
+                Assert.That(ex.Message, Is.EqualTo("Source and target file paths are the same."));
+            }
+        }
     }
 }

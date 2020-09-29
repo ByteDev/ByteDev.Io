@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace ByteDev.Io
@@ -210,6 +213,69 @@ namespace ByteDev.Io
         public static void RemoveExtension(this FileInfo source)
         {
             RenameExtension(source, string.Empty);
+        }
+
+        /// <summary>
+        /// Delete a specific line from a text file saving the new content to a target text file.
+        /// </summary>
+        /// <param name="source">File to perform the operation on.</param>
+        /// <param name="lineNumber">Line number to delete.</param>
+        /// <param name="targetFilePath">New target text file path.</param>
+        /// <returns>FileInfo for the new target file.</returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
+        /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="lineNumber" /> cannot be less than one.</exception>
+        /// <exception cref="T:System.ArgumentException"><paramref name="targetFilePath" /> cannot be the same as the source path.</exception>
+        public static FileInfo DeleteLine(this FileInfo source, int lineNumber, string targetFilePath)
+        {
+            return DeleteLines(source, new[] {lineNumber}, targetFilePath);
+        }
+
+        /// <summary>
+        /// Delete specific lines from a text file saving the new content to a target text file.
+        /// </summary>
+        /// <param name="source">File to perform the operation on.</param>
+        /// <param name="lineNumbers">Line numbers to delete.</param>
+        /// <param name="targetFilePath"></param>
+        /// <returns>FileInfo for the new target file.</returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="lineNumbers" /> is null.</exception>
+        /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="lineNumbers" /> cannot be less than one.</exception>
+        /// <exception cref="T:System.ArgumentException"><paramref name="targetFilePath" /> cannot be the same as the source path.</exception>
+        public static FileInfo DeleteLines(this FileInfo source, ICollection<int> lineNumbers, string targetFilePath)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            if (lineNumbers == null)
+                throw new ArgumentNullException(nameof(lineNumbers));
+
+            if (lineNumbers.Any(n => n < 1))
+                throw new ArgumentOutOfRangeException(nameof(lineNumbers), "Line numbers to delete must be one or more.");
+
+            if (source.FullName == targetFilePath)
+                throw new ArgumentException("Source and target file paths are the same.");
+
+            var lineCount = 1;
+
+            using (var streamReader = new StreamReader(source.FullName))
+            {
+                using (var streamWriter = new StreamWriter(targetFilePath))
+                {
+                    string line;
+
+                    while ((line = streamReader.ReadLineKeepNewLineChars()) != null)
+                    {
+                        if (!lineNumbers.Contains(lineCount))
+                        {
+                            streamWriter.Write(line);
+                        }
+
+                        lineCount++;
+                    }
+                }
+            }
+
+            return new FileInfo(targetFilePath);
         }
 
         private static string AddExtensionDotPrefix(string extension)

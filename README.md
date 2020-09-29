@@ -186,6 +186,8 @@ Methods:
 
 - AddExtension
 - DeleteIfExists
+- DeleteLine
+- DeleteLines
 - GetExtension
 - GetNextAvailableFileName
 - HasExtension
@@ -203,3 +205,7 @@ Methods:
 - ReadAsString
 - WriteToFile
 - WriteToFileAsync
+
+## StreamReaderExtensions
+
+- ReadLineKeepNewLineChars

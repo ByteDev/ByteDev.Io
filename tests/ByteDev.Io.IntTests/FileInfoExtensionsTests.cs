@@ -408,5 +408,69 @@ namespace ByteDev.Io.IntTests
                 }
             }
         }
+
+        [TestFixture]
+        public class DeleteLine : FileInfoExtensionsTests
+        {
+            [SetUp]
+            public void Setup()
+            {
+                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            }
+
+            [Test]
+            public void WhenFileIsEmpty_ThenDeleteNothing()
+            {
+                var sut = FileBuilder.InFileSystem.WithPath(GetAbsolutePath("DeleteLine1.txt")).Build();
+
+                var result = sut.DeleteLine(1, GetAbsolutePath("DeleteLine1-Output.txt"));
+
+                AssertFile.IsEmpty(result);
+            }
+
+            [Test]
+            public void WhenFileHasOneLine_ThenDeleteLine()
+            {
+                var sut = FileBuilder.InFileSystem.WithText("Line 1").WithPath(GetAbsolutePath("DeleteLine2.txt")).Build();
+
+                var result = sut.DeleteLine(1, GetAbsolutePath("DeleteLine2-Output.txt"));
+
+                AssertFile.IsEmpty(result);
+            }
+
+            [Test]
+            public void WhenFileHasThreeLines_ThenDeleteLine()
+            {
+                const string text = "Line1\nLine2\nLine3";
+
+                var sut = FileBuilder.InFileSystem.WithText(text).WithPath(GetAbsolutePath("DeleteLine3.txt")).Build();
+
+                var result = sut.DeleteLine(2, GetAbsolutePath("DeleteLine3-Output.txt"));
+
+                AssertFile.ContentEquals(result, "Line1\nLine3");
+            }
+
+            [Test]
+            public void WhenLineToDeleteIsEmpty_ThenDeleteLine()
+            {
+                const string text = "Line1\n\nLine3";
+
+                var sut = FileBuilder.InFileSystem.WithText(text).WithPath(GetAbsolutePath("DeleteLine4.txt")).Build();
+
+                var result = sut.DeleteLine(2, GetAbsolutePath("DeleteLine4-Output.txt"));
+
+                AssertFile.ContentEquals(result, "Line1\nLine3");
+            }
+
+            [Test]
+            public void WhenLineDoesNotExist_ThenDeleteNothing()
+            {
+                var sut = FileBuilder.InFileSystem.WithText("Line 1").WithPath(GetAbsolutePath("DeleteLine5.txt")).Build();
+
+                var result = sut.DeleteLine(2, GetAbsolutePath("DeleteLine5-Output.txt"));
+
+                AssertFile.AreSame(result, sut);
+            }
+        }
     }
 }
