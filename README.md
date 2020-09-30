@@ -194,6 +194,8 @@ Methods:
 - IsBinary
 - RenameExtension
 - RemoveExtension
+- ReplaceLine
+- ReplaceLines
 
 ### StreamExtensions
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 
@@ -129,28 +130,82 @@ namespace ByteDev.Io.UnitTests
         }
 
         [TestFixture]
-        public class DeleteLine : FileInfoExtensionsTests
+        public class DeleteLines : FileInfoExtensionsTests
         {
             [Test]
             public void WhenSourceIsNull_ThenThrowException()
             {
-                Assert.Throws<ArgumentNullException>(() => FileInfoExtensions.DeleteLine(null, 1, @"C:\Test.txt"));
+                Assert.Throws<ArgumentNullException>(() => FileInfoExtensions.DeleteLines(null, new List<int>(), @"C:\Test.txt"));
             }
 
             [Test]
-            public void WhenLineNumerLessThanOne_ThenThrowException()
+            public void WhenLineNumbersIsNull_ThenThrowException()
             {
-                var sut = new FileInfo(@"C:\Temp\DeleteLine-Test0.txt");
+                var sut = new FileInfo(@"C:\Temp\Output.txt");
 
-                Assert.Throws<ArgumentOutOfRangeException>(() => sut.DeleteLine(0, @"C:\Temp\NewFile.txt"));
+                Assert.Throws<ArgumentNullException>(() => sut.DeleteLines(null, @"C:\Test.txt"));
+            }
+
+            [Test]
+            public void WhenHasLineNumerLessThanOne_ThenThrowException()
+            {
+                var sut = new FileInfo(@"C:\Temp\Output.txt");
+
+                Assert.Throws<ArgumentOutOfRangeException>(() => sut.DeleteLines(new List<int> { 1, 2, 0 }, @"C:\Temp\NewFile.txt"));
             }
 
             [Test]
             public void WhenOriginalFileAndTargetAreSamePath_ThenThrowException()
             {
-                var sut = new FileInfo(@"C:\Temp\DeleteLine-Test0.txt");
+                var sut = new FileInfo(@"C:\Temp\Output.txt");
 
-                var ex = Assert.Throws<ArgumentException>(() => sut.DeleteLine(1, sut.FullName));
+                var ex = Assert.Throws<ArgumentException>(() => sut.DeleteLines(new List<int> { 1 }, sut.FullName));
+                Assert.That(ex.Message, Is.EqualTo("Source and target file paths are the same."));
+            }
+        }
+
+        [TestFixture]
+        public class ReplaceLines : FileInfoExtensionsTests
+        {
+            [Test]
+            public void WhenSourceIsNull_ThenThrowException()
+            {
+                Assert.Throws<ArgumentNullException>(() => FileInfoExtensions.ReplaceLines(null, new Dictionary<int, string>(), @"C:\Test.txt"));
+            }
+
+            [Test]
+            public void WhenNewLinesIsNull_ThenThrowException()
+            {
+                var sut = new FileInfo(@"C:\Temp\Output.txt");
+
+                Assert.Throws<ArgumentNullException>(() => sut.ReplaceLines(null, @"C:\Test.txt"));
+            }
+
+            [Test]
+            public void WhenHasLineNumerLessThanOne_ThenThrowException()
+            {
+                var sut = new FileInfo(@"C:\Temp\Output.txt");
+
+                var newLines = new Dictionary<int, string>
+                {
+                    { 1, "New Line 1" },
+                    { 0, "New Line 0" }
+                };
+
+                Assert.Throws<ArgumentOutOfRangeException>(() => sut.ReplaceLines(newLines, @"C:\Temp\NewFile.txt"));
+            }
+
+            [Test]
+            public void WhenOriginalFileAndTargetAreSamePath_ThenThrowException()
+            {
+                var sut = new FileInfo(@"C:\Temp\Output.txt");
+
+                var newLines = new Dictionary<int, string>
+                {
+                    { 1, "New Line 1" }
+                };
+
+                var ex = Assert.Throws<ArgumentException>(() => sut.ReplaceLines(newLines, sut.FullName));
                 Assert.That(ex.Message, Is.EqualTo("Source and target file paths are the same."));
             }
         }

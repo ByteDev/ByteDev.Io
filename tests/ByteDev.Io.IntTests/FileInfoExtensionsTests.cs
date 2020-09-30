@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using ByteDev.Io.IntTests.TestFiles;
@@ -514,6 +515,123 @@ namespace ByteDev.Io.IntTests
                 var sut = FileBuilder.InFileSystem.WithText(text).WithPath(GetAbsolutePath("DeleteLines2.txt")).Build();
 
                 var result = sut.DeleteLines(new [] { 2, 4, 5 }, GetAbsolutePath("DeleteLine2-Output.txt"));
+
+                AssertFile.ContentEquals(result, expected);
+            }
+        }
+
+        [TestFixture]
+        public class ReplaceLine : FileInfoExtensionsTests
+        {
+            [SetUp]
+            public void Setup()
+            {
+                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            }
+
+            [Test]
+            public void WhenFileIsEmpty_ThenReplaceNothing()
+            {
+                var sut = FileBuilder.InFileSystem.WithPath(GetAbsolutePath("ReplaceLine1.txt")).Build();
+
+                var result = sut.ReplaceLine(1, "New Line 1", GetAbsolutePath("ReplaceLine1-Output.txt"));
+
+                AssertFile.IsEmpty(result);
+            }
+
+            [Test]
+            public void WhenFileHasThreeUnixLines_ThenReplaceLine()
+            {
+                const string text = "Line1\nLine2\nLine3";
+
+                var sut = FileBuilder.InFileSystem.WithText(text).WithPath(GetAbsolutePath("ReplaceLine2.txt")).Build();
+
+                var result = sut.ReplaceLine(2, "New Line2", GetAbsolutePath("ReplaceLine2-Output.txt"));
+
+                AssertFile.ContentEquals(result, "Line1\nNew Line2\nLine3");
+            }
+
+            [Test]
+            public void WhenFileHasThreeWindowsLines_ThenReplaceLine()
+            {
+                const string text = "Line1\r\nLine2\r\nLine3";
+
+                const string expected = "Line1\r\nNew Line2\r\nLine3";
+
+                var sut = FileBuilder.InFileSystem.WithText(text).WithPath(GetAbsolutePath("ReplaceLine3.txt")).Build();
+
+                var result = sut.ReplaceLine(2, "New Line2", GetAbsolutePath("ReplaceLine3-Output.txt"));
+
+                AssertFile.ContentEquals(result, expected);
+            }
+
+            [Test]
+            public void WhenNewLineAlreadyHasEndLineChars_ThenReplaceWithOriginalEndLineChars()
+            {
+                const string text = "Line1\r\nLine2\r\nLine3";
+
+                const string expected = "Line1\r\nNew Line2\r\nLine3";
+
+                var sut = FileBuilder.InFileSystem.WithText(text).WithPath(GetAbsolutePath("ReplaceLine4.txt")).Build();
+
+                var result = sut.ReplaceLine(2, "New Line2\n", GetAbsolutePath("ReplaceLine4-Output.txt"));
+
+                AssertFile.ContentEquals(result, expected);
+            }
+        }
+
+        [TestFixture]
+        public class ReplaceLines : FileInfoExtensionsTests
+        {
+            [SetUp]
+            public void Setup()
+            {
+                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            }
+
+            [Test]
+            public void WhenNoPagesToReplace_ThenOutputSameFile()
+            {
+                const string text = "Line1\n" +
+                                    "\n" +
+                                    "Line3\r\n" +
+                                    "Line4\n" +
+                                    "Line5";
+
+                var sut = FileBuilder.InFileSystem.WithText(text).WithPath(GetAbsolutePath("ReplaceLines1.txt")).Build();
+
+                var result = sut.ReplaceLines(new Dictionary<int, string>(), GetAbsolutePath("ReplaceLine1-Output.txt"));
+
+                AssertFile.ContentEquals(result, text);
+                
+            }
+
+            [Test]
+            public void WhenReplaceMultipleLines_ThenDeleteLines()
+            {
+                const string text = "Line1\n" +
+                                    "\n" +
+                                    "Line3\r\n" +
+                                    "Line4\n" +
+                                    "Line5\r\n" +
+                                    "Line6";
+
+                const string expected = "Line1\n" +
+                                        "New Line2\n" +
+                                        "Line3\r\n" +
+                                        "\n" +
+                                        "\r\n" +
+                                        "New Line6";
+
+                var sut = FileBuilder.InFileSystem.WithText(text).WithPath(GetAbsolutePath("ReplaceLines2.txt")).Build();
+
+                var result = sut.ReplaceLines(new Dictionary<int, string>
+                {
+                    { 2, "New Line2" },
+                    { 4, "" },
+                    { 5, null },
+                    { 6, "New Line6\n" }
+                }, GetAbsolutePath("ReplaceLine2-Output.txt"));
 
                 AssertFile.ContentEquals(result, expected);
             }

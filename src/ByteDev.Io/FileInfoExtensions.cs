@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -32,7 +31,7 @@ namespace ByteDev.Io
             if (source.HasExtension())
                 throw new InvalidOperationException($"File: '{source.FullName}' already has an extension.");
 
-            source.MoveTo(source.FullName + AddExtensionDotPrefix(extension));
+            source.MoveTo(source.FullName + extension.AddExtensionDotPrefix());
         }
 
         /// <summary>
@@ -182,7 +181,7 @@ namespace ByteDev.Io
             if (newExtension == null)
                 throw new ArgumentNullException(nameof(newExtension));
 
-            var newPath = Path.Combine(source.DirectoryName, Path.GetFileNameWithoutExtension(source.FullName) + AddExtensionDotPrefix(newExtension));
+            var newPath = Path.Combine(source.DirectoryName, Path.GetFileNameWithoutExtension(source.FullName) + newExtension.AddExtensionDotPrefix());
 
             source.MoveTo(newPath);
         }
@@ -216,7 +215,7 @@ namespace ByteDev.Io
         }
 
         /// <summary>
-        /// Delete a specific line from a text file saving the new content to a target text file.
+        /// Delete a specific line from a text file saving the new content to a new target text file.
         /// </summary>
         /// <param name="source">File to perform the operation on.</param>
         /// <param name="lineNumber">Line number to delete.</param>
@@ -231,7 +230,7 @@ namespace ByteDev.Io
         }
 
         /// <summary>
-        /// Delete specific lines from a text file saving the new content to a target text file.
+        /// Delete specific lines from a text file saving the new content to a new target text file.
         /// </summary>
         /// <param name="source">File to perform the operation on.</param>
         /// <param name="lineNumbers">Line numbers to delete.</param>
@@ -250,7 +249,7 @@ namespace ByteDev.Io
                 throw new ArgumentNullException(nameof(lineNumbers));
 
             if (lineNumbers.Any(n => n < 1))
-                throw new ArgumentOutOfRangeException(nameof(lineNumbers), "Line numbers to delete must be one or more.");
+                throw new ArgumentOutOfRangeException(nameof(lineNumbers), "Line numbers to delete must be one or greater.");
 
             if (source.FullName == targetFilePath)
                 throw new ArgumentException("Source and target file paths are the same.");
@@ -278,12 +277,79 @@ namespace ByteDev.Io
             return new FileInfo(targetFilePath);
         }
 
-        private static string AddExtensionDotPrefix(string extension)
+        /// <summary>
+        /// Replace a specific line from a text file saving the new content to a new target text file.
+        /// </summary>
+        /// <param name="source">File to perform the operation on.</param>
+        /// <param name="lineNumber">Line number to delete.</param>
+        /// <param name="newLine">Text for the new line. Any end line characters (e.g. \r\n or \n) will be removed.</param>
+        /// <param name="targetFilePath">New target text file path.</param>
+        /// <returns>FileInfo for the new target file.</returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
+        /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="lineNumber" /> cannot be less than one.</exception>
+        /// <exception cref="T:System.ArgumentException"><paramref name="targetFilePath" /> cannot be the same as the source path.</exception>
+        public static FileInfo ReplaceLine(this FileInfo source, int lineNumber, string newLine, string targetFilePath)
         {
-            if (!string.IsNullOrEmpty(extension) && !extension.StartsWith("."))
-                return "." + extension;
+            var newLines = new Dictionary<int, string>(1)
+            {
+                { lineNumber, newLine }
+            };
 
-            return extension;
+            return ReplaceLines(source, newLines, targetFilePath);
+        }
+
+        /// <summary>
+        /// Replace specific lines from a text file saving the new content to a new target text file.
+        /// </summary>
+        /// <param name="source">File to perform the operation on.</param>
+        /// <param name="newLines">Dictionary of line numbers and their new line values.</param>
+        /// <param name="targetFilePath">New target text file path.</param>
+        /// <returns>FileInfo for the new target file.</returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="newLines" /> is null.</exception>
+        /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="newLines" /> cannot contain line numbers be less than one.</exception>
+        /// <exception cref="T:System.ArgumentException"><paramref name="targetFilePath" /> cannot be the same as the source path.</exception>
+        public static FileInfo ReplaceLines(this FileInfo source, IDictionary<int, string> newLines, string targetFilePath)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            if (newLines == null)
+                throw new ArgumentNullException(nameof(newLines));
+
+            if (newLines.Keys.Any(n => n < 1))
+                throw new ArgumentOutOfRangeException(nameof(newLines), "Line numbers must be one or greater.");
+
+            if (source.FullName == targetFilePath)
+                throw new ArgumentException("Source and target file paths are the same.");
+
+            var lineCount = 1;
+
+            using (var streamReader = new StreamReader(source.FullName))
+            {
+                using (var streamWriter = new StreamWriter(targetFilePath))
+                {
+                    string line;
+
+                    while ((line = streamReader.ReadLineKeepNewLineChars()) != null)
+                    {
+                        if (newLines.ContainsKey(lineCount))
+                        {
+                            var newLine = newLines[lineCount].RemoveEndLineChars();
+
+                            streamWriter.Write(newLine + line.GetEndLineChars());
+                        }
+                        else
+                        {
+                            streamWriter.Write(line);
+                        }
+
+                        lineCount++;
+                    }
+                }
+            }
+
+            return new FileInfo(targetFilePath);
         }
 
         private static string GetNextFileNameWithNumber(string fileName)
