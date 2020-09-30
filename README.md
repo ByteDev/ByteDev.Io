@@ -161,8 +161,6 @@ MemoryStream stream = StreamFactory.Create("some text");
 
 ### DirectoryInfoExtensions
 
-Methods:
-
 - CreateDirectory
 - DeleteIfExists
 - DeleteIfEmpty
@@ -182,8 +180,6 @@ Methods:
 
 ### FileInfoExtensions
 
-Methods:
-
 - AddExtension
 - DeleteIfExists
 - DeleteLine
@@ -198,8 +194,6 @@ Methods:
 - ReplaceLines
 
 ### StreamExtensions
-
-Methods:
 
 - IsEmpty
 - ReadAsBytes
