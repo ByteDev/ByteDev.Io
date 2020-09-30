@@ -235,7 +235,7 @@ namespace ByteDev.Io
         /// </summary>
         /// <param name="source">File to perform the operation on.</param>
         /// <param name="lineNumbers">Line numbers to delete.</param>
-        /// <param name="targetFilePath"></param>
+        /// <param name="targetFilePath">New target text file path.</param>
         /// <returns>FileInfo for the new target file.</returns>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="lineNumbers" /> is null.</exception>
@@ -257,20 +257,63 @@ namespace ByteDev.Io
 
             var lineCount = 1;
 
-            using (var streamReader = new StreamReader(source.FullName))
+            using (var reader = new StreamReader(source.FullName))
             {
-                using (var streamWriter = new StreamWriter(targetFilePath))
+                using (var writer = new StreamWriter(targetFilePath))
                 {
                     string line;
 
-                    while ((line = streamReader.ReadLineKeepNewLineChars()) != null)
+                    while ((line = reader.ReadLineKeepNewLineChars()) != null)
                     {
                         if (!lineNumbers.Contains(lineCount))
                         {
-                            streamWriter.Write(line);
+                            writer.Write(line);
                         }
 
                         lineCount++;
+                    }
+                }
+            }
+
+            return new FileInfo(targetFilePath);
+        }
+
+        /// <summary>
+        /// Delete the last line from a text file saving the new content to a new target text file.
+        /// </summary>
+        /// <param name="source">File to perform the operation on.</param>
+        /// <param name="targetFilePath">New target text file path.</param>
+        /// <returns>FileInfo for the new target file.</returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
+        /// <exception cref="T:System.ArgumentException"><paramref name="targetFilePath" /> cannot be the same as the source path.</exception>
+        public static FileInfo DeleteLastLine(this FileInfo source, string targetFilePath)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            if (source.FullName == targetFilePath)
+                throw new ArgumentException("Source and target file paths are the same.");
+
+            using (var reader = new StreamReader(source.FullName))
+            {
+                using (var writer = new StreamWriter(targetFilePath))
+                {
+                    string line;
+                    string previousEndLineChars = null;
+
+                    while ((line = reader.ReadLineKeepNewLineChars()) != null)
+                    {
+                        if (!string.IsNullOrEmpty(previousEndLineChars))
+                        {
+                            writer.Write(previousEndLineChars);
+                        }
+
+                        if (!IsLastLine(line))
+                        {
+                            writer.Write(line.RemoveEndLineChars());
+                        }
+
+                        previousEndLineChars = line.GetEndLineChars();
                     }
                 }
             }
@@ -351,6 +394,11 @@ namespace ByteDev.Io
             }
 
             return new FileInfo(targetFilePath);
+        }
+
+        private static bool IsLastLine(string line)
+        {
+            return string.IsNullOrEmpty(line.GetEndLineChars());
         }
 
         private static string GetNextFileNameWithNumber(string fileName)

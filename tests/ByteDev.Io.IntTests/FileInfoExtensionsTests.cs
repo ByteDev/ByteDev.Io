@@ -473,7 +473,7 @@ namespace ByteDev.Io.IntTests
                 AssertFile.AreSame(result, sut);
             }
         }
-
+        
         [TestFixture]
         public class DeleteLines : FileInfoExtensionsTests
         {
@@ -515,6 +515,71 @@ namespace ByteDev.Io.IntTests
                 var sut = FileBuilder.InFileSystem.WithText(text).WithPath(GetAbsolutePath("DeleteLines2.txt")).Build();
 
                 var result = sut.DeleteLines(new [] { 2, 4, 5 }, GetAbsolutePath("DeleteLine2-Output.txt"));
+
+                AssertFile.ContentEquals(result, expected);
+            }
+        }
+
+        [TestFixture]
+        public class DeleteLastLine : FileInfoExtensionsTests
+        {
+            [SetUp]
+            public void Setup()
+            {
+                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            }
+
+            [Test]
+            public void WhenFileIsEmpty_ThenDeleteNothing()
+            {
+                var sut = FileBuilder.InFileSystem.WithPath(GetAbsolutePath("DeleteLastLine1.txt")).Build();
+
+                var result = sut.DeleteLastLine(GetAbsolutePath("DeleteLastLine1-Output.txt"));
+
+                AssertFile.IsEmpty(result);
+            }
+
+            [Test]
+            public void WhenFileHasOneLine_ThenDeleteLine()
+            {
+                var sut = FileBuilder.InFileSystem.WithText("Line 1").WithPath(GetAbsolutePath("DeleteLastLine2.txt")).Build();
+
+                var result = sut.DeleteLastLine(GetAbsolutePath("DeleteLastLine2-Output.txt"));
+
+                AssertFile.IsEmpty(result);
+            }
+
+            [Test]
+            public void WhenFilesLastCharIsNotEndLineChar_ThenDeleteLastLine()
+            {
+                const string text = "Line1\n" +
+                                    "Line2\n" +
+                                    "Line3";
+
+                const string expected = "Line1\n" +
+                                        "Line2\n";
+
+                var sut = FileBuilder.InFileSystem.WithText(text).WithPath(GetAbsolutePath("DeleteLastLine3.txt")).Build();
+
+                var result = sut.DeleteLastLine(GetAbsolutePath("DeleteLastLine3-Output.txt"));
+
+                AssertFile.ContentEquals(result, expected);
+            }
+
+            [Test]
+            public void WhenFilesLastCharIsEndLineChar_ThenRemoveEndLineChar()
+            {
+                const string text = "Line1\n" +
+                                    "Line2\n" +
+                                    "Line3\n";
+
+                const string expected = "Line1\n" +
+                                        "Line2\n" +
+                                        "Line3";
+
+                var sut = FileBuilder.InFileSystem.WithText(text).WithPath(GetAbsolutePath("DeleteLastLine4.txt")).Build();
+
+                var result = sut.DeleteLastLine(GetAbsolutePath("DeleteLastLine4-Output.txt"));
 
                 AssertFile.ContentEquals(result, expected);
             }

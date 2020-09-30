@@ -1,6 +1,6 @@
 # Release Notes
 
-## 7.0.0 - ??
+## 7.0.0 - 30 September 2020
 
 Breaking changes:
 - Deleted `AssemblyExtensions` (use `ByteDev.Reflection` package instead)
@@ -9,6 +9,7 @@ Breaking changes:
 New features:
 - Added `FileInfoExtensions.DeleteLine`
 - Added `FileInfoExtensions.DeleteLines`
+- Added `FileInfoExtensions.DeleteLastLine`
 - Added `FileInfoExtensions.ReplaceLine`
 - Added `FileInfoExtensions.ReplaceLines`
 - Added `StreamReaderExtensions.ReadLineKeepNewLineChars`
