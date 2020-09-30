@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using ByteDev.Strings;
 
 namespace ByteDev.Io
 {
@@ -31,7 +32,7 @@ namespace ByteDev.Io
             if (source.HasExtension())
                 throw new InvalidOperationException($"File: '{source.FullName}' already has an extension.");
 
-            source.MoveTo(source.FullName + extension.AddExtensionDotPrefix());
+            source.MoveTo(source.FullName + extension.AddFileExtensionDotPrefix());
         }
 
         /// <summary>
@@ -181,7 +182,7 @@ namespace ByteDev.Io
             if (newExtension == null)
                 throw new ArgumentNullException(nameof(newExtension));
 
-            var newPath = Path.Combine(source.DirectoryName, Path.GetFileNameWithoutExtension(source.FullName) + newExtension.AddExtensionDotPrefix());
+            var newPath = Path.Combine(source.DirectoryName, Path.GetFileNameWithoutExtension(source.FullName) + newExtension.AddFileExtensionDotPrefix());
 
             source.MoveTo(newPath);
         }
