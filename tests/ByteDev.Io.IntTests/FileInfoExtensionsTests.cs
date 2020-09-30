@@ -472,5 +472,51 @@ namespace ByteDev.Io.IntTests
                 AssertFile.AreSame(result, sut);
             }
         }
+
+        [TestFixture]
+        public class DeleteLines : FileInfoExtensionsTests
+        {
+            [SetUp]
+            public void Setup()
+            {
+                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            }
+
+            [Test]
+            public void WhenNoPagesToDelete_ThenOutputSameFile()
+            {
+                const string text = "Line1\n" +
+                                    "\n" +
+                                    "Line3\r\n" +
+                                    "Line4\n" +
+                                    "Line5";
+
+                var sut = FileBuilder.InFileSystem.WithText(text).WithPath(GetAbsolutePath("DeleteLines1.txt")).Build();
+
+                var result = sut.DeleteLines(new int[0], GetAbsolutePath("DeleteLine1-Output.txt"));
+
+                AssertFile.ContentEquals(result, text);
+                
+            }
+
+            [Test]
+            public void WhenDeleteMultipleLines_ThenDeleteLines()
+            {
+                const string text = "Line1\n" +
+                                    "\n" +
+                                    "Line3\r\n" +
+                                    "Line4\n" +
+                                    "Line5";
+
+                const string expected = "Line1\n" +
+                                        "Line3\r\n";
+
+                var sut = FileBuilder.InFileSystem.WithText(text).WithPath(GetAbsolutePath("DeleteLines2.txt")).Build();
+
+                var result = sut.DeleteLines(new [] { 2, 4, 5 }, GetAbsolutePath("DeleteLine2-Output.txt"));
+
+                AssertFile.ContentEquals(result, expected);
+            }
+        }
     }
 }
