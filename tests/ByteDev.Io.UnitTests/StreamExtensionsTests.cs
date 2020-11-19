@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using ByteDev.Collections;
+using ByteDev.Encoding.Base64;
 using NUnit.Framework;
 
 namespace ByteDev.Io.UnitTests
@@ -66,6 +67,39 @@ namespace ByteDev.Io.UnitTests
                 var result = sut.ReadAsString();
 
                 Assert.That(result, Is.EqualTo("ABC"));
+            }
+        }
+
+        [TestFixture]
+        public class ReadAsBase64 : StreamExtensionsTests
+        {
+            [Test]
+            public void WhenStreamIsNull_ThenThrowException()
+            {
+                Assert.Throws<ArgumentNullException>(() => StreamExtensions.ReadAsBase64(null));
+            }
+
+            [Test]
+            public void WhenStreamIsEmpty_ThenReturnEmpty()
+            {
+                var sut = new MemoryStream();
+
+                var result = sut.ReadAsBase64();
+
+                Assert.That(result, Is.Empty);
+            }
+
+            [Test]
+            public void WhenStreamContainsText_ThenReturnBase64()
+            {
+                const string text = "John Smith is my name.";
+
+                var sut = StreamFactory.Create(text);
+
+                var result = sut.ReadAsBase64();
+                
+                Assert.That(result, Is.EqualTo("Sm9obiBTbWl0aCBpcyBteSBuYW1lLg=="));
+                Assert.That(new Base64Encoder().Decode(result), Is.EqualTo(text));
             }
         }
 

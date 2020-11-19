@@ -196,6 +196,7 @@ MemoryStream stream = StreamFactory.Create("some text");
 ### StreamExtensions
 
 - IsEmpty
+- ReadAsBase64
 - ReadAsBytes
 - ReadAsMemoryStream
 - ReadAsString

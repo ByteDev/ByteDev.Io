@@ -1,5 +1,16 @@
 # Release Notes
 
+## 7.1.0 - 19 November 2020
+
+Breaking changes:
+- (None)
+
+New features:
+- Added `StreamExtensions.ReadAsBase64`
+
+Bug fixes / internal changes:
+- (None)
+
 ## 7.0.0 - 30 September 2020
 
 Breaking changes:
@@ -20,8 +31,8 @@ Bug fixes / internal changes:
 ## 6.0.0 - 24 September 2020
 
 Breaking changes:
-- Removed `StringExtensions.AppendBackSlash`
-- `FileSystem.DeleteDirectoriesWithName` is now a `DirectoryInfoExtension`
+- Deleted `StringExtensions.AppendBackSlash`
+- Moved `FileSystem.DeleteDirectoriesWithName` to `DirectoryInfoExtensions.DeleteDirectoriesWithName`
 
 New features:
 - Added `DirectoryInfoExtensions.EmptyIfExists`
@@ -39,8 +50,8 @@ New features:
 - Added `StreamExtensions.WriteToFile`
 - Added `StreamExtensions.WriteToFileAsync`
 - Added `StreamFactory type`
-- `DirectoryInfoExtensions.GetSize` now takes optional `includeSubDirectories` param (default false)
-- `FileInfoExtensions.IsBinary` now takes optional `requiredConsecutiveNul` param (default 1)
+- `DirectoryInfoExtensions.GetSize` now takes optional `includeSubDirectories` param (default `false`)
+- `FileInfoExtensions.IsBinary` now takes optional `requiredConsecutiveNul` param (default `1`)
 
 Bug fixes / internal changes:
 - Package related fixes

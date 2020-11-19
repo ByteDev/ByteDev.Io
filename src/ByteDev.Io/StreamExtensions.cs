@@ -88,7 +88,7 @@ namespace ByteDev.Io
         /// <param name="source">Stream to read.</param>
         /// <param name="encoding">Encoding to use when reading from the stream.</param>
         /// <param name="tryStartFromBeginning">Indicates whether to read from the beginning of the stream if possible.</param>
-        /// <returns>Encoding string from the stream.</returns>
+        /// <returns>Encoded string from the stream.</returns>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="encoding" /> is null.</exception>
         public static string ReadAsString(this Stream source, Encoding encoding, bool tryStartFromBeginning = true)
@@ -106,6 +106,20 @@ namespace ByteDev.Io
             {
                 return sr.ReadToEnd();
             }
+        }
+
+        /// <summary>
+        /// Read the stream as a base64 string.
+        /// </summary>
+        /// <param name="source">Stream to read.</param>
+        /// <param name="tryStartFromBeginning">Indicates whether to read from the beginning of the stream if possible.</param>
+        /// <returns>Base 64 encoded string from the stream.</returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
+        public static string ReadAsBase64(this Stream source, bool tryStartFromBeginning = true)
+        {
+            var bytes = ReadAsBytes(source, tryStartFromBeginning);
+
+            return Convert.ToBase64String(bytes);
         }
 
         /// <summary>

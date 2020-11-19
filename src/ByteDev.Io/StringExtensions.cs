@@ -9,7 +9,7 @@ namespace ByteDev.Io
             if (string.IsNullOrEmpty(source))
                 return source;
 
-            return source.AddPrefix(".");
+            return source.EnsureStartsWith(".");
         }
     }
 }
