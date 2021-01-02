@@ -51,7 +51,7 @@ namespace ByteDev.Io
             }
             catch (FileNotFoundException)
             {
-                // Swallow exception
+                // Do nothing if file does not exist
             }
         }
 

@@ -11,7 +11,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="ByteDev.Strings" Version="8.0.0" />
+    <PackageReference Include="ByteDev.Strings" Version="8.1.0" />
   </ItemGroup>
 
 </Project>
