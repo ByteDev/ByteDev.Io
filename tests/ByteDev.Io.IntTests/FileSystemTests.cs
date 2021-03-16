@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
 using ByteDev.Testing.Builders;
 using ByteDev.Testing.NUnit;
@@ -9,7 +10,7 @@ namespace ByteDev.Io.IntTests
     [TestFixture]
     public class FileSystemTests : IoTestBase
     {
-        private IFileSystem _sut;
+        private FileSystem _sut;
 
         private void SetupWorkingDir(string methodName)
         {
@@ -21,6 +22,77 @@ namespace ByteDev.Io.IntTests
         public void Setup()
         {
             _sut = new FileSystem();            
+        }
+
+        [TestFixture]
+        public class GetPathExists : FileSystemTests
+        {
+            [SetUp]
+            public new void Setup()
+            {
+                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
+                CreateOrEmptyWorkingDir();
+            }
+
+            [Test]
+            public void WhenPathIsFile_AndExists_ThenReturnPath()
+            {
+                var fileInfo = FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "test.txt")).Build();
+
+                var result = _sut.GetPathExists(fileInfo.FullName);
+
+                Assert.That(result, Is.EqualTo(fileInfo.FullName));
+            }
+
+            [Test]
+            public void WhenPathIsDir_AndExists_ThenReturnPath()
+            {
+                var dirInfo = DirectoryBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test")).Build();
+
+                var result = _sut.GetPathExists(dirInfo.FullName);
+
+                Assert.That(result, Is.EqualTo(dirInfo.FullName));
+            }
+
+            [Test]
+            public void WhenPathIsFile_AndFileNotExist_ThenReturnPath()
+            {
+                var result = _sut.GetPathExists(Path.Combine(WorkingDir, Guid.NewGuid() + ".txt"));
+
+                Assert.That(result, Is.EqualTo(WorkingDir));
+            }
+
+            [Test]
+            public void WhenPathIsDir_AndDirNotExist_ThenReturnPath()
+            {
+                var result = _sut.GetPathExists(Path.Combine(WorkingDir, Guid.NewGuid().ToString()));
+
+                Assert.That(result, Is.EqualTo(WorkingDir));
+            }
+
+            [Test]
+            public void WhenPathIsFile_AndFileAndParentNotExist_ThenReturnPath()
+            {
+                var path = Path.Combine(WorkingDir, @"Test1\Test2\" + Guid.NewGuid() + ".txt");
+
+                var result = _sut.GetPathExists(path);
+
+                Assert.That(result, Is.EqualTo(WorkingDir));
+            }
+
+            [Test]
+            public void WhenOnlyDriveExists_ThenReturnPath()
+            {
+                var result = _sut.GetPathExists(@"C:\0af383f9266d4311ad331f8b461148ee\Test1\Test2\test.txt");
+
+                Assert.That(result, Is.EqualTo(@"C:\"));
+            }
+
+            [Test]
+            public void WhenNoPartsOfPathExist_ThenThrowException()
+            {
+                Assert.Throws<PathNotFoundException>(() => _sut.GetPathExists(@"I:\Test1\Test2\test.txt"));
+            }
         }
 
         [TestFixture]

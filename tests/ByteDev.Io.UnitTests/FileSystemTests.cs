@@ -19,6 +19,22 @@ namespace ByteDev.Io.UnitTests
         }
 
         [TestFixture]
+        public class GetPathExists : FileSystemTests
+        {
+            [Test]
+            public void WhenPathIsNull_ThenThrowException()
+            {
+                Assert.Throws<ArgumentNullException>(() => _sut.GetPathExists(null));
+            }
+
+            [Test]
+            public void WhenPathIsEmpty_ThenThrowException()
+            {
+                Assert.Throws<ArgumentException>(() => _sut.GetPathExists(string.Empty));
+            }
+        }
+
+        [TestFixture]
         public class FirstExists : FileSystemTests
         {
             [Test]
@@ -30,7 +46,17 @@ namespace ByteDev.Io.UnitTests
             [Test]
             public void WhenPathsIsEmpty_ThenThrowException()
             {
-                Assert.Throws<ArgumentException>(() => _sut.FirstExists(Enumerable.Empty<string>()));
+                Assert.Throws<PathNotFoundException>(() => _sut.FirstExists(Enumerable.Empty<string>()));
+            }
+        }
+
+        [TestFixture]
+        public class MoveFile : FileSystemTests
+        {
+            [Test]
+            public void WhenFileInfo1IsNull_ThenThrowException()
+            {
+                Assert.Throws<ArgumentNullException>(() => _sut.SwapFileNames(null, new FileInfo(FileExists)));
             }
         }
 

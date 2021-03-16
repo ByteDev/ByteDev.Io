@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using ByteDev.Io.FileCommands;
 
 namespace ByteDev.Io
@@ -17,6 +16,36 @@ namespace ByteDev.Io
         private FileMoveCommandFactory FileMoveCommandFactory => _fileMoveCommandFactory ?? (_fileMoveCommandFactory = new FileMoveCommandFactory());
 
         private FileCopyCommandFactory FileCopyCommandFactory => _fileCopyCommandFactory ?? (_fileCopyCommandFactory = new FileCopyCommandFactory());
+
+        /// <summary>
+        /// Get the first part of the path that exists moving up through the parent parts.
+        /// </summary>
+        /// <param name="path">Path to use.</param>
+        /// <returns>Path that exists.</returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="path" /> is null.</exception>
+        /// <exception cref="T:System.ArgumentException"><paramref name="path" /> is empty.</exception>
+        /// <exception cref="T:ByteDev.Io.PathNotFoundException">No part of <paramref name="path" /> exists.</exception>
+        public string GetPathExists(string path)
+        {
+            if (File.Exists(path) || Directory.Exists(path))
+                return path;
+
+            var dir = new DirectoryInfo(path);
+
+            while (dir.Parent != null && !dir.Parent.Exists)
+            {
+                dir = dir.Parent;
+            }
+
+            if (dir.Parent != null)
+                return dir.Parent.FullName;
+
+            // Drive only now
+            if (dir.Exists)
+                return dir.FullName;
+
+            throw new PathNotFoundException("No part of the path exists.");
+        }
 
         /// <summary>
         /// Indicates whether <paramref name="path" /> is a file.
@@ -54,15 +83,11 @@ namespace ByteDev.Io
         /// <param name="paths">Collection of paths (to files or directories).</param>
         /// <returns>String of first path that exists.</returns>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="paths" /> is null.</exception>
-        /// <exception cref="T:System.ArgumentException"><paramref name="paths" /> is empty.</exception>
         /// <exception cref="T:ByteDev.Io.PathNotFoundException">None of the paths exist.</exception>
         public string FirstExists(IEnumerable<string> paths)
         {
             if (paths == null)
                 throw new ArgumentNullException(nameof(paths));
-
-            if (!paths.Any())
-                throw new ArgumentException("Empty path list provided.", nameof(paths));
 
             foreach (var path in paths)
             {
@@ -80,8 +105,16 @@ namespace ByteDev.Io
         /// <param name="destinationFile">Destination to move the file to.</param>
         /// <param name="type">File operation behaviour to use when moving the file.</param>
         /// <returns>File info of the moved file.</returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="sourceFile" /> is null.</exception>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="destinationFile" /> is null.</exception>
         public FileInfo MoveFile(FileInfo sourceFile, FileInfo destinationFile, FileOperationBehaviourType type = FileOperationBehaviourType.DestExistsThrowException)
         {
+            if(sourceFile == null)
+                throw new ArgumentNullException(nameof(sourceFile));
+
+            if (destinationFile == null)
+                throw new ArgumentNullException(nameof(destinationFile));
+
             return MoveFile(sourceFile.FullName, destinationFile.FullName);
         }
 
@@ -92,8 +125,16 @@ namespace ByteDev.Io
         /// <param name="destinationFile">Destination to move the file to.</param>
         /// <param name="type">File operation behaviour to use when moving the file.</param>
         /// <returns>File info of the moved file.</returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="sourceFile" /> is null.</exception>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="destinationFile" /> is null.</exception>
         public FileInfo MoveFile(string sourceFile, string destinationFile, FileOperationBehaviourType type = FileOperationBehaviourType.DestExistsThrowException)
         {
+            if (sourceFile == null)
+                throw new ArgumentNullException(nameof(sourceFile));
+
+            if (destinationFile == null)
+                throw new ArgumentNullException(nameof(destinationFile));
+
             var command = FileMoveCommandFactory.Create(type, sourceFile, destinationFile);
 
             command.Execute();
@@ -108,8 +149,16 @@ namespace ByteDev.Io
         /// <param name="destinationFile">Destination to copy the file to.</param>
         /// <param name="type">File operation behaviour to use when copying the file.</param>
         /// <returns>File info of the copied file.</returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="sourceFile" /> is null.</exception>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="destinationFile" /> is null.</exception>
         public FileInfo CopyFile(FileInfo sourceFile, FileInfo destinationFile, FileOperationBehaviourType type = FileOperationBehaviourType.DestExistsThrowException)
         {
+            if(sourceFile == null)
+                throw new ArgumentNullException(nameof(sourceFile));
+
+            if (destinationFile == null)
+                throw new ArgumentNullException(nameof(destinationFile));
+
             return CopyFile(sourceFile.FullName, destinationFile.FullName);
         }
         
@@ -120,8 +169,16 @@ namespace ByteDev.Io
         /// <param name="destinationFile">Destination to copy the file to.</param>
         /// <param name="type">File operation behaviour to use when copying the file.</param>
         /// <returns>File info of the copied file.</returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="sourceFile" /> is null.</exception>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="destinationFile" /> is null.</exception>
         public FileInfo CopyFile(string sourceFile, string destinationFile, FileOperationBehaviourType type = FileOperationBehaviourType.DestExistsThrowException)
         {
+            if(sourceFile == null)
+                throw new ArgumentNullException(nameof(sourceFile));
+
+            if (destinationFile == null)
+                throw new ArgumentNullException(nameof(destinationFile));
+
             var command = FileCopyCommandFactory.Create(type, sourceFile, destinationFile);
 
             command.Execute();
@@ -162,7 +219,7 @@ namespace ByteDev.Io
             if (filePath2 == null)
                 throw new ArgumentNullException(nameof(filePath2));
 
-            var filePath1Temp = RenameToTemp(filePath1);
+            var filePath1Temp = RenameFileToTemp(filePath1);
 
             try
             {
@@ -176,7 +233,7 @@ namespace ByteDev.Io
             File.Move(filePath1Temp, filePath2);
         }
 
-        private static string RenameToTemp(string filePath)
+        private static string RenameFileToTemp(string filePath)
         {
             string filePathTemp = filePath + "." + Guid.NewGuid().ToString().Replace("-", string.Empty).ToLower();
 

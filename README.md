@@ -32,6 +32,7 @@ Provides a small set of methods for working with files and directories.
 
 Methods:
 
+- GetPathExists
 - IsFile
 - IsDirectory
 - FirstExists
@@ -42,6 +43,14 @@ Methods:
 ```csharp
 // Initialize object
 IFileSystem fs = new FileSystem();
+```
+
+```csharp
+// Determine first part of path that exists
+
+var path = fs.GetPathExists(@"C:\Temp\ThisDoesntExist\test.txt");
+
+// path == "C:\Temp"
 ```
 
 ```csharp
