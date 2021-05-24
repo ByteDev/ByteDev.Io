@@ -1,5 +1,16 @@
 # Release Notes
 
+## 7.2.1 - ?
+
+Breaking changes:
+- (None)
+
+New features:
+- (None)
+
+Bug fixes / internal changes:
+- Updated `ByteDev.Strings` package dependency to 9.1.0.
+
 ## 7.2.0 - 16 March 2021
 
 Breaking changes:

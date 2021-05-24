@@ -310,10 +310,10 @@ namespace ByteDev.Io
 
                         if (!IsLastLine(line))
                         {
-                            writer.Write(line.RemoveEndLineChars());
+                            writer.Write(line.RemoveEndNewLine());
                         }
 
-                        previousEndLineChars = line.GetEndLineChars();
+                        previousEndLineChars = line.GetEndNewLine();
                     }
                 }
             }
@@ -379,9 +379,9 @@ namespace ByteDev.Io
                     {
                         if (newLines.ContainsKey(lineCount))
                         {
-                            var newLine = newLines[lineCount].RemoveEndLineChars();
+                            var newLine = newLines[lineCount].RemoveEndNewLine();
 
-                            streamWriter.Write(newLine + line.GetEndLineChars());
+                            streamWriter.Write(newLine + line.GetEndNewLine());
                         }
                         else
                         {
@@ -398,7 +398,7 @@ namespace ByteDev.Io
 
         private static bool IsLastLine(string line)
         {
-            return string.IsNullOrEmpty(line.GetEndLineChars());
+            return string.IsNullOrEmpty(line.GetEndNewLine());
         }
 
         private static string GetNextFileNameWithNumber(string fileName)

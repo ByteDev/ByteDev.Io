@@ -10,12 +10,12 @@
     <description>Set of IO related .NET utility classes.</description>
     <copyright>Copyright 2019</copyright>
     <tags>io file directory folder</tags>
-	<projectUrl>https://github.com/ByteDev/ByteDev.Io</projectUrl>
+    <projectUrl>https://github.com/ByteDev/ByteDev.Io</projectUrl>
     <icon>images\icon.png</icon>
     <license type="file">LICENSE</license>	
     <dependencies>
       <group targetFramework=".NETStandard2.0">
-        <dependency id="ByteDev.Strings" version="8.1.0" />
+        <dependency id="ByteDev.Strings" version="9.1.0" />
       </group>
     </dependencies>
   </metadata>
