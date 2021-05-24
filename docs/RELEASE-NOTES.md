@@ -1,6 +1,6 @@
 # Release Notes
 
-## 7.2.1 - ?
+## 7.2.1 - 24 May 2021
 
 Breaking changes:
 - (None)
