@@ -185,7 +185,8 @@ Simple way to manage the locking of files.
 ```csharp
 using ByteDev.Io.Locking;
 
-/// ...
+// ...
+
 string file = @"C:\myfile.txt";
 
 // Lock a file (myfile.txt.lock is created)
