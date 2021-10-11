@@ -30,7 +30,7 @@ To use these main public classes simply reference `ByteDev.Io`.
 
 Provides a small set of methods for working with files and directories.
 
-Methods:
+`FileSytem` methods:
 
 - GetPathExists
 - IsFile
@@ -106,9 +106,11 @@ string file2 = @"C:\Temp\cover.png";
 fs.SwapFileNames(file1, file2);
 ```
 
+---
+
 ### FileSize
 
-Represents file size.
+Represents a file size as an object.
 
 ```csharp
 long numberOfBytes = 1048576;
@@ -121,21 +123,25 @@ Console.Write(fileSize.TotalKiloBytes);         // 1048
 Console.Write(fileSize.TotalMegaBytes);         // 1
 ```
 
+---
+
 ### FileComparer
 
 Provides functionality to compare two files.
 
-Methods:
+`FileComparer` methods:
 
 - IsSourceBigger
 - IsSourceBiggerOrEqual
 - IsSourceModifiedMoreRecently
 
+---
+
 ### IsolatedStorageIo
 
 Provides functionality for isolated storage operations. To use reference namespace: `ByteDev.Io.IsolatedStorage`.
 
-Methods:
+`IsolatedStorageIo` methods:
 
 - Exists
 - Delete
@@ -158,9 +164,13 @@ string data = io.Read(fileName);
 io.Delete(fileName);
 ```
 
+---
+
 ### StreamFactory
 
-Provides simple functionality to create memory streams.
+Provides simple functionality to create memory streams from different input.
+
+For example:
 
 ```csharp
 MemoryStream stream = StreamFactory.Create("some text");
@@ -168,50 +178,72 @@ MemoryStream stream = StreamFactory.Create("some text");
 
 ---
 
-### DirectoryInfoExtensions
+### FileLocker
 
-- CreateDirectory
-- DeleteIfExists
-- DeleteIfEmpty
-- DeleteDirectories
-- DeleteDirectoriesWithName
-- DeleteEmptyDirectories
-- DeleteFiles
-- DeleteFilesExcept
-- Empty
-- EmptyIfExists
-- GetFilesByExtensions
-- GetAudioFiles
-- GetImageFiles
-- GetVideoFiles
-- GetSize
-- IsEmpty
+Simple way to manage the locking of files.
 
-### FileInfoExtensions
+```csharp
+using ByteDev.Io.Locking;
 
-- AddExtension
-- DeleteIfExists
-- DeleteLine
-- DeleteLines
-- GetExtension
-- GetNextAvailableFileName
-- HasExtension
-- IsBinary
-- RenameExtension
-- RemoveExtension
-- ReplaceLine
-- ReplaceLines
+/// ...
+string file = @"C:\myfile.txt";
 
-### StreamExtensions
+// Lock a file (myfile.txt.lock is created)
+FileLockInfo fileLockInfo = FileLocker.Lock(file);
 
-- IsEmpty
-- ReadAsBase64
-- ReadAsBytes
-- ReadAsMemoryStream
-- ReadAsString
-- WriteToFile
-- WriteToFileAsync
+// fileLockInfo.File == new FileInfo(@"C:\myfile.txt")
+// fileLockInfo.LockFile == new FileInfo(@"C:\myfile.txt.lock")
 
-## StreamReaderExtensions
+// Determine if a file is created
+bool isLocked = FileLocker.IsLocked(file);
 
-- ReadLineKeepNewLineChars
+// isLocked == true
+
+// Unlock a file (myfile.txt.lock is deleted)
+FileLocker.Unlock(file);
+```
+
+---
+
+### Extension Methods
+
+- DirectoryInfo
+    - CreateDirectory
+    - DeleteIfExists
+    - DeleteIfEmpty
+    - DeleteDirectories
+    - DeleteDirectoriesWithName
+    - DeleteEmptyDirectories
+    - DeleteFiles
+    - DeleteFilesExcept
+    - Empty
+    - EmptyIfExists
+    - GetFilesByExtensions
+    - GetAudioFiles
+    - GetImageFiles
+    - GetVideoFiles
+    - GetSize
+    - IsEmpty
+- FileInfo
+    - AddExtension
+    - DeleteIfExists
+    - DeleteLine
+    - DeleteLines
+    - GetExtension
+    - GetNextAvailableFileName
+    - HasExtension
+    - IsBinary
+    - RenameExtension
+    - RemoveExtension
+    - ReplaceLine
+    - ReplaceLines
+- Stream
+    - IsEmpty
+    - ReadAsBase64
+    - ReadAsBytes
+    - ReadAsMemoryStream
+    - ReadAsString
+    - WriteToFile
+    - WriteToFileAsync
+- StreamReader
+  - ReadLineKeepNewLineChars

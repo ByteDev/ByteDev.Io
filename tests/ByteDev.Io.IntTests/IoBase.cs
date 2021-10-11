@@ -20,6 +20,8 @@ namespace ByteDev.Io.IntTests
         /// </summary>
         protected string WorkingDir { get; private set; }
 
+        protected FileInfo FileNotExist => new FileInfo(Path.Combine(WorkingDir, "DoesntExist"));
+
         /// <summary>
         /// Set the method under test's working directory for IO
         /// integration tests

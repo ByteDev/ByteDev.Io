@@ -1,5 +1,16 @@
 # Release Notes
 
+## 7.3.0 - 11 October 2021
+
+Breaking changes:
+- (None)
+
+New features:
+- Added file locking functionality (`FileLocker` & `FileLockInfo` types).
+
+Bug fixes / internal changes:
+- (None)
+
 ## 7.2.1 - 24 May 2021
 
 Breaking changes:
