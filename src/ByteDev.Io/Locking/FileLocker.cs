@@ -37,8 +37,7 @@ namespace ByteDev.Io.Locking
             if (fileInfo == null) 
                 throw new ArgumentNullException(nameof(fileInfo));
 
-            if (!fileInfo.Exists)
-                ThrowFileNotFoundException(fileInfo);
+            ThrowIfNotExists(fileInfo);
             
             var fileLockInfo = new FileLockInfo(fileInfo);
 
@@ -77,8 +76,7 @@ namespace ByteDev.Io.Locking
             if (fileInfo == null) 
                 throw new ArgumentNullException(nameof(fileInfo));
 
-            if (!fileInfo.Exists)
-                ThrowFileNotFoundException(fileInfo);
+            ThrowIfNotExists(fileInfo);
 
             var fileLockInfo = new FileLockInfo(fileInfo);
 
@@ -110,8 +108,7 @@ namespace ByteDev.Io.Locking
             if (fileInfo == null) 
                 throw new ArgumentNullException(nameof(fileInfo));
 
-            if (!fileInfo.Exists)
-                ThrowFileNotFoundException(fileInfo);
+            ThrowIfNotExists(fileInfo);
 
             var fileLockInfo = new FileLockInfo(fileInfo);
 
@@ -126,9 +123,10 @@ namespace ByteDev.Io.Locking
             }
         }
 
-        private static void ThrowFileNotFoundException(FileInfo fileInfo)
+        private static void ThrowIfNotExists(FileInfo fileInfo)
         {
-            throw new FileNotFoundException("File does not exist.", fileInfo.FullName);
+            if (!fileInfo.Exists)
+                throw new FileNotFoundException("File does not exist.", fileInfo.FullName);
         }
     }
 }
