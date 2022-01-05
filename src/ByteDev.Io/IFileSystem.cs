@@ -46,6 +46,14 @@ namespace ByteDev.Io
         string FirstExists(IEnumerable<string> paths);
 
         /// <summary>
+        /// Returns a collection containing details of which paths exist and which do not.
+        /// </summary>
+        /// <param name="paths">Collection of paths (to files or directories).</param>
+        /// <returns>Collection of ExistsInfo objects containing details of which paths exist and which do not.</returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="paths" /> is null.</exception>
+        IList<ExistsInfo> Exists(IEnumerable<string> paths);
+
+        /// <summary>
         /// Move <paramref name="sourceFile" /> to <paramref name="destinationFile" />.
         /// </summary>
         /// <param name="sourceFile">Source file to move.</param>

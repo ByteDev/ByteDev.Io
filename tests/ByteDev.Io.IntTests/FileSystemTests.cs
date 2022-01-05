@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using ByteDev.Collections;
 using ByteDev.Testing.Builders;
 using ByteDev.Testing.NUnit;
 using NUnit.Framework;
@@ -243,6 +245,65 @@ namespace ByteDev.Io.IntTests
                 var result = _sut.FirstExists(paths);
 
                 Assert.That(result, Is.EqualTo(testFile.FullName));
+            }
+        }
+
+        [TestFixture]
+        public class Exists : FileSystemTests
+        {
+            [SetUp]
+            public new void Setup()
+            {
+                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
+                CreateOrEmptyWorkingDir();
+            }
+
+            [Test]
+            public void WhenNoPathExists_ThenReturnList()
+            {
+                string[] paths = 
+                {
+                    Path.Combine(WorkingDir, "test1.txt"),
+                    Path.Combine(WorkingDir, "test2.txt")
+                };
+
+                var result = _sut.Exists(paths);
+
+                Assert.That(result.First().Path, Is.EqualTo(paths.First()));
+                Assert.That(result.First().Exists, Is.False);
+                
+                Assert.That(result.Second().Path, Is.EqualTo(paths.Second()));
+                Assert.That(result.Second().Exists, Is.False);
+            }
+
+            [Test]
+            public void WhenMixExistingFilesAndDirectories_ThenReturnList()
+            {
+                var testDir = DirectoryBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "TestDirectory")).Build();
+                var testFile = FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "test2.txt")).Build();
+
+                string[] paths =
+                {
+                    testDir.FullName,
+                    testFile.FullName,
+
+                    Path.Combine(WorkingDir, "SomeDir"),
+                    Path.Combine(WorkingDir, "test1.txt")
+                };
+
+                var result = _sut.Exists(paths);
+
+                Assert.That(result.First().Path, Is.EqualTo(paths.First()));
+                Assert.That(result.First().Exists, Is.True);
+                
+                Assert.That(result.Second().Path, Is.EqualTo(paths.Second()));
+                Assert.That(result.Second().Exists, Is.True);
+
+                Assert.That(result.Third().Path, Is.EqualTo(paths.Third()));
+                Assert.That(result.Third().Exists, Is.False);
+
+                Assert.That(result.Fourth().Path, Is.EqualTo(paths.Fourth()));
+                Assert.That(result.Fourth().Exists, Is.False);
             }
         }
 

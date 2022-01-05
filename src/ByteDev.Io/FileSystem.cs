@@ -99,6 +99,31 @@ namespace ByteDev.Io
         }
 
         /// <summary>
+        /// Returns a collection containing details of which paths exist and which do not.
+        /// </summary>
+        /// <param name="paths">Collection of paths (to files or directories).</param>
+        /// <returns>Collection of ExistsInfo objects containing details of which paths exist and which do not.</returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="paths" /> is null.</exception>
+        public IList<ExistsInfo> Exists(IEnumerable<string> paths)
+        {
+            if (paths == null)
+                throw new ArgumentNullException(nameof(paths));
+
+            var existsInfos = new List<ExistsInfo>();
+
+            foreach (var path in paths)
+            {
+                existsInfos.Add(new ExistsInfo
+                {
+                    Path = path,
+                    Exists = Directory.Exists(path) || File.Exists(path)
+                });
+            }
+
+            return existsInfos;
+        }
+
+        /// <summary>
         /// Move <paramref name="sourceFile" /> to <paramref name="destinationFile" />.
         /// </summary>
         /// <param name="sourceFile">Source file to move.</param>

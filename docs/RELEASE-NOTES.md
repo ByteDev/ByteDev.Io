@@ -1,5 +1,16 @@
 # Release Notes
 
+## 7.4.0 - 05 January 2022
+
+Breaking changes:
+- (None)
+
+New features:
+- Added `FileSystem.Exists` method (returns collection of new type `ExistsInfo`).
+
+Bug fixes / internal changes:
+- (None)
+
 ## 7.3.0 - 11 October 2021
 
 Breaking changes:

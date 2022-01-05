@@ -36,6 +36,7 @@ Provides a small set of methods for working with files and directories.
 - IsFile
 - IsDirectory
 - FirstExists
+- Exists
 - MoveFile
 - CopyFile
 - SwapFileNames
@@ -71,6 +72,19 @@ string[] paths =
 };
 
 var path = fs.FirstExists(paths);
+```
+
+```csharp
+// Return info on which paths exist and which don't
+
+string[] paths =
+{
+    @"C:\Temp\Test1.txt",
+    @"C:\Temp\Test2.txt",
+    @"C:\Temp\TestDirectory",
+};
+
+var info = fs.Exists(paths);
 ```
 
 ```csharp
