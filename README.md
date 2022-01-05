@@ -233,11 +233,12 @@ FileLocker.Unlock(file);
     - DeleteFilesExcept
     - Empty
     - EmptyIfExists
+    - GetAudioFiles    
     - GetFilesByExtensions
-    - GetAudioFiles
-    - GetImageFiles
-    - GetVideoFiles
+    - GetImageFiles    
+    - GetLastModifiedFile
     - GetSize
+    - GetVideoFiles
     - IsEmpty
 - FileInfo
     - AddExtension

@@ -93,5 +93,36 @@ namespace ByteDev.Io
 
             return GetFilesByExtensions(source, videoContainerExtensions);
         }
+
+        /// <summary>
+        /// Retrieves info for the last modified file in the directory. If the directory has no files then returns null.
+        /// </summary>
+        /// <param name="source">The directory to examine.</param>
+        /// <returns>Last modified file.</returns>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
+        public static FileInfo GetLastModifiedFile(this DirectoryInfo source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            var files = source.GetFiles();
+
+            FileInfo lastModifiedFile = null;
+
+            foreach (var file in files)
+            {
+                if (lastModifiedFile == null)
+                {
+                    lastModifiedFile = file;
+                }
+                else
+                {
+                    if (file.LastWriteTimeUtc > lastModifiedFile.LastWriteTimeUtc)
+                        lastModifiedFile = file;
+                }
+            }
+
+            return lastModifiedFile;
+        }
     }
 }

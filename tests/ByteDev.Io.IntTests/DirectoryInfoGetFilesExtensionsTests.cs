@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using ByteDev.Testing.Builders;
 using NUnit.Framework;
 
@@ -15,12 +16,12 @@ namespace ByteDev.Io.IntTests
             SetWorkingDir(type, methodName);
         }
 
-        private DirectoryInfo Createsut()
+        private DirectoryInfo CreateSut()
         {
-            return Createsut(WorkingDir);
+            return CreateSut(WorkingDir);
         }
 
-        private DirectoryInfo Createsut(string path)
+        private DirectoryInfo CreateSut(string path)
         {
             return new DirectoryInfo(path);
         }
@@ -50,7 +51,7 @@ namespace ByteDev.Io.IntTests
             {
                 FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "NotImage.txt")).Build();
 
-                var result = Createsut().GetImageFiles();
+                var result = CreateSut().GetImageFiles();
 
                 Assert.That(result.Count(), Is.EqualTo(0));
             }
@@ -66,7 +67,7 @@ namespace ByteDev.Io.IntTests
                 FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Image.jpeg")).Build();
                 FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Image.bmp")).Build();
 
-                var result = Createsut().GetImageFiles().ToList();
+                var result = CreateSut().GetImageFiles().ToList();
 
                 Assert.That(result.Count, Is.EqualTo(5));
             }
@@ -84,15 +85,78 @@ namespace ByteDev.Io.IntTests
             [Test]
             public void WhenTwoTextFilesExist_ThenReturnTwoTextFiles()
             {
-                EmptyWorkingDir();
-
                 FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test1.txt")).Build();
                 FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test2.text")).Build();
                 FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test1.gif")).Build();
 
-                var result = Createsut().GetFilesByExtensions(".txt", "text");
+                var result = CreateSut().GetFilesByExtensions(".txt", "text");
 
                 Assert.That(result.Count(), Is.EqualTo(2));
+            }
+        }
+
+        [TestFixture]
+        public class GetLastModifiedFile : DirectoryInfoGetFilesExtensionsTests
+        {
+            [SetUp]
+            public void Setup()
+            {
+                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
+            }
+
+            [Test]
+            public void WhenDirectoryIsEmpty_ThenReturNull()
+            {
+                var result = CreateSut().GetLastModifiedFile();
+
+                Assert.That(result, Is.Null);
+            }
+
+            [Test]
+            public void WhenDirectoryHasNoFiles_ThenReturnNull()
+            {
+                DirectoryBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "SubDir")).Build();
+
+                var result = CreateSut().GetLastModifiedFile();
+
+                Assert.That(result, Is.Null);
+            }
+
+            [Test]
+            public void WhenDirectoryContainsOneFile_ThenReturnFile()
+            {
+                FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test1.txt")).Build();
+
+                var result = CreateSut().GetLastModifiedFile();
+
+                Assert.That(result.Name, Is.EqualTo("Test1.txt"));
+            }
+
+            [Test]
+            public void WhenDirectoryContainsTwoFiles_ThenReturnLastModified()
+            {
+                FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test1.txt")).Build();
+                FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test2.txt")).Build();
+                
+                var result = CreateSut().GetLastModifiedFile();
+
+                Assert.That(result.Name, Is.EqualTo("Test2.txt"));
+            }
+
+            [Test]
+            public void WhenOlderFileIsModified_ThenReturnOlderFile()
+            {
+                var f1 = FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test1.txt")).Build();
+                var f2 = FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test2.txt")).Build();
+                
+                using (var writer = f1.AppendText())
+                {
+                    writer.WriteLine("appended text");
+                }
+                
+                var result = CreateSut().GetLastModifiedFile();
+
+                Assert.That(result.FullName, Is.EqualTo(f1.FullName));
             }
         }
     }

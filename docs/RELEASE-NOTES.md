@@ -7,6 +7,7 @@ Breaking changes:
 
 New features:
 - Added `FileSystem.Exists` method (returns collection of new type `ExistsInfo`).
+- Added `DirectoryInfoGetFilesExtensions.GetLastModifiedFile` method.
 
 Bug fixes / internal changes:
 - (None)
