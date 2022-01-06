@@ -136,6 +136,7 @@ namespace ByteDev.Io.IntTests
             public void WhenDirectoryContainsTwoFiles_ThenReturnLastModified()
             {
                 FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test1.txt")).Build();
+                Thread.Sleep(1000);
                 FileBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "Test2.txt")).Build();
                 
                 var result = CreateSut().GetLastModifiedFile();
