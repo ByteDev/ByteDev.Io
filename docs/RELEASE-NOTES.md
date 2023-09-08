@@ -1,5 +1,18 @@
 # Release Notes
 
+## 7.4.1 - 08 September 2023
+
+Breaking changes:
+- (None)
+
+New features:
+- (None)
+
+Bug fixes / internal changes:
+- Fixed bug in `DirectoryInfoExtensions.DeleteFilesExcept` method.
+- `DirectoryInfoExtensions.DeleteFilesExcept` method `fileNames` param is now type `ICollection` (rather than `IList`).
+- Added optional param `recursive` to `DirectoryInfoExtensions.DeleteFiles` method.
+
 ## 7.4.0 - 05 January 2022
 
 Breaking changes:

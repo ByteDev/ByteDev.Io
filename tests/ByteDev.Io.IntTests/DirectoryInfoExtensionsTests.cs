@@ -218,7 +218,7 @@ namespace ByteDev.Io.IntTests
             }
 
             [Test]
-            public void WhenThereAreTwoFiles_ThenDeleteAllFiles()
+            public void WhenNoExtensionSpecified_ThenDeleteAllFiles()
             {
                 FileBuilder.InFileSystem.WithPath(GetAbsolutePath("Test1.txt")).Build();
                 FileBuilder.InFileSystem.WithPath(GetAbsolutePath("Test2.txt")).Build();
@@ -229,9 +229,20 @@ namespace ByteDev.Io.IntTests
 
                 AssertDir.HasNoFiles(sut);
             }
+        }
+
+        [TestFixture]
+        public class DeleteFiles_Extension : DirectoryInfoExtensionsTests
+        {
+            [SetUp]
+            public void Setup()
+            {
+                SetupWorkingDir(MethodBase.GetCurrentMethod().DeclaringType.ToString());
+                EmptyWorkingDir();
+            }
 
             [Test]
-            public void WhenExtensionSpecified_ThenDeleteOnlyFilesWithExtension()
+            public void WhenDifferentFilesExistInDir_ThenDeleteOnlyFilesWithExtension()
             {
                 FileBuilder.InFileSystem.WithPath(GetAbsolutePath("Test1.txt")).Build();
                 FileBuilder.InFileSystem.WithPath(GetAbsolutePath("Test2.txt")).Build();
@@ -253,9 +264,57 @@ namespace ByteDev.Io.IntTests
 
                 var sut = CreateSut();
 
-                sut.DeleteFiles("");
+                sut.DeleteFiles(string.Empty);
 
                 AssertDir.ContainsFiles(sut, 1);
+            }
+
+            [Test]
+            public void WhenRecursiveIsFalse_ThenDoNotDeleteFilesInSubDir()
+            {
+                DirectoryBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, "DirTest1")).Build();
+
+                var file1 = FileBuilder.InFileSystem
+                    .WithPath(GetAbsolutePath("Test1.txt"))
+                    .Build();
+                
+                var file2 = FileBuilder.InFileSystem
+                    .WithPath(Path.Combine(GetAbsolutePath(@"DirTest1\Test2.txt")))
+                    .Build();
+
+                var sut = CreateSut();
+
+                sut.DeleteFiles("txt");
+
+                AssertFile.NotExists(file1);
+                AssertFile.Exists(file2);
+            }
+
+            [Test]
+            public void WhenRecursiveIsTrue_ThenDeleteFilesInSubDirs()
+            {
+                DirectoryBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, @"DirTest1")).Build();
+                DirectoryBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, @"DirTest2")).Build();
+                DirectoryBuilder.InFileSystem.WithPath(Path.Combine(WorkingDir, @"DirTest2\DirTest20")).Build();
+
+                var file1 = FileBuilder.InFileSystem.WithPath(GetAbsolutePath("Test1.txt")).Build();
+
+                var file2 = FileBuilder.InFileSystem.WithPath(GetAbsolutePath(@"DirTest1\Test10.txt")).Build();
+                var file3 = FileBuilder.InFileSystem.WithPath(GetAbsolutePath(@"DirTest1\Test11.txt")).Build();
+
+                var file4 = FileBuilder.InFileSystem.WithPath(GetAbsolutePath(@"DirTest2\Test2.txt")).Build();
+                
+                var file5 = FileBuilder.InFileSystem.WithPath(GetAbsolutePath(@"DirTest2\DirTest20\Test20.txt")).Build();
+
+                var sut = CreateSut();
+
+                sut.DeleteFiles("txt", true);
+
+                AssertFile.NotExists(file1);
+                AssertFile.NotExists(file2);
+                AssertFile.NotExists(file3);
+                AssertFile.NotExists(file4);
+                AssertFile.NotExists(file5);
             }
         }
 

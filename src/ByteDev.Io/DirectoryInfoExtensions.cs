@@ -59,7 +59,7 @@ namespace ByteDev.Io
             }
         }
 
-                /// <summary>
+        /// <summary>
         /// Delete all directories in the directory.
         /// </summary>
         /// <param name="source">Directory to perform the operation on.</param>
@@ -134,13 +134,14 @@ namespace ByteDev.Io
         }
 
         /// <summary>
-        /// Delete all files in the directory with particular extension.
+        /// Delete all files in the directory with a particular extension.
         /// </summary>
         /// <param name="source">Directory to perform the operation on.</param>
         /// <param name="extension">File extension search pattern.</param>
+        /// <param name="recursive">True delete files in sub directories; otherwise do not. False by default.</param>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="extension" /> is null.</exception>
-        public static void DeleteFiles(this DirectoryInfo source, string extension)
+        public static void DeleteFiles(this DirectoryInfo source, string extension, bool recursive = false)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -149,6 +150,14 @@ namespace ByteDev.Io
             {
                 file.Delete();
             }
+
+            if (recursive)
+            {
+                foreach (var dirInfo in source.GetDirectories())
+                {
+                    DeleteFiles(dirInfo, extension, true);
+                }
+            }
         }
 
         /// <summary>
@@ -156,11 +165,11 @@ namespace ByteDev.Io
         /// File names in the list are case sensitive.
         /// </summary>
         /// <param name="source">Directory to perform the operation on.</param>
-        /// <param name="fileNames">File name except list.</param>
-        /// <param name="recursive">True potentially delete files in sub directories; otherwise do not.</param>
+        /// <param name="fileNames">File name except collection.</param>
+        /// <param name="recursive">True delete files in sub directories; otherwise do not. False by default.</param>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="source" /> is null.</exception>
         /// <exception cref="T:System.ArgumentNullException"><paramref name="fileNames" /> is null.</exception>
-        public static void DeleteFilesExcept(this DirectoryInfo source, IList<string> fileNames, bool recursive = false)
+        public static void DeleteFilesExcept(this DirectoryInfo source, ICollection<string> fileNames, bool recursive = false)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -178,7 +187,7 @@ namespace ByteDev.Io
             {
                 foreach (var dirInfo in source.GetDirectories())
                 {
-                    DeleteFilesExcept(dirInfo, fileNames);
+                    DeleteFilesExcept(dirInfo, fileNames, true);
                 }
             }
         }
