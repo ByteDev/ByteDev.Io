@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2036
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ByteDev.Io", "src\ByteDev.Io\ByteDev.Io.csproj", "{3D21595C-C100-41F4-AF14-4BAF5016CB7B}"
 EndProject
@@ -19,6 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{4620C436-C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{CA07D0A1-A3AE-41FE-B73B-4EEBE40BBBAC}"
 	ProjectSection(SolutionItems) = preProject
+		appveyor.yml = appveyor.yml
 		build\build.cake = build\build.cake
 		build\ByteDev.Io.nuspec = build\ByteDev.Io.nuspec
 		build\ByteDev.Utilities.cake = build\ByteDev.Utilities.cake

@@ -12,8 +12,10 @@
     <tags>io file directory folder</tags>
     <projectUrl>https://github.com/ByteDev/ByteDev.Io</projectUrl>
     <icon>images\icon.png</icon>
-    <license type="file">LICENSE</license>	
-    <dependencies>
+    <license type="file">LICENSE</license>
+	<releaseNotes>Refer to https://github.com/ByteDev/ByteDev.xyz/blob/master/docs/RELEASE-NOTES.md on GitHub.</releaseNotes>
+	<readme>README.md</readme>
+	<dependencies>
       <group targetFramework=".NETStandard2.0">
         <dependency id="ByteDev.Strings" version="9.1.0" />
       </group>
@@ -24,5 +26,6 @@
     <file src="..\src\ByteDev.Io\bin\Release\netstandard2.0\ByteDev.Io.xml" target="lib\netstandard2.0" />
     <file src="..\images\icon.png" target="images\" />
     <file src="..\LICENSE*" target="" />
+    <file src="..\README.md" target="" />
   </files>
 </package>
